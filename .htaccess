@@ -1,0 +1,6 @@
+Options -Indexes
+RewriteEngine On
+
+# Si ya estamos en public/, no redirigir
+RewriteCond %{REQUEST_URI} !^/SISGECLIN/public
+RewriteRule ^(.*)$ /SISGECLIN/public/$1 [L,R=301]

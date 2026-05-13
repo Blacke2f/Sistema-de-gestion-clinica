@@ -1,0 +1,28 @@
+# ── Entorno ───────────────────────────────────────────────────
+.env
+.env.backup
+.env.production
+
+# ── Dependencias ──────────────────────────────────────────────
+/vendor
+/node_modules
+
+# ── Build de assets ───────────────────────────────────────────
+/public/build
+/public/hot
+
+# ── Laravel ───────────────────────────────────────────────────
+/storage/*.key
+/storage/pail
+/public/storage
+.phpunit.result.cache
+/.phpunit.cache
+
+# ── Sistema operativo ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+
+# ── IDE ───────────────────────────────────────────────────────
+/.idea
+/.vscode

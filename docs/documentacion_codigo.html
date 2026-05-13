@@ -1,0 +1,1189 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SISGECLIN — Documentacion del Codigo</title>
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
+<style>
+.process-counter {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+.process-card {
+    background: linear-gradient(135deg, var(--primary-light), #fff);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    transition: var(--transition);
+}
+.process-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.process-card .num { font-size: 36px; font-weight: 800; color: var(--primary); line-height: 1; }
+.process-card .lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+.code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    line-height: 1.7;
+    margin: 12px 0;
+    border: 1px solid #1e293b;
+}
+.code-block .kw  { color: #93c5fd; }
+.code-block .fn  { color: #86efac; }
+.code-block .str { color: #fde68a; }
+.code-block .cm  { color: #64748b; font-style: italic; }
+.code-block .var { color: #f9a8d4; }
+.flow-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 10px;
+    transition: var(--transition);
+}
+.flow-step:hover { background: var(--primary-light); }
+.flow-num {
+    width: 28px; height: 28px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    flex-shrink: 0;
+}
+.flow-body h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.flow-body p  { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+}
+.module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: var(--transition);
+}
+.module-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.module-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+.module-card-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.module-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin: 0; }
+.module-card p  { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0 0 8px; }
+.process-list { list-style: none; padding: 0; }
+.process-list li {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.process-list li::before { content: "→"; color: var(--primary); font-weight: 700; }
+.highlight-box {
+    background: rgba(13,110,253,.06);
+    border: 1px solid rgba(13,110,253,.2);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--text);
+}
+.method-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    background: #fafbff;
+    transition: var(--transition);
+}
+.method-row:hover { background: var(--primary-light); }
+.method-badge {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    min-width: 52px;
+    text-align: center;
+}
+.method-get    { background: #dcfce7; color: #15803d; }
+.method-post   { background: #dbeafe; color: #1d4ed8; }
+.method-put    { background: #fef9c3; color: #a16207; }
+.method-patch  { background: #ffedd5; color: #c2410c; }
+.method-delete { background: #fee2e2; color: #b91c1c; }
+.method-info h5 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; }
+.method-info p  { font-size: 12px; color: var(--text-muted); margin: 0; }
+</style>
+</head>
+<body>
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <div class="doc-header-brand">
+      <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
+      <div>
+        <h1>Documentacion del Codigo</h1>
+        <p>SISGECLIN v2.5 &mdash; Como funciona el sistema</p>
+      </div>
+    </div>
+    <nav class="doc-header-nav">
+      <a href="/SISGECLIN/docs/manual_usuario.html"><i class="bx bxs-book-open"></i> Manual</a>
+      <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class="bx bx-code-alt"></i> Tecnica</a>
+      <a href="/SISGECLIN/docs/modelo_er.html"><i class="bx bx-data"></i> Modelo ER</a>
+      <a href="/SISGECLIN/docs/documentacion_codigo.html" class="active"><i class="bx bx-code-curly"></i> Codigo</a>
+    </nav>
+  </div>
+</header>
+<div class="doc-layout">
+  <aside class="doc-sidebar">
+    <div class="doc-sidebar-inner">
+      <div class="doc-sidebar-title">Contenido</div>
+      <nav class="doc-sidebar-menu">
+        <a href="#resumen"><i class="bx bx-stats"></i> Resumen del Sistema</a>
+        <a href="#procesos"><i class="bx bx-cog"></i> Procesos del Sistema</a>
+        <a href="#arquitectura"><i class="bx bx-git-branch"></i> Arquitectura MVC</a>
+        <a href="#flujo-peticion"><i class="bx bx-transfer-alt"></i> Flujo de Peticion</a>
+        <a href="#autenticacion"><i class="bx bx-lock"></i> Autenticacion</a>
+        <a href="#permisos"><i class="bx bx-shield"></i> Sistema de Permisos</a>
+        <a href="#mod-pacientes"><i class="bx bxs-user-detail"></i> Modulo Pacientes</a>
+        <a href="#mod-consultas"><i class="bx bx-clipboard"></i> Modulo Consultas</a>
+        <a href="#mod-inventario"><i class="bx bxs-capsule"></i> Modulo Inventario</a>
+        <a href="#mod-movimientos"><i class="bx bx-transfer"></i> Modulo Movimientos</a>
+        <a href="#mod-solicitudes"><i class="bx bx-send"></i> Modulo Solicitudes</a>
+        <a href="#mod-nomina"><i class="bx bxs-group"></i> Modulo Nomina</a>
+        <a href="#mod-usuarios"><i class="bx bxs-user-account"></i> Modulo Usuarios</a>
+        <a href="#mod-mensajes"><i class="bx bxs-envelope"></i> Modulo Mensajes</a>
+        <a href="#mod-notificaciones"><i class="bx bxs-bell"></i> Notificaciones</a>
+        <a href="#mod-bitacora"><i class="bx bx-history"></i> Bitacora</a>
+        <a href="#exportaciones"><i class="bx bxs-file-pdf"></i> Exportaciones</a>
+        <a href="#busqueda"><i class="bx bx-search"></i> Busqueda AJAX</a>
+      </nav>
+    </div>
+  </aside>
+  <main class="doc-content">
+
+<!-- ══ RESUMEN ══ -->
+<div class="doc-section" id="resumen">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class="bx bx-stats"></i></div>
+    <div><h2>Resumen del Sistema</h2><p>SISGECLIN v2.5 — Sistema de Gestion Clinica</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">SISGECLIN es una aplicacion web desarrollada con <strong>Laravel 13</strong> (PHP 8.2+) que gestiona todos los procesos operativos de una clinica medica. Implementa el patron <strong>MVC</strong> con autenticacion por sesiones, control de acceso por roles y permisos granulares por modulo.</p>
+    <div class="info-grid">
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class="bx bx-code-alt"></i></div><div><h3>Laravel 13</h3><p>Framework PHP</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-orange"><i class="bx bx-data"></i></div><div><h3>MySQL</h3><p>Base de datos</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class="bx bxs-grid-alt"></i></div><div><h3>14</h3><p>Modulos del sistema</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-purple"><i class="bx bx-cog"></i></div><div><h3>47+</h3><p>Procesos automatizados</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-red"><i class="bx bx-map"></i></div><div><h3>65+</h3><p>Rutas HTTP</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-cyan"><i class="bx bx-table"></i></div><div><h3>13</h3><p>Tablas en la BD</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PROCESOS ══ -->
+<div class="doc-section" id="procesos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class="bx bx-cog"></i></div>
+    <div><h2>Procesos del Sistema</h2><p>Todos los procesos automatizados que realiza SISGECLIN</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="highlight-box">
+      <strong>Total de procesos identificados: 47 procesos</strong> distribuidos en 14 modulos.
+      Un "proceso" es una operacion con logica de negocio que el sistema ejecuta automaticamente o en respuesta a una accion del usuario.
+    </div>
+    <h3 class="doc-subtitle">Procesos por modulo</h3>
+    <div class="process-counter">
+      <div class="process-card"><div class="num">5</div><div class="lbl">Autenticacion</div></div>
+      <div class="process-card"><div class="num">5</div><div class="lbl">Pacientes</div></div>
+      <div class="process-card"><div class="num">5</div><div class="lbl">Consultas</div></div>
+      <div class="process-card"><div class="num">5</div><div class="lbl">Medicamentos</div></div>
+      <div class="process-card"><div class="num">4</div><div class="lbl">Movimientos</div></div>
+      <div class="process-card"><div class="num">3</div><div class="lbl">Solicitudes</div></div>
+      <div class="process-card"><div class="num">5</div><div class="lbl">Nomina</div></div>
+      <div class="process-card"><div class="num">7</div><div class="lbl">Usuarios</div></div>
+      <div class="process-card"><div class="num">3</div><div class="lbl">Mensajes</div></div>
+      <div class="process-card"><div class="num">4</div><div class="lbl">Notificaciones</div></div>
+      <div class="process-card"><div class="num">1</div><div class="lbl">Bitacora</div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Lista completa de los 47 procesos</h3>
+    <table class="doc-table">
+      <thead><tr><th>#</th><th>Proceso</th><th>Modulo</th><th>Descripcion</th><th>Automatico</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Iniciar Sesion</td><td>Auth</td><td>Verifica credenciales, regenera sesion, registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>2</td><td>Cerrar Sesion</td><td>Auth</td><td>Invalida sesion, regenera token CSRF, registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>3</td><td>Registrar Usuario</td><td>Auth</td><td>Crea cuenta deshabilitada y notifica a admins</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>4</td><td>Verificar Cuenta Activa</td><td>Auth</td><td>Bloquea login si activo=false</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>5</td><td>Actualizar Ultimo Acceso</td><td>Auth</td><td>Guarda fecha/hora del ultimo login exitoso</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>6</td><td>Registrar Paciente</td><td>Pacientes</td><td>Crea paciente y notifica a todos los usuarios</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>7</td><td>Buscar Paciente</td><td>Pacientes</td><td>Busqueda por nombre, apellido o cedula con paginacion</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>8</td><td>Editar Paciente</td><td>Pacientes</td><td>Actualiza datos con validacion de cedula unica</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>9</td><td>Eliminar Paciente</td><td>Pacientes</td><td>Elimina paciente y sus consultas en cascada</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>10</td><td>Exportar Pacientes</td><td>Pacientes</td><td>Genera CSV/PDF/Excel con todos los pacientes</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>11</td><td>Registrar Consulta</td><td>Consultas</td><td>Crea consulta y notifica a todos los usuarios</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>12</td><td>Buscar Consulta</td><td>Consultas</td><td>Busqueda por paciente, motivo, estado o diagnostico</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>13</td><td>Actualizar Estado Consulta</td><td>Consultas</td><td>Cambia estado: pendiente→en_proceso→completada</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>14</td><td>Registrar Diagnostico</td><td>Consultas</td><td>Guarda diagnostico y tratamiento de la consulta</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>15</td><td>Exportar Consultas</td><td>Consultas</td><td>Genera CSV/PDF/Excel por periodo o rango de fechas</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>16</td><td>Registrar Medicamento</td><td>Medicamentos</td><td>Agrega medicamento al catalogo con stock minimo</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>17</td><td>Buscar Medicamento</td><td>Medicamentos</td><td>Busqueda por nombre o proveedor</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>18</td><td>Detectar Stock Bajo</td><td>Medicamentos</td><td>Verifica si cantidad &lt;= stock_minimo y alerta</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>19</td><td>Editar Medicamento</td><td>Medicamentos</td><td>Actualiza datos del medicamento en el catalogo</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>20</td><td>Exportar Medicamentos</td><td>Medicamentos</td><td>Genera CSV/PDF/Excel con estado de stock</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>21</td><td>Registrar Entrada</td><td>Movimientos</td><td>Suma stock, crea movimiento, notifica, registra bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>22</td><td>Registrar Salida con Firma</td><td>Movimientos</td><td>Resta stock, guarda quien entrega y quien recibe</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>23</td><td>Alerta Stock Bajo Post-Salida</td><td>Movimientos</td><td>Verifica stock despues de salida y notifica si es bajo</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>24</td><td>Reporte Auditoria Inventario</td><td>Movimientos</td><td>Genera PDF con entradas/salidas/stock para contraloria</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>25</td><td>Crear Solicitud</td><td>Solicitudes</td><td>Genera numero de orden SOL-AAAAMM-XXXX y notifica admins</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>26</td><td>Aprobar Solicitud</td><td>Solicitudes</td><td>Aprueba y registra entrada automatica al inventario</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>27</td><td>Verificar Stock al Crear Solicitud</td><td>Solicitudes</td><td>Avisa si el stock esta bien antes de crear solicitud</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>28</td><td>Registrar Empleado</td><td>Nomina</td><td>Agrega empleado y registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>29</td><td>Detectar Cargo Medico</td><td>Nomina</td><td>Empleados con cargo medico aparecen en selector de consultas</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>30</td><td>Editar Empleado</td><td>Nomina</td><td>Actualiza datos y registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>31</td><td>Eliminar Empleado</td><td>Nomina</td><td>Elimina empleado y registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>32</td><td>Exportar Nomina</td><td>Nomina</td><td>Genera CSV/PDF/Excel con masa salarial</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>33</td><td>Crear Usuario</td><td>Usuarios</td><td>Crea cuenta con contrasena bcrypt y registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>34</td><td>Activar/Desactivar Usuario</td><td>Usuarios</td><td>Habilita o bloquea acceso al sistema</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>35</td><td>Configurar Permisos</td><td>Usuarios</td><td>Define que puede hacer cada usuario en cada modulo</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>36</td><td>Verificar Permisos en Rutas</td><td>Usuarios</td><td>Middleware CheckPermiso verifica antes de cada accion</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>37</td><td>Sidebar Dinamico</td><td>Usuarios</td><td>Oculta modulos sin permiso de ver en el menu lateral</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>38</td><td>Cambiar Contrasena</td><td>Usuarios</td><td>Verifica contrasena actual y hashea la nueva con bcrypt</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>39</td><td>Actualizar Perfil</td><td>Usuarios</td><td>Actualiza nombre/email y registra en bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>40</td><td>Enviar Mensaje Individual</td><td>Mensajes</td><td>Crea mensaje y notifica al destinatario</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>41</td><td>Enviar Mensaje Masivo</td><td>Mensajes</td><td>Envia a todos, medicos, recepcionistas o admins</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>42</td><td>Marcar Mensaje Leido</td><td>Mensajes</td><td>Actualiza leido=true al abrir el mensaje</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>43</td><td>Notificar Evento</td><td>Notificaciones</td><td>INSERT masivo en notificaciones para todos los usuarios</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>44</td><td>Polling de Badges</td><td>Notificaciones</td><td>Consulta cada 30s el conteo de notificaciones no leidas</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>45</td><td>Marcar Todas Leidas</td><td>Notificaciones</td><td>UPDATE masivo de leida=true para el usuario actual</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>46</td><td>Registrar en Bitacora</td><td>Bitacora</td><td>Guarda accion, usuario, tabla, ID e IP automaticamente</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>47</td><td>Busqueda Global AJAX</td><td>Sistema</td><td>Busca en pacientes, consultas, medicamentos y usuarios</td><td><span class="badge badge-gray">No</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ ARQUITECTURA MVC ══ -->
+<div class="doc-section" id="arquitectura">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class="bx bx-git-branch"></i></div>
+    <div><h2>Arquitectura MVC</h2><p>Como esta organizado el codigo del sistema</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">SISGECLIN sigue el patron <strong>Modelo-Vista-Controlador (MVC)</strong> de Laravel. Cada capa tiene una responsabilidad clara y separada.</p>
+
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-card-icon icon-blue"><i class="bx bx-data"></i></div>
+          <h4>Modelos — <code>app/Models/</code></h4>
+        </div>
+        <p>Representan las tablas de la base de datos. Definen relaciones, accessors, scopes de busqueda y logica de negocio del dato.</p>
+        <ul class="process-list">
+          <li>Usuario.php — usuarios del sistema + permisos</li>
+          <li>Paciente.php — pacientes de la clinica</li>
+          <li>Consulta.php — consultas medicas</li>
+          <li>Medicamento.php — catalogo de medicamentos</li>
+          <li>Empleado.php — nomina del personal</li>
+          <li>InventarioMovimiento.php — entradas y salidas</li>
+          <li>SolicitudInventario.php — solicitudes de reposicion</li>
+          <li>Mensaje.php — mensajeria interna</li>
+          <li>Notificacion.php — notificaciones del sistema</li>
+          <li>Bitacora.php — auditoria de acciones</li>
+          <li>PermisoUsuario.php — permisos granulares ACL</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-card-icon icon-orange"><i class="bx bx-code-curly"></i></div>
+          <h4>Controladores — <code>app/Http/Controllers/</code></h4>
+        </div>
+        <p>Reciben las peticiones HTTP, llaman a los modelos, aplican logica de negocio y retornan vistas o JSON.</p>
+        <ul class="process-list">
+          <li>AuthController — login, logout, registro</li>
+          <li>DashboardController — estadisticas y resumen</li>
+          <li>PacientesController — CRUD pacientes</li>
+          <li>ConsultasController — CRUD consultas</li>
+          <li>MedicinaController — CRUD medicamentos</li>
+          <li>InventarioMovimientosController — entradas/salidas</li>
+          <li>SolicitudesInventarioController — solicitudes</li>
+          <li>NominaController — CRUD empleados</li>
+          <li>UsuariosController — CRUD usuarios + permisos</li>
+          <li>MensajesController — mensajeria</li>
+          <li>NotificacionesController — notificaciones</li>
+          <li>BitacoraController — auditoria</li>
+          <li>PerfilController — perfil y contrasena</li>
+          <li>ExportController — exportaciones PDF/Excel/CSV</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-card-icon icon-purple"><i class="bx bx-layout"></i></div>
+          <h4>Vistas — <code>resources/views/</code></h4>
+        </div>
+        <p>Plantillas Blade de Laravel. Heredan del layout principal y usan componentes parciales reutilizables.</p>
+        <ul class="process-list">
+          <li>layouts/app.blade.php — layout principal</li>
+          <li>partials/pagination.blade.php — paginador</li>
+          <li>partials/export-modal.blade.php — modal exportar</li>
+          <li>auth/ — login y registro</li>
+          <li>pacientes/, consultas/, medicina/ — modulos</li>
+          <li>inventario/, solicitudes/, nomina/ — modulos</li>
+          <li>usuarios/, mensajes/, bitacora/ — modulos</li>
+          <li>exports/ — templates PDF para mPDF</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-card-icon icon-red"><i class="bx bx-shield"></i></div>
+          <h4>Middleware — <code>app/Http/Middleware/</code></h4>
+        </div>
+        <p>Interceptan las peticiones HTTP antes de llegar al controlador para verificar autenticacion, roles y permisos.</p>
+        <ul class="process-list">
+          <li>CheckRole — verifica el rol del usuario (admin, medico, recepcionista)</li>
+          <li>CheckPermiso — verifica permisos granulares por modulo y accion</li>
+          <li>Authenticate (Laravel) — verifica que haya sesion activa</li>
+          <li>RedirectIfAuthenticated — redirige si ya esta logueado</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="doc-subtitle">Estructura de directorios</h3>
+    <div class="code-block">
+<span class="cm">SISGECLIN/</span>
+├── <span class="kw">app/</span>
+│   ├── <span class="fn">Http/Controllers/</span>   <span class="cm">← 14 controladores</span>
+│   ├── <span class="fn">Http/Middleware/</span>    <span class="cm">← CheckRole, CheckPermiso</span>
+│   ├── <span class="fn">Models/</span>             <span class="cm">← 11 modelos Eloquent</span>
+│   └── <span class="fn">Providers/</span>          <span class="cm">← AppServiceProvider</span>
+├── <span class="kw">bootstrap/</span>
+│   └── <span class="fn">app.php</span>             <span class="cm">← registro de middleware alias</span>
+├── <span class="kw">config/</span>              <span class="cm">← configuracion de BD, sesion, mail</span>
+├── <span class="kw">database/</span>
+│   ├── <span class="fn">migrations/</span>         <span class="cm">← 18 migraciones</span>
+│   └── <span class="fn">seeders/</span>            <span class="cm">← datos iniciales</span>
+├── <span class="kw">docs/</span>                <span class="cm">← documentacion HTML</span>
+├── <span class="kw">public/</span>
+│   ├── <span class="fn">css/</span>                <span class="cm">← estilos del sistema</span>
+│   ├── <span class="fn">img/</span>                <span class="cm">← imagenes y logo</span>
+│   └── <span class="fn">js/</span>                 <span class="cm">← script.js principal</span>
+├── <span class="kw">resources/views/</span>     <span class="cm">← plantillas Blade</span>
+└── <span class="kw">routes/web.php</span>       <span class="cm">← 65+ rutas HTTP</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FLUJO DE PETICION ══ -->
+<div class="doc-section" id="flujo-peticion">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-cyan"><i class="bx bx-transfer-alt"></i></div>
+    <div><h2>Flujo de una Peticion HTTP</h2><p>Que pasa desde que el usuario hace click hasta que ve la respuesta</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Cada accion del usuario (click en boton, envio de formulario, carga de pagina) genera una peticion HTTP que recorre el siguiente camino:</p>
+
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-body">
+        <h4>Navegador → <code>public/index.php</code></h4>
+        <p>El servidor web (Apache/XAMPP) redirige todas las peticiones a <code>public/index.php</code> gracias al <code>.htaccess</code>. Este archivo arranca el framework Laravel.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-body">
+        <h4>Router — <code>routes/web.php</code></h4>
+        <p>Laravel busca la ruta que coincide con la URL y el metodo HTTP (GET, POST, PUT, DELETE). Si no encuentra ninguna, retorna 404.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-body">
+        <h4>Middleware Pipeline</h4>
+        <p>Antes de llegar al controlador, la peticion pasa por los middleware asignados a esa ruta: <code>auth</code> (verifica sesion), <code>role:admin</code> (verifica rol), <code>permiso:modulo,accion</code> (verifica permiso granular). Si alguno falla, retorna error o redirige.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-body">
+        <h4>Controlador — metodo especifico</h4>
+        <p>El metodo del controlador recibe el objeto <code>Request</code> con todos los datos de la peticion. Valida los datos, llama a los modelos Eloquent y prepara la respuesta.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-body">
+        <h4>Modelo Eloquent — consulta a MySQL</h4>
+        <p>El modelo traduce las operaciones PHP a SQL y ejecuta las consultas en la base de datos <code>sisgeclin_laravel</code>. Retorna colecciones o instancias de modelos.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">6</div>
+      <div class="flow-body">
+        <h4>Respuesta — Vista Blade o JSON</h4>
+        <p>Para peticiones normales (GET de paginas): el controlador retorna <code>view('modulo.index', $datos)</code> que Blade compila a HTML. Para peticiones AJAX (formularios modales): retorna <code>response()->json(['success' => true, ...])</code>.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">7</div>
+      <div class="flow-body">
+        <h4>JavaScript — manejo de respuesta AJAX</h4>
+        <p>El <code>script.js</code> recibe el JSON, muestra el toast de exito/error, cierra el modal y recarga la tabla de datos sin recargar toda la pagina.</p>
+      </div>
+    </div>
+
+    <h3 class="doc-subtitle">Ejemplo: Registrar un paciente</h3>
+    <div class="code-block">
+<span class="cm">// 1. Usuario llena el modal y hace click en "Guardar"</span>
+<span class="cm">// 2. script.js intercepta el submit y hace fetch() a POST /pacientes</span>
+<span class="cm">// 3. Middleware 'auth' verifica sesion activa</span>
+<span class="cm">// 4. Middleware 'permiso:pacientes,crear' verifica que puede crear</span>
+<span class="cm">// 5. PacientesController::store() valida los datos</span>
+<span class="cm">// 6. Paciente::create($data) inserta en MySQL</span>
+<span class="cm">// 7. Notificacion::notificarTodos() inserta notificaciones para todos</span>
+<span class="cm">// 8. Retorna JSON { success: true, message: "Paciente registrado..." }</span>
+<span class="cm">// 9. script.js muestra toast verde y cierra el modal</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AUTENTICACION ══ -->
+<div class="doc-section" id="autenticacion">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-red"><i class="bx bx-lock"></i></div>
+    <div><h2>Autenticacion</h2><p>Como funciona el login, logout y registro — AuthController.php</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">El sistema usa <strong>autenticacion por sesion</strong> de Laravel. No usa tokens JWT ni API keys — todo se maneja con la sesion del servidor y cookies de sesion en el navegador.</p>
+
+    <h3 class="doc-subtitle">Rutas de autenticacion</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/login</h5><p>Muestra el formulario de inicio de sesion. Si ya hay sesion activa, redirige al dashboard.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/login</h5><p>Procesa las credenciales. Verifica usuario, cuenta activa y contrasena bcrypt.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/register</h5><p>Muestra el formulario de registro publico (solo medico o recepcionista).</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/register</h5><p>Crea la cuenta con activo=false. Notifica a todos los admins.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/logout</h5><p>Cierra sesion, invalida la sesion actual y regenera el token CSRF.</p></div></div>
+
+    <h3 class="doc-subtitle">Flujo de login paso a paso</h3>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>Validacion de campos</h4><p>Verifica que username y password no esten vacios. Si faltan, retorna al formulario con errores.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>Buscar usuario en BD</h4><p><code>Usuario::where('username', $request->username)->first()</code> — si no existe, error "Usuario no encontrado".</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><h4>Verificar cuenta activa</h4><p>Si <code>$usuario->activo === false</code>, bloquea el acceso con mensaje de cuenta desactivada.</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><h4>Verificar contrasena</h4><p><code>Hash::check($request->password, $usuario->password)</code> compara el texto plano con el hash bcrypt almacenado.</p></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><h4>Iniciar sesion</h4><p><code>Auth::login($usuario, $remember)</code> crea la sesion. <code>$request->session()->regenerate()</code> previene session fixation.</p></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><h4>Registrar en bitacora</h4><p><code>Bitacora::registrar($userId, 'INICIO SESION', 'usuarios', $userId)</code> guarda el evento con IP y timestamp.</p></div></div>
+
+    <h3 class="doc-subtitle">Registro de nuevos usuarios</h3>
+    <div class="doc-alert info"><i class="bx bx-info-circle"></i><div>Los usuarios registrados desde el formulario publico quedan con <strong>activo = false</strong>. El administrador debe activarlos manualmente desde el modulo de Usuarios. Esto previene accesos no autorizados.</div></div>
+
+    <div class="code-block">
+<span class="cm">// AuthController::register() — fragmento clave</span>
+<span class="var">$usuario</span> = <span class="fn">Usuario::create</span>([
+    <span class="str">'nombre_completo'</span> => <span class="var">$request</span>->nombre_completo,
+    <span class="str">'username'</span>        => <span class="var">$request</span>->username,
+    <span class="str">'password'</span>        => <span class="fn">Hash::make</span>(<span class="var">$request</span>->password), <span class="cm">// bcrypt</span>
+    <span class="str">'activo'</span>          => <span class="kw">false</span>, <span class="cm">// DESHABILITADO hasta que admin active</span>
+]);
+
+<span class="cm">// Notificar a todos los admins activos</span>
+<span class="var">$admins</span> = <span class="fn">Usuario::where</span>(<span class="str">'rol'</span>, <span class="str">'admin'</span>)-><span class="fn">where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)-><span class="fn">get</span>();
+<span class="kw">foreach</span> (<span class="var">$admins</span> <span class="kw">as</span> <span class="var">$admin</span>) {
+    <span class="fn">Notificacion::notificarUsuario</span>(usuarioId: <span class="var">$admin</span>->id, tipo: <span class="str">'registro_pendiente'</span>, ...);
+}
+    </div>
+  </div>
+</div>
+
+<!-- ══ SISTEMA DE PERMISOS ══ -->
+<div class="doc-section" id="permisos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class="bx bx-shield"></i></div>
+    <div><h2>Sistema de Permisos Granulares (ACL)</h2><p>Como funciona el control de acceso por modulo y accion</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">SISGECLIN implementa un sistema de <strong>Control de Acceso basado en Listas (ACL)</strong>. Ademas del rol general (admin/medico/recepcionista), cada usuario tiene permisos individuales por modulo.</p>
+
+    <h3 class="doc-subtitle">Tabla permisos_usuario</h3>
+    <table class="doc-table">
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><code>usuario_id</code></td><td>FK</td><td>Usuario al que aplica el permiso</td></tr>
+        <tr><td><code>modulo</code></td><td>VARCHAR</td><td>Nombre del modulo: pacientes, consultas, medicina, inventario, nomina, mensajes, usuarios, bitacora, solicitudes</td></tr>
+        <tr><td><code>puede_ver</code></td><td>BOOLEAN</td><td>Puede acceder a la lista del modulo</td></tr>
+        <tr><td><code>puede_crear</code></td><td>BOOLEAN</td><td>Puede crear nuevos registros</td></tr>
+        <tr><td><code>puede_editar</code></td><td>BOOLEAN</td><td>Puede modificar registros existentes</td></tr>
+        <tr><td><code>puede_eliminar</code></td><td>BOOLEAN</td><td>Puede eliminar registros</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Middleware CheckPermiso</h3>
+    <p class="doc-text">El middleware <code>permiso:modulo,accion</code> se ejecuta antes de cada ruta protegida. Verifica si el usuario tiene el permiso requerido.</p>
+    <div class="code-block">
+<span class="cm">// Ejemplo de ruta protegida en routes/web.php</span>
+<span class="fn">Route::post</span>(<span class="str">'/'</span>, [PacientesController::<span class="kw">class</span>, <span class="str">'store'</span>])
+    -><span class="fn">middleware</span>(<span class="str">'permiso:pacientes,crear'</span>);
+
+<span class="cm">// CheckPermiso::handle() — logica interna</span>
+<span class="kw">public function</span> <span class="fn">handle</span>(<span class="var">$request</span>, <span class="var">$next</span>, <span class="var">$modulo</span>, <span class="var">$accion</span>)
+{
+    <span class="var">$usuario</span> = <span class="fn">Auth::user</span>();
+
+    <span class="cm">// Los admins siempre tienen acceso total</span>
+    <span class="kw">if</span> (<span class="var">$usuario</span>-><span class="fn">isAdmin</span>()) <span class="kw">return</span> <span class="var">$next</span>(<span class="var">$request</span>);
+
+    <span class="cm">// Verificar permiso especifico del usuario</span>
+    <span class="kw">if</span> (! <span class="var">$usuario</span>-><span class="fn">puedeEn</span>(<span class="var">$modulo</span>, <span class="var">$accion</span>)) {
+        <span class="kw">if</span> (<span class="var">$request</span>-><span class="fn">expectsJson</span>()) {
+            <span class="kw">return</span> <span class="fn">response</span>()-><span class="fn">json</span>([<span class="str">'success'</span> => <span class="kw">false</span>, <span class="str">'message'</span> => <span class="str">'Sin permiso para esta accion.'</span>], 403);
+        }
+        <span class="kw">return</span> <span class="fn">back</span>()-><span class="fn">with</span>(<span class="str">'error'</span>, <span class="str">'Sin permiso para esta accion.'</span>);
+    }
+
+    <span class="kw">return</span> <span class="var">$next</span>(<span class="var">$request</span>);
+}
+    </div>
+
+    <h3 class="doc-subtitle">Metodo puedeEn() en el modelo Usuario</h3>
+    <div class="code-block">
+<span class="cm">// Usuario::puedeEn($modulo, $accion) — verifica permiso</span>
+<span class="kw">public function</span> <span class="fn">puedeEn</span>(<span class="kw">string</span> <span class="var">$modulo</span>, <span class="kw">string</span> <span class="var">$accion</span>): <span class="kw">bool</span>
+{
+    <span class="cm">// Admin siempre puede todo</span>
+    <span class="kw">if</span> (<span class="var">$this</span>->rol === <span class="str">'admin'</span>) <span class="kw">return true</span>;
+
+    <span class="cm">// Buscar el registro de permiso para este usuario y modulo</span>
+    <span class="var">$permiso</span> = <span class="var">$this</span>->permisos()-><span class="fn">where</span>(<span class="str">'modulo'</span>, <span class="var">$modulo</span>)-><span class="fn">first</span>();
+    <span class="kw">if</span> (! <span class="var">$permiso</span>) <span class="kw">return false</span>; <span class="cm">// sin registro = sin acceso</span>
+
+    <span class="cm">// Mapear la accion al campo correspondiente</span>
+    <span class="kw">return match</span>(<span class="var">$accion</span>) {
+        <span class="str">'ver'</span>      => (bool) <span class="var">$permiso</span>->puede_ver,
+        <span class="str">'crear'</span>    => (bool) <span class="var">$permiso</span>->puede_crear,
+        <span class="str">'editar'</span>   => (bool) <span class="var">$permiso</span>->puede_editar,
+        <span class="str">'eliminar'</span> => (bool) <span class="var">$permiso</span>->puede_eliminar,
+        <span class="kw">default</span>    => <span class="kw">false</span>,
+    };
+}
+    </div>
+
+    <h3 class="doc-subtitle">Sidebar dinamico</h3>
+    <p class="doc-text">El menu lateral del layout principal verifica los permisos antes de mostrar cada enlace. Si el usuario no tiene permiso de <code>ver</code> en un modulo, ese enlace no aparece en el sidebar.</p>
+    <div class="code-block">
+<span class="cm">{{-- layouts/app.blade.php — ejemplo de enlace condicional --}}</span>
+<span class="kw">@if</span>(<span class="fn">auth()->user()->isAdmin()</span> || <span class="fn">auth()->user()->puedeEn('pacientes','ver')</span>)
+    &lt;a href="{{ route('pacientes.index') }}"&gt;Pacientes&lt;/a&gt;
+<span class="kw">@endif</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO PACIENTES ══ -->
+<div class="doc-section" id="mod-pacientes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class="bx bxs-user-detail"></i></div>
+    <div><h2>Modulo Pacientes</h2><p>PacientesController.php — Modelo: Paciente.php — Tabla: pacientes</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestiona el registro completo de pacientes de la clinica. Incluye busqueda en tiempo real, paginacion configurable y exportacion en multiples formatos.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/pacientes</h5><p>Lista paginada con busqueda por nombre, apellido o cedula. Parametros: <code>?search=&amp;per_page=</code></p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/pacientes</h5><p>Crea nuevo paciente. Retorna JSON. Notifica a todos los usuarios.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/pacientes/{id}</h5><p>Retorna datos del paciente en JSON para pre-llenar el modal de edicion.</p></div></div>
+    <div class="method-row"><span class="method-badge method-put">PUT</span><div class="method-info"><h5>/pacientes/{id}</h5><p>Actualiza datos del paciente. Valida cedula unica excluyendo el registro actual.</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/pacientes/{id}</h5><p>Elimina paciente y sus consultas en cascada.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/pacientes/exportar/csv</h5><p>Descarga CSV con BOM UTF-8 para compatibilidad con Excel.</p></div></div>
+
+    <h3 class="doc-subtitle">Campos del modelo Paciente</h3>
+    <table class="doc-table">
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><code>nombre</code></td><td>string</td><td>Primer nombre del paciente</td></tr>
+        <tr><td><code>apellido</code></td><td>string</td><td>Apellido del paciente</td></tr>
+        <tr><td><code>cedula</code></td><td>string unique</td><td>Cedula de identidad — unica en el sistema</td></tr>
+        <tr><td><code>telefono</code></td><td>string nullable</td><td>Numero de telefono de contacto</td></tr>
+        <tr><td><code>email</code></td><td>string nullable</td><td>Correo electronico</td></tr>
+        <tr><td><code>fecha_nacimiento</code></td><td>date nullable</td><td>Fecha de nacimiento para calcular edad</td></tr>
+        <tr><td><code>genero</code></td><td>enum M/F/Otro</td><td>Genero del paciente</td></tr>
+        <tr><td><code>tipo_sangre</code></td><td>string nullable</td><td>Tipo de sangre (A+, O-, etc.)</td></tr>
+        <tr><td><code>alergias</code></td><td>text nullable</td><td>Alergias conocidas del paciente</td></tr>
+        <tr><td><code>direccion</code></td><td>text nullable</td><td>Direccion de residencia</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Accessors del modelo</h3>
+    <div class="code-block">
+<span class="cm">// Paciente.php — accessors para uso en vistas y exportaciones</span>
+<span class="kw">public function</span> <span class="fn">getNombreCompletoAttribute</span>(): <span class="kw">string</span>
+{
+    <span class="kw">return</span> <span class="var">$this</span>->nombre . <span class="str">' '</span> . <span class="var">$this</span>->apellido;
+}
+
+<span class="kw">public function</span> <span class="fn">getGeneroTextoAttribute</span>(): <span class="kw">string</span>
+{
+    <span class="kw">return match</span>(<span class="var">$this</span>->genero) {
+        <span class="str">'M'</span>    => <span class="str">'Masculino'</span>,
+        <span class="str">'F'</span>    => <span class="str">'Femenino'</span>,
+        <span class="kw">default</span> => <span class="str">'Otro'</span>,
+    };
+}
+
+<span class="cm">// Scope de busqueda — usado en index()</span>
+<span class="kw">public function</span> <span class="fn">scopeSearch</span>(<span class="var">$query</span>, <span class="kw">string</span> <span class="var">$search</span>)
+{
+    <span class="kw">return</span> <span class="var">$query</span>-><span class="fn">where</span>(<span class="str">'nombre'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'apellido'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'cedula'</span>, <span class="str">'like'</span>, <span class="str">"%{$search}%"</span>);
+}
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO CONSULTAS ══ -->
+<div class="doc-section" id="mod-consultas">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-cyan"><i class="bx bx-clipboard"></i></div>
+    <div><h2>Modulo Consultas</h2><p>ConsultasController.php — Modelo: Consulta.php — Tabla: consultas</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestiona las consultas medicas. Cada consulta pertenece a un paciente y puede ser atendida por un empleado de nomina con cargo medico o por un usuario del sistema con rol medico.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/consultas</h5><p>Lista paginada. Busqueda en nombre/cedula del paciente, motivo, estado y diagnostico.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/consultas</h5><p>Crea consulta. Requiere al menos un medico asignado (empleado_id o medico_id).</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/consultas/{id}</h5><p>Retorna consulta con relaciones (paciente, empleado, medico) en JSON.</p></div></div>
+    <div class="method-row"><span class="method-badge method-put">PUT</span><div class="method-info"><h5>/consultas/{id}</h5><p>Actualiza consulta incluyendo diagnostico y tratamiento post-consulta.</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/consultas/{id}</h5><p>Elimina la consulta del sistema.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/consultas/exportar/csv</h5><p>Exporta con filtro de periodo: semanal, mensual, rango de fechas o todos.</p></div></div>
+
+    <h3 class="doc-subtitle">Estados de una consulta</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Descripcion</th><th>Color en UI</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">pendiente</span></td><td>Consulta programada, aun no atendida</td><td>Amarillo</td></tr>
+        <tr><td><span class="badge badge-blue">en_proceso</span></td><td>Consulta en curso, medico atendiendo</td><td>Azul</td></tr>
+        <tr><td><span class="badge badge-green">completada</span></td><td>Consulta finalizada con diagnostico</td><td>Verde</td></tr>
+        <tr><td><span class="badge badge-red">cancelada</span></td><td>Consulta cancelada o no asistio</td><td>Rojo</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Relaciones del modelo Consulta</h3>
+    <div class="code-block">
+<span class="cm">// Consulta.php — relaciones Eloquent</span>
+<span class="kw">public function</span> <span class="fn">paciente</span>()  { <span class="kw">return</span> <span class="var">$this</span>-><span class="fn">belongsTo</span>(Paciente::<span class="kw">class</span>); }
+<span class="kw">public function</span> <span class="fn">empleado</span>()  { <span class="kw">return</span> <span class="var">$this</span>-><span class="fn">belongsTo</span>(Empleado::<span class="kw">class</span>); }
+<span class="kw">public function</span> <span class="fn">medico</span>()    { <span class="kw">return</span> <span class="var">$this</span>-><span class="fn">belongsTo</span>(Usuario::<span class="kw">class</span>, <span class="str">'medico_id'</span>); }
+
+<span class="cm">// Accessor para obtener el nombre del medico (de nomina o de usuarios)</span>
+<span class="kw">public function</span> <span class="fn">getMedicoNombreAttribute</span>(): <span class="kw">string</span>
+{
+    <span class="kw">if</span> (<span class="var">$this</span>->empleado) <span class="kw">return</span> <span class="var">$this</span>->empleado->nombre_completo;
+    <span class="kw">if</span> (<span class="var">$this</span>->medico)   <span class="kw">return</span> <span class="var">$this</span>->medico->nombre_completo;
+    <span class="kw">return</span> <span class="str">'Sin asignar'</span>;
+}
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO INVENTARIO ══ -->
+<div class="doc-section" id="mod-inventario">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class="bx bxs-capsule"></i></div>
+    <div><h2>Modulo Inventario (Medicamentos)</h2><p>MedicinaController.php — Modelo: Medicamento.php — Tabla: inventario</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestiona el catalogo de medicamentos. Controla el stock minimo — cuando la cantidad cae por debajo del umbral configurado, el sistema muestra alertas visuales y envia notificaciones automaticas.</p>
+
+    <div class="doc-alert warning"><i class="bx bx-error"></i><div>La tabla en la base de datos se llama <strong>inventario</strong> (no medicamentos). El modelo se llama <code>Medicamento</code> y el controlador <code>MedicinaController</code>. Las rutas usan el prefijo <code>/medicina</code>.</div></div>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/medicina</h5><p>Lista paginada ordenada alfabeticamente. Busqueda por nombre o proveedor.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/medicina</h5><p>Registra nuevo medicamento con stock inicial y umbral de alerta.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/medicina/{id}</h5><p>Retorna datos del medicamento en JSON para el modal de edicion.</p></div></div>
+    <div class="method-row"><span class="method-badge method-put">PUT</span><div class="method-info"><h5>/medicina/{id}</h5><p>Actualiza datos del medicamento incluyendo stock y stock minimo.</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/medicina/{id}</h5><p>Elimina medicamento y todos sus movimientos de inventario.</p></div></div>
+
+    <h3 class="doc-subtitle">Logica de stock bajo</h3>
+    <div class="code-block">
+<span class="cm">// Medicamento.php — accessor para detectar stock bajo</span>
+<span class="kw">public function</span> <span class="fn">getStockBajoAttribute</span>(): <span class="kw">bool</span>
+{
+    <span class="kw">return</span> <span class="var">$this</span>->cantidad <= <span class="var">$this</span>->stock_minimo;
+}
+
+<span class="cm">// En la vista medicina/index.blade.php:</span>
+<span class="cm">// Si $medicamento->stock_bajo === true → fila en rojo + badge "Stock Bajo"</span>
+<span class="cm">// El dashboard cuenta cuantos medicamentos tienen stock_bajo = true</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO MOVIMIENTOS ══ -->
+<div class="doc-section" id="mod-movimientos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-orange"><i class="bx bx-transfer"></i></div>
+    <div><h2>Modulo Movimientos de Inventario</h2><p>InventarioMovimientosController.php — Tabla: inventario_movimientos</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Registra todas las entradas y salidas de medicamentos. Cada movimiento guarda el stock anterior y el nuevo para tener un historial completo. Las salidas incluyen datos de firma del entregador y receptor para auditoria.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/inventario</h5><p>Lista de movimientos con filtro por tipo (entrada/salida) y medicamento.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/inventario/entrada</h5><p>Registra entrada: suma stock al medicamento, crea movimiento, notifica.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/inventario/salida</h5><p>Registra salida con firma: resta stock, guarda entregado_por y recibido_por.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/inventario/medicamento/{id}</h5><p>Historial de movimientos de un medicamento especifico en JSON.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/inventario/auditoria/pdf</h5><p>Genera PDF de auditoria con formula: Stock Actual = Stock Inicial + Entradas - Salidas.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/movimientos</h5><p>Exporta movimientos en PDF, Excel o CSV segun el parametro <code>?formato=</code>.</p></div></div>
+
+    <h3 class="doc-subtitle">Campos de firma en salidas</h3>
+    <table class="doc-table">
+      <thead><tr><th>Campo</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><code>entregado_por_nombre</code></td><td>Nombre de quien entrega el medicamento</td></tr>
+        <tr><td><code>recibido_por_nombre</code></td><td>Nombre de quien recibe el medicamento</td></tr>
+        <tr><td><code>recibido_por_cedula</code></td><td>Cedula de quien recibe (para verificacion)</td></tr>
+        <tr><td><code>observaciones_entrega</code></td><td>Notas adicionales sobre la entrega</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Logica de registro de entrada</h3>
+    <div class="code-block">
+<span class="cm">// InventarioMovimientosController::registrarEntrada()</span>
+<span class="var">$medicamento</span> = <span class="fn">Medicamento::findOrFail</span>(<span class="var">$request</span>->medicamento_id);
+<span class="var">$cantidadAnterior</span> = <span class="var">$medicamento</span>->cantidad;
+<span class="var">$cantidadNueva</span>    = <span class="var">$cantidadAnterior</span> + <span class="var">$request</span>->cantidad;
+
+<span class="cm">// Actualizar stock del medicamento</span>
+<span class="var">$medicamento</span>-><span class="fn">update</span>([<span class="str">'cantidad'</span> => <span class="var">$cantidadNueva</span>]);
+
+<span class="cm">// Crear registro del movimiento con snapshot de stock</span>
+<span class="fn">InventarioMovimiento::create</span>([
+    <span class="str">'medicamento_id'</span>   => <span class="var">$medicamento</span>->id,
+    <span class="str">'tipo_movimiento'</span>  => <span class="str">'entrada'</span>,
+    <span class="str">'cantidad'</span>         => <span class="var">$request</span>->cantidad,
+    <span class="str">'cantidad_anterior'</span> => <span class="var">$cantidadAnterior</span>, <span class="cm">// snapshot antes</span>
+    <span class="str">'cantidad_nueva'</span>   => <span class="var">$cantidadNueva</span>,    <span class="cm">// snapshot despues</span>
+    <span class="str">'motivo'</span>           => <span class="var">$request</span>->motivo,
+    <span class="str">'usuario_id'</span>       => <span class="fn">Auth::id</span>(),
+]);
+
+<span class="cm">// Registrar en bitacora y notificar</span>
+<span class="fn">Bitacora::registrar</span>(<span class="fn">Auth::id</span>(), <span class="str">'ENTRADA INVENTARIO'</span>, <span class="str">'inventario'</span>, <span class="var">$medicamento</span>->id);
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO SOLICITUDES ══ -->
+<div class="doc-section" id="mod-solicitudes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-yellow"><i class="bx bx-send"></i></div>
+    <div><h2>Modulo Solicitudes de Inventario</h2><p>SolicitudesInventarioController.php — Tabla: solicitudes_inventario + solicitud_items</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Permite a cualquier usuario solicitar la reposicion de medicamentos. Soporta multiples medicamentos por solicitud. Al aprobar, el sistema registra automaticamente la entrada al inventario.</p>
+
+    <h3 class="doc-subtitle">Numero de orden automatico</h3>
+    <div class="code-block">
+<span class="cm">// Formato: SOL-AAAAMM-XXXX (ej: SOL-202601-0001)</span>
+<span class="cm">// Se genera automaticamente al crear la solicitud</span>
+<span class="var">$ultimo</span> = <span class="fn">SolicitudInventario::whereYear</span>(<span class="str">'created_at'</span>, <span class="fn">now</span>()-><span class="fn">year</span>)
+    -><span class="fn">whereMonth</span>(<span class="str">'created_at'</span>, <span class="fn">now</span>()-><span class="fn">month</span>)
+    -><span class="fn">count</span>();
+<span class="var">$numero</span> = <span class="str">'SOL-'</span> . <span class="fn">now</span>()-><span class="fn">format</span>(<span class="str">'Ym'</span>) . <span class="str">'-'</span> . <span class="fn">str_pad</span>(<span class="var">$ultimo</span> + 1, 4, <span class="str">'0'</span>, STR_PAD_LEFT);
+    </div>
+
+    <h3 class="doc-subtitle">Flujo de una solicitud</h3>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>Verificacion de stock</h4><p>Al abrir el modal, el sistema verifica si el stock de los medicamentos seleccionados esta por encima del minimo. Si esta bien, muestra aviso "El stock aun tiene medicamentos, desea realizar la solicitud de todas formas?"</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>Creacion de la solicitud</h4><p>Se crea el registro en <code>solicitudes_inventario</code> con estado <code>pendiente</code> y los items en <code>solicitud_items</code>. Se genera el numero de orden automaticamente.</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><h4>Notificacion a admins</h4><p>Se notifica a todos los administradores activos para que revisen y aprueben la solicitud.</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><h4>Aprobacion por el admin</h4><p>El admin hace click en "Aprobar". El sistema cambia el estado a <code>aprobada</code> y registra automaticamente una entrada al inventario por cada item de la solicitud.</p></div></div>
+
+    <h3 class="doc-subtitle">Estados de una solicitud</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">pendiente</span></td><td>Solicitud creada, esperando revision del admin</td></tr>
+        <tr><td><span class="badge badge-green">aprobada</span></td><td>Aprobada — entrada registrada automaticamente en inventario</td></tr>
+        <tr><td><span class="badge badge-red">rechazada</span></td><td>Rechazada por el administrador</td></tr>
+        <tr><td><span class="badge badge-blue">completada</span></td><td>Proceso completado y cerrado</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ MODULO NOMINA ══ -->
+<div class="doc-section" id="mod-nomina">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class="bx bxs-group"></i></div>
+    <div><h2>Modulo Nomina</h2><p>NominaController.php — Modelo: Empleado.php — Tabla: nomina</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestiona el personal de la clinica. Los empleados con cargo medico aparecen automaticamente en el selector de medico al crear consultas. Solo accesible para administradores.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo (solo admin)</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/nomina</h5><p>Lista paginada del personal con busqueda por nombre, cedula o cargo.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/nomina</h5><p>Registra nuevo empleado. Registra en bitacora automaticamente.</p></div></div>
+    <div class="method-row"><span class="method-badge method-put">PUT</span><div class="method-info"><h5>/nomina/{id}</h5><p>Actualiza datos del empleado. Registra en bitacora.</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/nomina/{id}</h5><p>Elimina empleado. Registra en bitacora.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/nomina/exportar/csv</h5><p>Exporta nomina en CSV con masa salarial total.</p></div></div>
+
+    <h3 class="doc-subtitle">Scope de medicos</h3>
+    <div class="code-block">
+<span class="cm">// Empleado.php — scope para filtrar solo medicos</span>
+<span class="kw">public function</span> <span class="fn">scopeMedicos</span>(<span class="var">$query</span>)
+{
+    <span class="cm">// Filtra empleados cuyo cargo contenga "medico" o "doctor" (case-insensitive)</span>
+    <span class="kw">return</span> <span class="var">$query</span>-><span class="fn">where</span>(<span class="str">'cargo'</span>, <span class="str">'like'</span>, <span class="str">'%medico%'</span>)
+        -><span class="fn">orWhere</span>(<span class="str">'cargo'</span>, <span class="str">'like'</span>, <span class="str">'%doctor%'</span>)
+        -><span class="fn">where</span>(<span class="str">'estado'</span>, <span class="str">'activo'</span>);
+}
+
+<span class="cm">// Usado en ConsultasController::index() para llenar el selector de medico</span>
+<span class="var">$medicos</span> = <span class="fn">Empleado::medicos</span>()-><span class="fn">orderBy</span>(<span class="str">'nombre'</span>)-><span class="fn">get</span>();
+    </div>
+
+    <h3 class="doc-subtitle">Exportacion de nomina</h3>
+    <p class="doc-text">La nomina se puede exportar en tres formatos desde el modal de exportacion: <strong>PDF</strong> (con tabla profesional y total de masa salarial), <strong>Excel</strong> (formato .xlsx via PhpSpreadsheet) y <strong>CSV</strong> (compatible con cualquier hoja de calculo).</p>
+  </div>
+</div>
+
+<!-- ══ MODULO USUARIOS ══ -->
+<div class="doc-section" id="mod-usuarios">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class="bx bxs-user-account"></i></div>
+    <div><h2>Modulo Usuarios</h2><p>UsuariosController.php — Modelo: Usuario.php — Tabla: usuarios</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestion completa de cuentas de usuario. Solo accesible para administradores. Incluye activacion/desactivacion de cuentas y configuracion de permisos granulares por modulo.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo (solo admin)</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/usuarios</h5><p>Lista de todos los usuarios con su rol, estado y ultimo acceso.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/usuarios</h5><p>Crea nuevo usuario con contrasena hasheada en bcrypt. Registra en bitacora.</p></div></div>
+    <div class="method-row"><span class="method-badge method-put">PUT</span><div class="method-info"><h5>/usuarios/{id}</h5><p>Actualiza datos del usuario. Si se envia nueva contrasena, la hashea.</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/usuarios/{id}</h5><p>Elimina usuario. No se puede eliminar el propio usuario logueado.</p></div></div>
+    <div class="method-row"><span class="method-badge method-patch">PATCH</span><div class="method-info"><h5>/usuarios/{id}/toggle</h5><p>Activa o desactiva la cuenta. No se puede desactivar la propia cuenta.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/usuarios/{id}/permisos</h5><p>Retorna los permisos actuales del usuario en JSON para el modal de permisos.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/usuarios/{id}/permisos</h5><p>Guarda los permisos seleccionados. Usa upsert para crear o actualizar cada modulo.</p></div></div>
+
+    <h3 class="doc-subtitle">Roles disponibles</h3>
+    <table class="doc-table">
+      <thead><tr><th>Rol</th><th>Acceso</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-red">admin</span></td><td>Total</td><td>Acceso completo a todos los modulos. No requiere permisos granulares.</td></tr>
+        <tr><td><span class="badge badge-blue">medico</span></td><td>Segun permisos</td><td>Acceso a los modulos que el admin le haya habilitado.</td></tr>
+        <tr><td><span class="badge badge-green">recepcionista</span></td><td>Segun permisos</td><td>Acceso a los modulos que el admin le haya habilitado.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Modal de permisos granulares</h3>
+    <p class="doc-text">Al hacer click en el icono de escudo de un usuario, se abre un modal con una tabla de checkboxes. Cada fila es un modulo y cada columna es una accion (Ver, Crear, Editar, Eliminar). El admin puede usar los accesos rapidos: "Todo", "Nada" o "Solo lectura".</p>
+    <div class="code-block">
+<span class="cm">// UsuariosController::guardarPermisos() — guarda todos los permisos</span>
+<span class="kw">foreach</span> (<span class="fn">PermisoUsuario::modulos</span>() <span class="kw">as</span> <span class="var">$modulo</span> => <span class="var">$_</span>) {
+    <span class="fn">PermisoUsuario::updateOrCreate</span>(
+        [<span class="str">'usuario_id'</span> => <span class="var">$usuario</span>->id, <span class="str">'modulo'</span> => <span class="var">$modulo</span>],
+        [
+            <span class="str">'puede_ver'</span>      => <span class="var">$request</span>-><span class="fn">boolean</span>(<span class="str">"permisos.{$modulo}.ver"</span>),
+            <span class="str">'puede_crear'</span>    => <span class="var">$request</span>-><span class="fn">boolean</span>(<span class="str">"permisos.{$modulo}.crear"</span>),
+            <span class="str">'puede_editar'</span>   => <span class="var">$request</span>-><span class="fn">boolean</span>(<span class="str">"permisos.{$modulo}.editar"</span>),
+            <span class="str">'puede_eliminar'</span> => <span class="var">$request</span>-><span class="fn">boolean</span>(<span class="str">"permisos.{$modulo}.eliminar"</span>),
+        ]
+    );
+}
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODULO MENSAJES ══ -->
+<div class="doc-section" id="mod-mensajes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-orange"><i class="bx bxs-envelope"></i></div>
+    <div><h2>Modulo Mensajes</h2><p>MensajesController.php — Modelo: Mensaje.php — Tabla: mensajes</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Sistema de mensajeria interna entre usuarios. Soporta mensajes individuales y mensajes masivos a grupos de usuarios (todos, medicos, recepcionistas o admins).</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/mensajes</h5><p>Bandeja de entrada y enviados del usuario actual.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/mensajes</h5><p>Envia mensaje individual. Crea notificacion para el destinatario.</p></div></div>
+    <div class="method-row"><span class="method-badge method-post">POST</span><div class="method-info"><h5>/mensajes/masivo</h5><p>Envia mensaje a un grupo: todos, medicos, recepcionistas o admins.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/mensajes/{id}</h5><p>Muestra el mensaje y lo marca como leido automaticamente.</p></div></div>
+    <div class="method-row"><span class="method-badge method-patch">PATCH</span><div class="method-info"><h5>/mensajes/{id}/read</h5><p>Marca el mensaje como leido (leido=true).</p></div></div>
+    <div class="method-row"><span class="method-badge method-delete">DELETE</span><div class="method-info"><h5>/mensajes/{id}</h5><p>Elimina el mensaje del sistema.</p></div></div>
+
+    <h3 class="doc-subtitle">Mensaje masivo</h3>
+    <div class="code-block">
+<span class="cm">// MensajesController::storeMasivo() — envia a un grupo</span>
+<span class="var">$destinatarios</span> = <span class="kw">match</span>(<span class="var">$request</span>->grupo) {
+    <span class="str">'todos'</span>           => <span class="fn">Usuario::where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)-><span class="fn">get</span>(),
+    <span class="str">'medicos'</span>         => <span class="fn">Usuario::where</span>(<span class="str">'rol'</span>, <span class="str">'medico'</span>)-><span class="fn">where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)-><span class="fn">get</span>(),
+    <span class="str">'recepcionistas'</span>  => <span class="fn">Usuario::where</span>(<span class="str">'rol'</span>, <span class="str">'recepcionista'</span>)-><span class="fn">where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)-><span class="fn">get</span>(),
+    <span class="str">'admins'</span>          => <span class="fn">Usuario::where</span>(<span class="str">'rol'</span>, <span class="str">'admin'</span>)-><span class="fn">where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)-><span class="fn">get</span>(),
+    <span class="kw">default</span>           => <span class="fn">collect</span>(),
+};
+
+<span class="kw">foreach</span> (<span class="var">$destinatarios</span> <span class="kw">as</span> <span class="var">$dest</span>) {
+    <span class="fn">Mensaje::create</span>([..., <span class="str">'destinatario_id'</span> => <span class="var">$dest</span>->id, <span class="str">'es_masivo'</span> => <span class="kw">true</span>]);
+}
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTIFICACIONES ══ -->
+<div class="doc-section" id="mod-notificaciones">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-yellow"><i class="bx bxs-bell"></i></div>
+    <div><h2>Sistema de Notificaciones</h2><p>NotificacionesController.php — Modelo: Notificacion.php — Tabla: notificaciones</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Las notificaciones se generan automaticamente cuando ocurren eventos importantes en el sistema (nuevo paciente, nueva consulta, stock bajo, solicitud pendiente, etc.). El contador en el navbar se actualiza cada 30 segundos via polling AJAX.</p>
+
+    <h3 class="doc-subtitle">Rutas del modulo</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/notificaciones</h5><p>Lista todas las notificaciones del usuario actual, ordenadas por fecha.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/notificaciones/count</h5><p>Retorna JSON con el conteo de notificaciones no leidas. Usado por el polling.</p></div></div>
+    <div class="method-row"><span class="method-badge method-patch">PATCH</span><div class="method-info"><h5>/notificaciones/read-all</h5><p>Marca todas las notificaciones del usuario como leidas.</p></div></div>
+    <div class="method-row"><span class="method-badge method-patch">PATCH</span><div class="method-info"><h5>/notificaciones/{id}/read</h5><p>Marca una notificacion especifica como leida.</p></div></div>
+
+    <h3 class="doc-subtitle">Metodos estaticos del modelo</h3>
+    <div class="code-block">
+<span class="cm">// Notificacion.php — notificar a todos los usuarios activos</span>
+<span class="kw">public static function</span> <span class="fn">notificarTodos</span>(
+    <span class="kw">string</span> <span class="var">$tipo</span>, <span class="kw">string</span> <span class="var">$titulo</span>, <span class="kw">string</span> <span class="var">$mensaje</span>,
+    <span class="kw">string</span> <span class="var">$icono</span> = <span class="str">'bx-bell'</span>, <span class="kw">string</span> <span class="var">$color</span> = <span class="str">'primary'</span>,
+    <span class="kw">string</span> <span class="var">$url</span> = <span class="str">'/'</span>, ?<span class="kw">int</span> <span class="var">$excluirId</span> = <span class="kw">null</span>
+): <span class="kw">void</span> {
+    <span class="var">$usuarios</span> = <span class="fn">Usuario::where</span>(<span class="str">'activo'</span>, <span class="kw">true</span>)
+        -><span class="fn">when</span>(<span class="var">$excluirId</span>, <span class="kw">fn</span>(<span class="var">$q</span>) => <span class="var">$q</span>-><span class="fn">where</span>(<span class="str">'id'</span>, <span class="str">'!='</span>, <span class="var">$excluirId</span>))
+        -><span class="fn">pluck</span>(<span class="str">'id'</span>);
+
+    <span class="cm">// INSERT masivo — una sola query para todos los usuarios</span>
+    <span class="var">$data</span> = <span class="var">$usuarios</span>-><span class="fn">map</span>(<span class="kw">fn</span>(<span class="var">$id</span>) => [
+        <span class="str">'usuario_id'</span> => <span class="var">$id</span>, <span class="str">'tipo'</span> => <span class="var">$tipo</span>, <span class="str">'titulo'</span> => <span class="var">$titulo</span>,
+        <span class="str">'mensaje'</span> => <span class="var">$mensaje</span>, <span class="str">'icono'</span> => <span class="var">$icono</span>, <span class="str">'color'</span> => <span class="var">$color</span>,
+        <span class="str">'url'</span> => <span class="var">$url</span>, <span class="str">'leida'</span> => <span class="kw">false</span>, <span class="str">'created_at'</span> => <span class="fn">now</span>(),
+    ])-><span class="fn">toArray</span>();
+
+    <span class="fn">Notificacion::insert</span>(<span class="var">$data</span>); <span class="cm">// una sola query INSERT masivo</span>
+}
+
+<span class="cm">// Polling en el navbar — se ejecuta cada 30 segundos</span>
+<span class="cm">// GET /notificaciones/count → { count: 5 }</span>
+<span class="cm">// El badge del campanita se actualiza con el numero retornado</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BITACORA ══ -->
+<div class="doc-section" id="mod-bitacora">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-red"><i class="bx bx-history"></i></div>
+    <div><h2>Bitacora de Auditoria</h2><p>BitacoraController.php — Modelo: Bitacora.php — Tabla: bitacora</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Registra automaticamente todas las acciones importantes del sistema: inicios de sesion, cierres de sesion, creacion/edicion/eliminacion de registros, entradas y salidas de inventario. Solo visible para administradores.</p>
+
+    <h3 class="doc-subtitle">Metodo estatico Bitacora::registrar()</h3>
+    <div class="code-block">
+<span class="cm">// Bitacora.php — metodo estatico para registrar cualquier accion</span>
+<span class="kw">public static function</span> <span class="fn">registrar</span>(
+    <span class="kw">int</span>    <span class="var">$usuarioId</span>,
+    <span class="kw">string</span> <span class="var">$accion</span>,
+    <span class="kw">string</span> <span class="var">$tabla</span>,
+    ?<span class="kw">int</span>   <span class="var">$registroId</span> = <span class="kw">null</span>,
+    ?<span class="kw">string</span> <span class="var">$detalles</span>  = <span class="kw">null</span>
+): <span class="kw">void</span> {
+    <span class="kw">static</span>::<span class="fn">create</span>([
+        <span class="str">'usuario_id'</span>  => <span class="var">$usuarioId</span>,
+        <span class="str">'accion'</span>      => <span class="var">$accion</span>,
+        <span class="str">'tabla'</span>       => <span class="var">$tabla</span>,
+        <span class="str">'registro_id'</span> => <span class="var">$registroId</span>,
+        <span class="str">'detalles'</span>    => <span class="var">$detalles</span>,
+        <span class="str">'ip'</span>          => <span class="fn">request</span>()-><span class="fn">ip</span>(), <span class="cm">// IP del cliente</span>
+    ]);
+}
+
+<span class="cm">// Ejemplo de uso en NominaController::store()</span>
+<span class="fn">Bitacora::registrar</span>(<span class="fn">Auth::id</span>(), <span class="str">'CREAR EMPLEADO'</span>, <span class="str">'nomina'</span>, <span class="var">$empleado</span>->id);
+    </div>
+
+    <h3 class="doc-subtitle">Campos registrados</h3>
+    <table class="doc-table">
+      <thead><tr><th>Campo</th><th>Descripcion</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><code>usuario_id</code></td><td>Quien realizo la accion</td><td>ID del usuario logueado</td></tr>
+        <tr><td><code>accion</code></td><td>Que hizo</td><td>INICIO SESION, CREAR PACIENTE, ENTRADA INVENTARIO</td></tr>
+        <tr><td><code>tabla</code></td><td>En que tabla</td><td>usuarios, pacientes, inventario</td></tr>
+        <tr><td><code>registro_id</code></td><td>ID del registro afectado</td><td>ID del paciente creado</td></tr>
+        <tr><td><code>ip</code></td><td>IP del cliente</td><td>192.168.1.100</td></tr>
+        <tr><td><code>created_at</code></td><td>Fecha y hora exacta</td><td>2026-01-15 14:32:05</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ EXPORTACIONES ══ -->
+<div class="doc-section" id="exportaciones">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-dark"><i class="bx bxs-file-pdf"></i></div>
+    <div><h2>Sistema de Exportaciones</h2><p>ExportController.php — Formatos: PDF (mPDF), Excel (PhpSpreadsheet), CSV</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Todas las exportaciones se activan desde un modal unificado que pregunta el formato deseado (PDF, Excel o CSV). El modal es un partial reutilizable incluido en cada vista.</p>
+
+    <h3 class="doc-subtitle">Rutas de exportacion</h3>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/pacientes?formato=pdf|excel|csv</h5><p>Exporta todos los pacientes en el formato seleccionado.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/consultas?formato=pdf|excel|csv&periodo=</h5><p>Exporta consultas con filtro de periodo.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/medicamentos?formato=pdf|excel|csv</h5><p>Exporta catalogo de medicamentos con estado de stock.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/nomina?formato=pdf|excel|csv</h5><p>Exporta nomina con masa salarial total.</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/export/movimientos?formato=pdf|excel|csv&tipo=</h5><p>Exporta movimientos de inventario (entradas/salidas).</p></div></div>
+    <div class="method-row"><span class="method-badge method-get">GET</span><div class="method-info"><h5>/inventario/auditoria/pdf</h5><p>PDF especial de auditoria con formula de stock para contraloria.</p></div></div>
+
+    <h3 class="doc-subtitle">Como funciona el PDF</h3>
+    <div class="code-block">
+<span class="cm">// ExportController — generacion de PDF con mPDF</span>
+<span class="var">$html</span> = <span class="fn">view</span>(<span class="str">'exports.pacientes-pdf'</span>, <span class="fn">compact</span>(<span class="str">'pacientes'</span>))-><span class="fn">render</span>();
+
+<span class="var">$mpdf</span> = <span class="kw">new</span> <span class="fn">\Mpdf\Mpdf</span>([
+    <span class="str">'orientation'</span> => <span class="str">'L'</span>,   <span class="cm">// horizontal para tablas anchas</span>
+    <span class="str">'margin_top'</span>  => 15,
+    <span class="str">'margin_left'</span> => 10,
+]);
+<span class="var">$mpdf</span>-><span class="fn">WriteHTML</span>(<span class="var">$html</span>);
+
+<span class="cm">// Retornar como descarga directa al navegador</span>
+<span class="kw">return</span> <span class="fn">response</span>(<span class="var">$mpdf</span>-><span class="fn">Output</span>(<span class="str">''</span>, <span class="str">'S'</span>), 200, [
+    <span class="str">'Content-Type'</span>        => <span class="str">'application/pdf'</span>,
+    <span class="str">'Content-Disposition'</span> => <span class="str">'attachment; filename="pacientes.pdf"'</span>,
+]);
+    </div>
+
+    <h3 class="doc-subtitle">Como funciona el Excel</h3>
+    <div class="code-block">
+<span class="cm">// ExportController — generacion de Excel con PhpSpreadsheet</span>
+<span class="var">$spreadsheet</span> = <span class="kw">new</span> <span class="fn">Spreadsheet</span>();
+<span class="var">$sheet</span> = <span class="var">$spreadsheet</span>-><span class="fn">getActiveSheet</span>();
+
+<span class="cm">// Escribir encabezados con estilo</span>
+<span class="var">$sheet</span>-><span class="fn">setCellValue</span>(<span class="str">'A1'</span>, <span class="str">'ID'</span>);
+<span class="var">$sheet</span>-><span class="fn">setCellValue</span>(<span class="str">'B1'</span>, <span class="str">'Nombre'</span>);
+<span class="cm">// ... mas columnas</span>
+
+<span class="cm">// Escribir datos fila por fila</span>
+<span class="var">$row</span> = 2;
+<span class="kw">foreach</span> (<span class="var">$pacientes</span> <span class="kw">as</span> <span class="var">$p</span>) {
+    <span class="var">$sheet</span>-><span class="fn">setCellValue</span>(<span class="str">"A{$row}"</span>, <span class="var">$p</span>->id);
+    <span class="var">$sheet</span>-><span class="fn">setCellValue</span>(<span class="str">"B{$row}"</span>, <span class="var">$p</span>->nombre_completo);
+    <span class="var">$row</span>++;
+}
+
+<span class="cm">// Retornar como descarga .xlsx</span>
+<span class="var">$writer</span> = <span class="kw">new</span> <span class="fn">Xlsx</span>(<span class="var">$spreadsheet</span>);
+<span class="kw">return</span> <span class="fn">response</span>()-><span class="fn">streamDownload</span>(<span class="kw">fn</span>() => <span class="var">$writer</span>-><span class="fn">save</span>(<span class="str">'php://output'</span>), <span class="str">'pacientes.xlsx'</span>);
+    </div>
+  </div>
+</div>
+
+<!-- ══ BUSQUEDA AJAX ══ -->
+<div class="doc-section" id="busqueda">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-cyan"><i class="bx bx-search"></i></div>
+    <div><h2>Busqueda Global AJAX</h2><p>Ruta: GET /buscar — Tiempo real con debounce de 280ms</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">La barra de busqueda en el navbar realiza busquedas en tiempo real mientras el usuario escribe. Usa debounce para no hacer una peticion por cada tecla presionada.</p>
+
+    <h3 class="doc-subtitle">Que busca</h3>
+    <table class="doc-table">
+      <thead><tr><th>Tipo</th><th>Campos buscados</th><th>Maximo resultados</th><th>Visible para</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Paciente</span></td><td>nombre, apellido, cedula</td><td>4</td><td>Todos</td></tr>
+        <tr><td><span class="badge badge-cyan">Consulta</span></td><td>nombre/apellido del paciente, motivo</td><td>3</td><td>Todos</td></tr>
+        <tr><td><span class="badge badge-orange">Medicamento</span></td><td>nombre_medicamento, proveedor</td><td>4</td><td>Todos</td></tr>
+        <tr><td><span class="badge badge-purple">Usuario</span></td><td>nombre_completo, username, email</td><td>3</td><td>Solo admin</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="doc-subtitle">Implementacion en JavaScript</h3>
+    <div class="code-block">
+<span class="cm">// layouts/app.blade.php — busqueda con debounce</span>
+<span class="kw">let</span> <span class="var">searchTimeout</span>;
+<span class="var">searchInput</span>.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, <span class="kw">function</span>() {
+    <span class="fn">clearTimeout</span>(<span class="var">searchTimeout</span>);
+    <span class="var">searchTimeout</span> = <span class="fn">setTimeout</span>(<span class="kw">async</span> () => {
+        <span class="kw">const</span> <span class="var">q</span> = <span class="var">this</span>.value.<span class="fn">trim</span>();
+        <span class="kw">if</span> (<span class="var">q</span>.length < 2) { <span class="cm">/* ocultar dropdown */</span> <span class="kw">return</span>; }
+
+        <span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`/SISGECLIN/public/buscar?q=${encodeURIComponent(q)}`</span>);
+        <span class="kw">const</span> { <span class="var">results</span> } = <span class="kw">await</span> <span class="var">res</span>.<span class="fn">json</span>();
+
+        <span class="cm">// Renderizar resultados en el dropdown</span>
+        <span class="var">dropdown</span>.innerHTML = <span class="var">results</span>.<span class="fn">map</span>(<span class="var">r</span> => <span class="str">`
+            &lt;a href="${r.url}" class="search-result-item"&gt;
+                &lt;i class="bx bx-${r.icon}" style="color:${r.color}"&gt;&lt;/i&gt;
+                &lt;div&gt;&lt;strong&gt;${r.texto}&lt;/strong&gt;&lt;small&gt;${r.sub}&lt;/small&gt;&lt;/div&gt;
+                &lt;span class="badge"&gt;${r.tipo}&lt;/span&gt;
+            &lt;/a&gt;`</span>).<span class="fn">join</span>(<span class="str">''</span>);
+    }, 280); <span class="cm">// debounce: espera 280ms despues de la ultima tecla</span>
+});
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="doc-footer">
+  <strong>SISGECLIN v2.5</strong> &mdash; Sistema de Gestion Clinica &mdash; Documentacion del Codigo<br>
+  <span>Laravel 13 &bull; PHP 8.2 &bull; MySQL &bull; mPDF &bull; PhpSpreadsheet</span>
+</div>
+
+  </main>
+</div>
+
+<script>
+// Resaltar enlace activo en el sidebar segun la seccion visible
+(function() {
+  const links = document.querySelectorAll('.doc-sidebar-menu a');
+  const sections = document.querySelectorAll('.doc-section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        links.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+})();
+</script>
+</body>
+</html>

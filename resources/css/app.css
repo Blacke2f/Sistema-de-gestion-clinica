@@ -1,0 +1,11 @@
+/*
+ * SISGECLIN — Punto de entrada CSS (resources)
+ *
+ * Los estilos del sistema están en public/css/:
+ *   - public/css/styleS.css          → estilos principales
+ *   - public/css/login.css           → pantalla de login
+ *   - public/css/pagination-pro.css  → paginador profesional
+ *   - public/css/dark-mode-improvements.css → modo oscuro
+ *
+ * Este archivo existe para compatibilidad con el pipeline de Vite/Laravel.
+ */

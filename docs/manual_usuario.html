@@ -1,0 +1,580 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SISGECLIN - Manual de Usuario</title>
+<link rel="icon" type="image/png" href="/SISGECLIN/public/img/image-Photoroom.png">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
+</head>
+<body><!-- HEADER -->
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <div class="doc-header-brand">
+      <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
+      <div>
+        <h1>Manual de Usuario</h1>
+        <p>SISGECLIN v2.5 &mdash; Sistema de Gestion Clinica</p>
+      </div>
+    </div>
+    <nav class="doc-header-nav">
+      <a href="/SISGECLIN/docs/manual_usuario.html" class="active"><i class='bx bxs-book-open'></i> Manual</a>
+      <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class='bx bx-code-alt'></i> Tecnica</a>
+      <a href="/SISGECLIN/docs/modelo_er.html"><i class='bx bx-data'></i> Modelo ER</a>
+      <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Codigo</a>
+    </nav>
+  </div>
+</header><!-- LAYOUT -->
+<div class="doc-layout">
+  <!-- SIDEBAR -->
+  <aside class="doc-sidebar">
+    <div class="doc-sidebar-inner">
+      <div class="doc-sidebar-title">Contenido</div>
+      <nav class="doc-sidebar-menu">
+        <a href="#intro"><i class='bx bxs-book-open'></i> Introduccion</a>
+        <a href="#acceso"><i class='bx bx-log-in'></i> Acceso al Sistema</a>
+        <a href="#dashboard"><i class='bx bxs-dashboard'></i> Panel de Control</a>
+        <a href="#pacientes"><i class='bx bxs-user-detail'></i> Pacientes</a>
+        <a href="#consultas"><i class='bx bx-clipboard'></i> Consultas</a>
+        <a href="#medicamentos"><i class='bx bxs-capsule'></i> Medicamentos</a>
+        <a href="#movimientos"><i class='bx bx-transfer'></i> Movimientos</a>
+        <a href="#mensajes"><i class='bx bxs-envelope'></i> Mensajes</a>
+        <a href="#nomina"><i class='bx bxs-group'></i> Nomina</a>
+        <a href="#usuarios"><i class='bx bxs-user-account'></i> Usuarios</a>
+        <a href="#exportaciones"><i class='bx bxs-file-pdf'></i> Exportaciones</a>
+        <a href="#notificaciones"><i class='bx bxs-bell'></i> Notificaciones</a>
+        <a href="#solicitudes"><i class='bx bx-send'></i> Solicitudes</a>
+        <a href="#bitacora"><i class='bx bx-history'></i> Bitacora</a>
+        <a href="#permisos"><i class='bx bx-shield'></i> Permisos</a>
+        <a href="#faq"><i class='bx bx-help-circle'></i> Preguntas Frecuentes</a>
+      </nav>
+    </div>
+  </aside>
+  <!-- CONTENT -->
+  <main class="doc-content"><!-- SECCION 1: INTRODUCCION -->
+<section class="doc-section" id="intro">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bxs-book-open'></i></div>
+    <div><h2>Introduccion</h2><p>Bienvenido al Sistema de Gestion Clinica SISGECLIN</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">SISGECLIN es el sistema de gestion clinica de su institucion. Permite registrar y administrar pacientes, consultas medicas, inventario de medicamentos, nomina del personal y comunicacion interna entre el equipo.</p>
+    <div class="info-grid" style="margin-top:20px;">
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-badge'></i></div><div><h3>3</h3><p>Roles de usuario</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-grid-alt'></i></div><div><h3>13</h3><p>Modulos del sistema</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-purple"><i class='bx bx-devices'></i></div><div><h3>LAN</h3><p>Acceso multi-dispositivo</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-orange"><i class='bx bxs-file-pdf'></i></div><div><h3>PDF</h3><p>Exportacion profesional</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Funcionalidades principales</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bxs-user-detail' style="color:#0d6efd;"></i><div><h4>Gestion de Pacientes</h4><p>Registro completo con historial clinico, alergias y tipo de sangre.</p></div></div>
+      <div class="feature-item"><i class='bx bx-clipboard' style="color:#0dcaf0;"></i><div><h4>Consultas Medicas</h4><p>Programacion, diagnostico, tratamiento y seguimiento de estados.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#fd7e14;"></i><div><h4>Inventario de Medicamentos</h4><p>Control de stock con alertas automaticas de nivel minimo.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-group' style="color:#6f42c1;"></i><div><h4>Nomina del Personal</h4><p>Registro de empleados, cargos, departamentos y salarios.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-envelope' style="color:#198754;"></i><div><h4>Mensajeria Interna</h4><p>Mensajes individuales y masivos entre usuarios del sistema.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-file-pdf' style="color:#dc3545;"></i><div><h4>Exportacion PDF / Excel / CSV</h4><p>Reportes profesionales en multiples formatos para todos los modulos.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Roles disponibles</h3>
+    <table class="doc-table">
+      <thead><tr><th>Rol</th><th>Modulos accesibles</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-red">Administrador</span></td><td>Acceso total: todos los modulos incluyendo Nomina y Usuarios</td></tr>
+        <tr><td><span class="badge badge-blue">Medico</span></td><td>Acceso según permisos configurados por el administrador. Por defecto: Pacientes, Consultas, Medicamentos, Movimientos, Mensajes, Solicitudes, Perfil</td></tr>
+        <tr><td><span class="badge badge-gray">Recepcionista</span></td><td>Acceso según permisos configurados por el administrador. Por defecto: Pacientes, Consultas, Medicamentos, Movimientos, Mensajes, Solicitudes, Perfil</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section><!-- SECCION 2: ACCESO -->
+<section class="doc-section" id="acceso">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-log-in'></i></div>
+    <div><h2>Acceso al Sistema</h2><p>Como iniciar sesion y solicitar acceso</p></div>
+  </div>
+  <div class="doc-section-body">
+    <h3 class="doc-subtitle">Iniciar Sesion</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Abrir el navegador</h4><p>Desde esta computadora: <code>http://localhost/SISGECLIN/public</code> &mdash; Desde la red: <code>http://192.168.1.3/SISGECLIN/public</code></p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ingresar credenciales</h4><p>Escribe tu nombre de usuario y contrasena en los campos correspondientes.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Recordarme (opcional)</h4><p>Marca la casilla para mantener la sesion activa en este dispositivo.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Clic en Iniciar Sesion</h4><p>Seras redirigido al Panel de Control automaticamente.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Credenciales por defecto</h3>
+    <table class="doc-table">
+      <thead><tr><th>Usuario</th><th>Contrasena</th><th>Rol</th></tr></thead>
+      <tbody>
+        <tr><td><code>admin</code></td><td><code>admin123</code></td><td><span class="badge badge-red">Administrador</span></td></tr>
+        <tr><td><code>medico</code></td><td><code>admin123</code></td><td><span class="badge badge-blue">Medico</span></td></tr>
+        <tr><td><code>recepcion</code></td><td><code>admin123</code></td><td><span class="badge badge-gray">Recepcionista</span></td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Si tu cuenta esta desactivada veras el mensaje: <strong>"Su cuenta esta desactivada. Contacte al administrador."</strong> Comunicate con el administrador del sistema para que la active.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Solicitar Acceso (Nuevo Usuario)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en "Solicitar acceso"</h4><p>En la pantalla de login, haz clic en el enlace <strong>Solicitar acceso</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Completar el formulario</h4><p>Nombre completo, nombre de usuario, correo electronico, rol solicitado (Recepcionista o Medico) y contrasena.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Enviar solicitud</h4><p>Haz clic en <strong>Enviar Solicitud</strong>. Tu cuenta se crea automaticamente.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Cuenta deshabilitada</h4><p>Tu cuenta queda con estado <span class="badge badge-yellow">Pendiente</span> hasta que el administrador la active.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Activacion por el admin</h4><p>El administrador recibe una notificacion automatica y puede activar tu cuenta desde el modulo <strong>Usuarios</strong>.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Cerrar Sesion</h3>
+    <p class="doc-text">Haz clic en el boton <strong>Cerrar Sesion</strong> en la parte inferior del menu lateral, o desde el menu de perfil en la esquina superior derecha.</p>
+  </div>
+</section><!-- SECCION 3: DASHBOARD -->
+<section class="doc-section" id="dashboard">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class='bx bxs-dashboard'></i></div>
+    <div><h2>Panel de Control</h2><p>Vista general del sistema al iniciar sesion</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="info-grid">
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-detail'></i></div><div><h3>Total</h3><p>Pacientes registrados</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-calendar-check'></i></div><div><h3>Hoy</h3><p>Consultas del dia</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-orange"><i class='bx bxs-capsule'></i></div><div><h3>Alertas</h3><p>Medicamentos con stock bajo</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-cyan"><i class='bx bxs-envelope'></i></div><div><h3>Nuevos</h3><p>Mensajes no leidos</p></div></div>
+    </div>
+    <div class="feature-grid" style="margin-top:20px;">
+      <div class="feature-item"><i class='bx bx-list-ul' style="color:#0d6efd;"></i><div><h4>Consultas Recientes</h4><p>Muestra las ultimas 4 consultas con paciente, fecha y estado actual.</p></div></div>
+      <div class="feature-item"><i class='bx bx-zap' style="color:#198754;"></i><div><h4>Acciones Rapidas</h4><p>Accesos directos para registrar paciente, nueva consulta, ver inventario y mensajes.</p></div></div>
+      <div class="feature-item"><i class='bx bx-history' style="color:#6f42c1;"></i><div><h4>Bitacora del Sistema</h4><p>Solo visible para Administradores. Muestra las ultimas 15 acciones realizadas en el sistema.</p></div></div>
+    </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Haz clic en cualquier tarjeta de estadistica para ir directamente al modulo correspondiente.</div></div>
+  </div>
+</section>
+
+<!-- SECCION 4: PACIENTES -->
+<section class="doc-section" id="pacientes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bxs-user-detail'></i></div>
+    <div><h2>Gestion de Pacientes</h2><p>Registro y administracion de pacientes</p></div>
+  </div>
+  <div class="doc-section-body">
+    <h3 class="doc-subtitle">Registrar nuevo paciente</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir al modulo</h4><p>Haz clic en <strong>Pacientes</strong> en el menu lateral izquierdo.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Nuevo Paciente</h4><p>Haz clic en el boton <strong>+ Nuevo Paciente</strong> en la esquina superior derecha.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Completar el formulario</h4><p>Rellena los campos requeridos (marcados con *) y los opcionales que tengas disponibles.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>Haz clic en <strong>Guardar</strong>. Todos los usuarios recibiran una notificacion automatica.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Campos del formulario</h3>
+    <table class="doc-table">
+      <thead><tr><th>Campo</th><th>Requerido</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre</td><td><span class="badge badge-red">Si</span></td><td>Primer nombre del paciente</td></tr>
+        <tr><td>Apellido</td><td><span class="badge badge-red">Si</span></td><td>Apellido del paciente</td></tr>
+        <tr><td>Cedula</td><td><span class="badge badge-red">Si</span></td><td>Numero de cedula (unico en el sistema)</td></tr>
+        <tr><td>Telefono</td><td><span class="badge badge-gray">No</span></td><td>Numero de contacto</td></tr>
+        <tr><td>Email</td><td><span class="badge badge-gray">No</span></td><td>Correo electronico</td></tr>
+        <tr><td>Fecha de Nacimiento</td><td><span class="badge badge-gray">No</span></td><td>Formato: DD/MM/AAAA</td></tr>
+        <tr><td>Genero</td><td><span class="badge badge-red">Si</span></td><td>Masculino / Femenino / Otro</td></tr>
+        <tr><td>Tipo de Sangre</td><td><span class="badge badge-gray">No</span></td><td>O+, O-, A+, A-, B+, B-, AB+, AB-</td></tr>
+        <tr><td>Direccion</td><td><span class="badge badge-gray">No</span></td><td>Direccion de residencia</td></tr>
+        <tr><td>Alergias</td><td><span class="badge badge-gray">No</span></td><td>Alergias conocidas del paciente</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert danger" style="margin-top:16px;"><i class='bx bx-error-circle'></i><div><strong>Atencion:</strong> Eliminar un paciente tambien eliminara todas sus consultas asociadas. Esta accion no se puede deshacer.</div></div>
+  </div>
+</section><!-- SECCION 5: CONSULTAS -->
+<section class="doc-section" id="consultas">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-cyan"><i class='bx bx-clipboard'></i></div>
+    <div><h2>Gestion de Consultas</h2><p>Programacion y seguimiento de consultas medicas</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Consulta</h4><p>Haz clic en <strong>+ Nueva Consulta</strong> en el modulo Consultas.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar Paciente y Medico</h4><p>Elige el paciente de la lista y el medico de la nomina que atendara la consulta.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Fecha, Hora y Motivo</h4><p>Establece la fecha y hora de la consulta y describe el motivo de la visita.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>El sistema notificara automaticamente a todos los usuarios del nuevo registro.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Estados de una consulta</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Color</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Amarillo</td><td>Consulta programada, aun no atendida</td></tr>
+        <tr><td><span class="badge badge-cyan">En Proceso</span></td><td>Azul</td><td>Consulta en curso, siendo atendida</td></tr>
+        <tr><td><span class="badge badge-green">Completada</span></td><td>Verde</td><td>Consulta finalizada con diagnostico</td></tr>
+        <tr><td><span class="badge badge-red">Cancelada</span></td><td>Rojo</td><td>Consulta cancelada o no realizada</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Opciones de exportacion</h3>
+    <table class="doc-table">
+      <thead><tr><th>Formato</th><th>Periodos disponibles</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-red">PDF</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
+        <tr><td><span class="badge badge-green">Excel</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
+        <tr><td><span class="badge badge-blue">CSV</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION 6: MEDICAMENTOS -->
+<section class="doc-section" id="medicamentos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-orange"><i class='bx bxs-capsule'></i></div>
+    <div><h2>Medicamentos e Inventario</h2><p>Control de stock y alertas de nivel minimo</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Medicamentos</h4><p>Haz clic en <strong>Medicamentos</strong> en el menu lateral.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Nuevo Medicamento</h4><p>Haz clic en <strong>+ Nuevo Medicamento</strong> e ingresa nombre, cantidad, unidad, precio y stock minimo.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Stock Minimo</h4><p>Define la cantidad minima. Cuando el stock llegue a ese nivel, el sistema generara una alerta automatica.</p></div></div>
+    </div>
+    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Los medicamentos con <strong>stock bajo</strong> aparecen marcados en rojo en la tabla. Tambien se muestra el contador en el Dashboard y se envia una notificacion a todos los usuarios.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Exportaciones disponibles</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bxs-file-pdf' style="color:#dc3545;"></i><div><h4>PDF</h4><p>Incluye columna de estado (Normal / Stock Bajo) y resumen de alertas.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-file' style="color:#198754;"></i><div><h4>Excel</h4><p>Resalta en rojo las cantidades con stock bajo para facil identificacion.</p></div></div>
+      <div class="feature-item"><i class='bx bx-export' style="color:#0d6efd;"></i><div><h4>CSV</h4><p>Exportacion rapida con todos los campos del inventario.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCION 7: MOVIMIENTOS -->
+<section class="doc-section" id="movimientos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-transfer'></i></div>
+    <div><h2>Movimientos de Inventario</h2><p>Registro de entradas y salidas de medicamentos</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="info-grid">
+      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bx-trending-up'></i></div><div><h3>Entradas</h3><p>Total del periodo</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-red"><i class='bx bx-trending-down'></i></div><div><h3>Salidas</h3><p>Total del periodo</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-cyan"><i class='bx bx-transfer'></i></div><div><h3>Recientes</h3><p>Movimientos totales</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Registrar Entrada</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Registrar Entrada</h4><p>Boton verde en la parte superior del modulo Movimientos.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamento y cantidad</h4><p>Elige el medicamento y la cantidad que ingresa al inventario.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Motivo y Registrar</h4><p>Escribe el motivo (ej: Compra a proveedor) y haz clic en Registrar. El stock se actualiza automaticamente.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Registrar Salida</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Registrar Salida</h4><p>Boton rojo en la parte superior del modulo Movimientos.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamento y cantidad</h4><p>Elige el medicamento y la cantidad que sale del inventario.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Motivo y Registrar</h4><p>Escribe el motivo (ej: Dispensado en consulta) y confirma.</p></div></div>
+    </div>
+    <div class="doc-alert danger" style="margin-top:16px;"><i class='bx bx-error-circle'></i><div>Si la cantidad solicitada supera el stock disponible, el sistema mostrara un error y <strong>no permitira la operacion</strong>. Registra primero una entrada para reponer el inventario.</div></div>
+  </div>
+</section><!-- SECCION 8: MENSAJES -->
+<section class="doc-section" id="mensajes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-cyan"><i class='bx bxs-envelope'></i></div>
+    <div><h2>Mensajes</h2><p>Mensajeria interna entre usuarios del sistema</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-inbox' style="color:#0d6efd;"></i><div><h4>Bandeja de Entrada</h4><p>Mensajes recibidos. Los no leidos aparecen resaltados con etiqueta Nuevo.</p></div></div>
+      <div class="feature-item"><i class='bx bx-send' style="color:#198754;"></i><div><h4>Enviados</h4><p>Historial de todos los mensajes que has enviado.</p></div></div>
+      <div class="feature-item"><i class='bx bx-broadcast' style="color:#856404;"></i><div><h4>Mensaje Masivo</h4><p>Solo Administradores. Envia el mismo mensaje a todos, medicos o recepcionistas.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-bell' style="color:#dc3545;"></i><div><h4>Badge en Tiempo Real</h4><p>El icono de sobre muestra cuantos mensajes no has leido. Se actualiza cada 30 segundos.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Enviar un mensaje</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Mensaje</h4><p>Haz clic en el boton <strong>+ Nuevo Mensaje</strong> en el modulo Mensajes.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar destinatario</h4><p>Elige el usuario de la lista desplegable.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Asunto y contenido</h4><p>Escribe el asunto y el cuerpo del mensaje.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Enviar</h4><p>El destinatario recibira una notificacion automatica en su campana.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCION 9: NOMINA -->
+<section class="doc-section" id="nomina">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class='bx bxs-group'></i></div>
+    <div><h2>Nomina</h2><p>Gestion del personal medico y administrativo</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>. No aparece en el menu de otros roles.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Registrar empleado</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Empleado</h4><p>Haz clic en <strong>+ Nuevo Empleado</strong> en el modulo Nomina.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Completar datos</h4><p>Nombre, apellido, cedula, cargo, departamento, salario y fecha de ingreso son obligatorios.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cargo medico</h4><p>Si el cargo es medico (Medico General, Pediatra, Cardiologo, etc.) aparecera en el selector de consultas.</p></div></div>
+    </div>
+    <table class="doc-table" style="margin-top:16px;">
+      <thead><tr><th>Campo</th><th>Requerido</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre y Apellido</td><td><span class="badge badge-red">Si</span></td><td>Nombre completo del empleado</td></tr>
+        <tr><td>Cedula</td><td><span class="badge badge-red">Si</span></td><td>Numero de cedula unico</td></tr>
+        <tr><td>Cargo</td><td><span class="badge badge-red">Si</span></td><td>Ej: Medico General, Enfermera, Recepcionista</td></tr>
+        <tr><td>Departamento</td><td><span class="badge badge-red">Si</span></td><td>Ej: Consultas, Enfermeria, Administracion</td></tr>
+        <tr><td>Salario</td><td><span class="badge badge-red">Si</span></td><td>Salario mensual en RD$</td></tr>
+        <tr><td>Fecha de Ingreso</td><td><span class="badge badge-red">Si</span></td><td>Fecha de inicio en la institucion</td></tr>
+        <tr><td>Estado</td><td><span class="badge badge-red">Si</span></td><td>Activo o Inactivo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION 10: USUARIOS -->
+<section class="doc-section" id="usuarios">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-dark"><i class='bx bxs-user-account'></i></div>
+    <div><h2>Usuarios del Sistema</h2><p>Administracion de cuentas y accesos</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Activar usuario pendiente</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Usuarios</h4><p>Haz clic en <strong>Usuarios</strong> en el menu lateral.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Localizar el usuario</h4><p>Busca el usuario con estado <span class="badge badge-gray">Inactivo</span> que solicito acceso.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Activar</h4><p>Haz clic en el icono de activar (check verde). El usuario podra iniciar sesion inmediatamente.</p></div></div>
+    </div>
+    <table class="doc-table" style="margin-top:16px;">
+      <thead><tr><th>Accion</th><th>Icono</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Editar</td><td><span class="badge badge-yellow">Lapiz</span></td><td>Modificar datos, rol o contrasena del usuario</td></tr>
+        <tr><td>Activar / Desactivar</td><td><span class="badge badge-green">Toggle</span></td><td>Habilitar o bloquear el acceso al sistema</td></tr>
+        <tr><td>Eliminar</td><td><span class="badge badge-red">Papelera</span></td><td>Eliminar permanentemente (no puede eliminarse a si mismo)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION 11: EXPORTACIONES -->
+<section class="doc-section" id="exportaciones">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-red"><i class='bx bxs-file-pdf'></i></div>
+    <div><h2>Exportaciones</h2><p>Reportes en PDF, Excel y CSV</p></div>
+  </div>
+  <div class="doc-section-body">
+    <table class="doc-table">
+      <thead><tr><th>Modulo</th><th>CSV</th><th>PDF</th><th>Excel</th></tr></thead>
+      <tbody>
+        <tr><td>Pacientes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Consultas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Medicamentos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Movimientos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>Nomina</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-gray">No</span></td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Exportar por rango de fechas</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Por Fechas</h4><p>En Consultas o Movimientos, haz clic en el boton <strong>Por Fechas</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar rango</h4><p>Elige la fecha de inicio y la fecha de fin del periodo que deseas exportar.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Descargar</h4><p>Haz clic en Exportar CSV. El archivo se descargara automaticamente.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCION: SOLICITUDES -->
+<section class="doc-section" id="solicitudes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-yellow"><i class='bx bx-send'></i></div>
+    <div><h2>Solicitudes de Reposicion</h2><p>Solicitar medicamentos al proveedor cuando el stock esta bajo</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class='bx bx-info-circle'></i><div>Las solicitudes las crean <strong>Recepcionistas y Medicos</strong>. Los <strong>Administradores</strong> las aprueban y al aprobar se registra automaticamente la entrada al inventario.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Crear una solicitud</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Solicitudes</h4><p>Haz clic en <strong>Solicitudes</strong> en el menu lateral, o desde el boton <strong>Crear Solicitud de Reposicion</strong> en la alerta de stock bajo en Movimientos.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamentos</h4><p>Elige uno o varios medicamentos. Puedes agregar multiples items con el boton <strong>+ Agregar otro medicamento</strong>. Los medicamentos con stock bajo aparecen resaltados.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cantidad y proveedor</h4><p>Indica la cantidad solicitada y el proveedor sugerido. El proveedor se autocompleta si el medicamento ya tiene uno registrado.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Enviar</h4><p>Haz clic en <strong>Enviar Solicitud</strong>. Se genera un numero de orden (formato SOL-AAAAMM-XXXX) y los administradores reciben una notificacion automatica.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Aprobar una solicitud (solo Admin)</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Solicitudes</h4><p>En el menu lateral, seccion Administracion.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Clic en Aprobar</h4><p>Haz clic en el icono de doble check verde junto a la solicitud pendiente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Confirmar cantidad y factura</h4><p>Verifica la cantidad a ingresar y opcionalmente escribe el numero de factura del proveedor.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Aprobar y Registrar Entrada</h4><p>Al confirmar, el sistema registra automaticamente la entrada al inventario y notifica al solicitante. El numero de orden queda vinculado al movimiento.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Estados de una solicitud</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Solicitud enviada, esperando revision del administrador</td></tr>
+        <tr><td><span class="badge badge-blue">Aprobada</span></td><td>Aprobada por el admin, entrada registrada automaticamente</td></tr>
+        <tr><td><span class="badge badge-green">Completada</span></td><td>Medicamentos fisicamente recibidos y verificados</td></tr>
+        <tr><td><span class="badge badge-red">Rechazada</span></td><td>Solicitud denegada por el administrador</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION: BITACORA -->
+<section class="doc-section" id="bitacora">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-dark"><i class='bx bx-history'></i></div>
+    <div><h2>Bitacora del Sistema</h2><p>Registro de auditoria de todas las acciones criticas</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>La Bitacora es exclusiva para <strong>Administradores</strong>. Registra automaticamente todas las acciones importantes sin intervencion del usuario.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Acceder a la Bitacora</h3>
+    <p class="doc-text">Haz clic en <strong>Bitacora</strong> en el menu lateral, seccion Administracion. Tambien puedes ver las ultimas 15 acciones directamente en el Panel de Control.</p>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Filtros disponibles</h3>
+    <table class="doc-table">
+      <thead><tr><th>Filtro</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Por Accion</td><td>Filtra por tipo: INICIO SESION, CREAR USUARIO, ENTRADA INVENTARIO, etc.</td></tr>
+        <tr><td>Por Usuario</td><td>Ver solo las acciones de un usuario especifico</td></tr>
+        <tr><td>Por Fecha</td><td>Rango de fechas de inicio y fin</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Acciones registradas automaticamente</h3>
+    <table class="doc-table">
+      <thead><tr><th>Accion</th><th>Cuando ocurre</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">INICIO SESION</span></td><td>Al autenticarse correctamente</td></tr>
+        <tr><td><span class="badge badge-gray">CIERRE SESION</span></td><td>Al hacer logout</td></tr>
+        <tr><td><span class="badge badge-green">CREAR USUARIO / EMPLEADO</span></td><td>Al registrar un nuevo usuario o empleado</td></tr>
+        <tr><td><span class="badge badge-yellow">EDITAR USUARIO / EMPLEADO</span></td><td>Al modificar datos o contrasena</td></tr>
+        <tr><td><span class="badge badge-red">ELIMINAR USUARIO / EMPLEADO</span></td><td>Al eliminar un registro</td></tr>
+        <tr><td><span class="badge badge-green">ACTIVAR / DESACTIVAR USUARIO</span></td><td>Al cambiar el estado de una cuenta</td></tr>
+        <tr><td><span class="badge badge-green">ENTRADA INVENTARIO</span></td><td>Al registrar entrada de medicamento</td></tr>
+        <tr><td><span class="badge badge-red">SALIDA INVENTARIO</span></td><td>Al registrar salida de medicamento</td></tr>
+        <tr><td><span class="badge badge-yellow">ACTUALIZAR PERFIL</span></td><td>Al cambiar nombre o email propio</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION 12: NOTIFICACIONES -->
+<section class="doc-section" id="notificaciones">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-yellow"><i class='bx bxs-bell'></i></div>
+    <div><h2>Notificaciones</h2><p>Alertas automaticas en tiempo real</p></div>
+  </div>
+  <div class="doc-section-body">
+    <table class="doc-table">
+      <thead><tr><th>Tipo</th><th>Color</th><th>Cuando aparece</th><th>Destinatarios</th></tr></thead>
+      <tbody>
+        <tr><td>Nuevo paciente</td><td><span class="badge badge-green">Verde</span></td><td>Al registrar un paciente</td><td>Todos los usuarios</td></tr>
+        <tr><td>Nueva consulta</td><td><span class="badge badge-blue">Azul</span></td><td>Al crear una consulta</td><td>Todos los usuarios</td></tr>
+        <tr><td>Entrada de inventario</td><td><span class="badge badge-green">Verde</span></td><td>Al registrar una entrada</td><td>Todos los usuarios</td></tr>
+        <tr><td>Salida de inventario</td><td><span class="badge badge-yellow">Amarillo</span></td><td>Al registrar una salida</td><td>Todos los usuarios</td></tr>
+        <tr><td>Stock bajo</td><td><span class="badge badge-red">Rojo</span></td><td>Cuando el stock cae al minimo</td><td>Todos los usuarios</td></tr>
+        <tr><td>Nuevo mensaje</td><td><span class="badge badge-cyan">Cyan</span></td><td>Al recibir un mensaje</td><td>Solo el destinatario</td></tr>
+        <tr><td>Registro pendiente</td><td><span class="badge badge-yellow">Amarillo</span></td><td>Cuando alguien solicita acceso</td><td>Solo administradores</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Como usar las notificaciones</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ver notificaciones</h4><p>Haz clic en el icono de campana en la barra superior. Se abre un panel con las ultimas 10 no leidas.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ir al modulo</h4><p>Haz clic en una notificacion para ir directamente al modulo relacionado. Se marca como leida automaticamente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Marcar todas como leidas</h4><p>Haz clic en <strong>Marcar todas como leidas</strong> en la parte superior del panel.</p></div></div>
+    </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Los badges de campana y sobre se actualizan automaticamente cada <strong>30 segundos</strong> sin necesidad de recargar la pagina.</div></div>
+  </div>
+</section>
+
+<!-- SECCION: PERMISOS -->
+<section class="doc-section" id="permisos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-dark"><i class='bx bx-shield'></i></div>
+    <div><h2>Sistema de Permisos</h2><p>Control granular de acceso por usuario y modulo</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Solo los <strong>Administradores</strong> pueden configurar permisos. Los administradores siempre tienen acceso total y no se pueden restringir.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">¿Qué son los permisos?</h3>
+    <p class="doc-text">El sistema de permisos permite al administrador definir exactamente qué puede hacer cada usuario en cada módulo. Por ejemplo, un recepcionista puede ver pacientes pero no eliminarlos.</p>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Configurar permisos de un usuario</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Usuarios</h4><p>Haz clic en <strong>Usuarios</strong> en el menu lateral (solo admins).</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Clic en el icono de escudo</h4><p>En la columna de acciones, haz clic en el icono <strong>🛡️</strong> del usuario que deseas configurar.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Configurar permisos</h4><p>Se abre un modal con una tabla de módulos. Marca los checkboxes para cada acción permitida.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>Haz clic en <strong>Guardar Permisos</strong>. Los cambios se aplican de inmediato.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Acciones disponibles por módulo</h3>
+    <table class="doc-table">
+      <thead><tr><th>Accion</th><th>Color</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Ver</span></td><td>Azul</td><td>Acceder al módulo y ver la lista de registros</td></tr>
+        <tr><td><span class="badge badge-green">Crear</span></td><td>Verde</td><td>Agregar nuevos registros al módulo</td></tr>
+        <tr><td><span class="badge badge-yellow">Editar</span></td><td>Amarillo</td><td>Modificar registros existentes</td></tr>
+        <tr><td><span class="badge badge-red">Eliminar</span></td><td>Rojo</td><td>Eliminar registros del módulo</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Accesos rapidos en el modal</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-check-double' style="color:#198754;"></i><div><h4>Seleccionar todo</h4><p>Marca todos los checkboxes de todos los módulos de una sola vez.</p></div></div>
+      <div class="feature-item"><i class='bx bx-x' style="color:#dc3545;"></i><div><h4>Quitar todo</h4><p>Desmarca todos los checkboxes — el usuario queda sin acceso a nada.</p></div></div>
+      <div class="feature-item"><i class='bx bx-show' style="color:#0d6efd;"></i><div><h4>Solo lectura</h4><p>Marca solo los checkboxes de "Ver" en todos los módulos.</p></div></div>
+    </div>
+    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Si un usuario intenta acceder a un módulo sin permiso, verá el mensaje: <strong>"Sin permiso para acceder a esta sección."</strong> y será redirigido al Panel de Control.</div></div>
+  </div>
+</section>
+
+<!-- SECCION 13: FAQ -->
+<section class="doc-section" id="faq">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bx-help-circle'></i></div>
+    <div><h2>Preguntas Frecuentes</h2><p>Soluciones a los problemas mas comunes</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="steps">
+      <div class="step" style="border-left-color:#dc3545;"><div class="step-num" style="background:#dc3545;">?</div><div class="step-body"><h4>No puedo iniciar sesion</h4><p>Verifica usuario y contrasena. Si tu cuenta esta desactivada, contacta al administrador. Asegurate de que XAMPP este corriendo.</p></div></div>
+      <div class="step" style="border-left-color:#6f42c1;"><div class="step-num" style="background:#6f42c1;">?</div><div class="step-body"><h4>No veo el modulo de Nomina o Usuarios</h4><p>Esos modulos son exclusivos del rol Administrador. Solicita al admin que cambie tu rol si necesitas acceso.</p></div></div>
+      <div class="step" style="border-left-color:#fd7e14;"><div class="step-num" style="background:#fd7e14;">?</div><div class="step-body"><h4>Como accedo desde otra computadora?</h4><p>Usa la URL: <code>http://192.168.1.3/SISGECLIN/public</code>. Ambas computadoras deben estar en la misma red WiFi o LAN. Ejecuta <code>ABRIR_FIREWALL.bat</code> como administrador si es la primera vez.</p></div></div>
+      <div class="step" style="border-left-color:#198754;"><div class="step-num" style="background:#198754;">?</div><div class="step-body"><h4>Me sale Stock insuficiente al registrar salida</h4><p>La cantidad que intentas retirar supera el stock disponible. Registra primero una entrada para reponer el inventario.</p></div></div>
+      <div class="step" style="border-left-color:#0dcaf0;"><div class="step-num" style="background:#0dcaf0;">?</div><div class="step-body"><h4>Como recupero mi contrasena?</h4><p>Contacta al administrador para que la restablezca desde el modulo Usuarios usando el boton Editar.</p></div></div>
+      <div class="step" style="border-left-color:#856404;"><div class="step-num" style="background:#856404;">?</div><div class="step-body"><h4>Que significa el numero rojo en la campana?</h4><p>Es la cantidad de notificaciones no leidas. Se actualiza automaticamente cada 30 segundos sin recargar la pagina.</p></div></div>
+    </div>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <strong>SISGECLIN v2.5</strong> &mdash; Manual de Usuario &mdash; Sistema de Gestion Clinica &mdash; &copy; 2026
+</footer>
+
+<script>
+// Resaltar item activo en sidebar al hacer scroll
+const sections = document.querySelectorAll('.doc-section');
+const links = document.querySelectorAll('.doc-sidebar-menu a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html><!-- SECCION SOLICITUDES - agregar al manual -->
+<section class="doc-section" id="solicitudes">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-yellow"><i class="bx bx-send"></i></div>
+    <div><h2>Solicitudes de Reposicion</h2><p>Solicitar medicamentos al proveedor y registrar entradas</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert warning"><i class="bx bx-info-circle"></i><div>Las solicitudes solo pueden ser creadas por <strong>Recepcionistas y Medicos</strong>. Los <strong>Administradores</strong> las aprueban y registran la entrada automaticamente.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Flujo de una solicitud</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Crear solicitud</h4><p>Desde Movimientos, haz clic en <strong>Crear Solicitud de Reposicion</strong> cuando haya stock bajo. Puedes agregar varios medicamentos en una sola solicitud.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Numero de orden automatico</h4><p>El sistema genera un numero unico formato <code>SOL-202605-0001</code> para identificar la solicitud.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Admin aprueba</h4><p>El administrador recibe una notificacion, revisa la solicitud y hace clic en el boton de aprobar.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Entrada automatica</h4><p>Al aprobar, se registra automaticamente la entrada al inventario con el numero de orden y factura como referencia.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una solicitud</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Solicitud enviada, esperando aprobacion del administrador</td></tr>
+        <tr><td><span class="badge badge-blue">Aprobada</span></td><td>Aprobada y entrada registrada en inventario</td></tr>
+        <tr><td><span class="badge badge-green">Completada</span></td><td>Medicamentos fisicamente recibidos y verificados</td></tr>
+        <tr><td><span class="badge badge-red">Rechazada</span></td><td>Solicitud rechazada por el administrador</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECCION BITACORA -->
+<section class="doc-section" id="bitacora">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-dark"><i class="bx bx-history"></i></div>
+    <div><h2>Bitacora del Sistema</h2><p>Registro completo de todas las acciones - Solo Administradores</p></div>
+  </div>
+  <div class="doc-section-body">
+    <div class="doc-alert info"><i class="bx bx-lock"></i><div>La bitacora es exclusiva para <strong>Administradores</strong>. Registra automaticamente todas las acciones criticas del sistema.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Filtros disponibles</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class="bx bx-filter" style="color:#0d6efd;"></i><div><h4>Por Accion</h4><p>Filtra por tipo: inicio sesion, crear usuario, entrada inventario, etc.</p></div></div>
+      <div class="feature-item"><i class="bx bxs-user" style="color:#6f42c1;"></i><div><h4>Por Usuario</h4><p>Ver todas las acciones de un usuario especifico.</p></div></div>
+      <div class="feature-item"><i class="bx bx-calendar" style="color:#198754;"></i><div><h4>Por Fecha</h4><p>Filtrar registros de un dia especifico.</p></div></div>
+    </div>
+  </div>
+</section>

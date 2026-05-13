@@ -1,0 +1,964 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SISGECLIN — Diagramas del Sistema</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
+<link rel="stylesheet" href="/SISGECLIN/docs/modelo_er.css">
+<style>
+/* ── Diagramas ER y UML — tamaño grande y legible ── */
+.mermaid-wrap {
+    overflow: auto;
+    padding: 28px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 8px;
+    min-height: 500px;
+    position: relative;
+}
+
+.mermaid-wrap .mermaid svg {
+    min-width: 700px;
+    min-height: 400px;
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+}
+
+/* Tabs */
+.diagram-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0;
+}
+.diagram-tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all .2s;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.diagram-tab:hover  { color: #0d6efd; background: #f0f4ff; }
+.diagram-tab.active { color: #0d6efd; border-bottom-color: #0d6efd; background: #f0f4ff; font-weight: 700; }
+
+/*
+ * IMPORTANTE: usar visibility+height en lugar de display:none
+ * para que Mermaid pueda renderizar TODOS los diagramas al cargar,
+ * incluso los que están en pestañas inactivas.
+ */
+.diagram-panel {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    pointer-events: none;
+}
+.diagram-panel.active {
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+    position: static;
+    pointer-events: auto;
+}
+
+/* Leyenda */
+.er-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.er-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #475569; font-weight: 500; }
+.er-legend-dot  { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+.zoom-hint {
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER con navegación igual al manual -->
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <div class="doc-header-brand">
+      <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
+      <div>
+        <h1>Diagramas del Sistema</h1>
+        <p>SISGECLIN v2.5 &mdash; Modelo ER + Casos de Uso UML</p>
+      </div>
+    </div>
+    <nav class="doc-header-nav">
+      <a href="/SISGECLIN/docs/manual_usuario.html"><i class='bx bxs-book-open'></i> Manual</a>
+      <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class='bx bx-code-alt'></i> Técnica</a>
+      <a href="/SISGECLIN/docs/modelo_er.html" class="active"><i class='bx bx-data'></i> Modelo ER</a>
+      <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Codigo</a>
+    </nav>
+  </div>
+</header>
+
+<!-- LAYOUT con sidebar -->
+<div class="doc-layout">
+  <aside class="doc-sidebar">
+    <div class="doc-sidebar-inner">
+      <div class="doc-sidebar-title">Contenido</div>
+      <nav class="doc-sidebar-menu">
+        <a href="#diagrama"><i class='bx bx-sitemap'></i> Diagrama ER</a>
+        <a href="#uml-casos"><i class='bx bx-user-check'></i> Casos de Uso</a>
+        <a href="#tablas"><i class='bx bx-table'></i> Tablas</a>
+        <a href="#relaciones"><i class='bx bx-git-branch'></i> Relaciones</a>
+      </nav>
+    </div>
+  </aside>
+  <main class="doc-content">
+
+    <!-- Diagrama ER -->
+    <div class="doc-section" id="diagrama">
+      <div class="doc-section-header">
+        <div class="doc-section-icon icon-blue"><i class='bx bx-sitemap'></i></div>
+        <div><h2>Diagrama Entidad-Relación</h2><p>Tablas, campos y relaciones de la base de datos sisgeclin_laravel</p></div>
+      </div>
+      <div class="doc-section-body">
+
+        <!-- Leyenda -->
+        <div class="er-legend">
+          <div class="er-legend-item"><div class="er-legend-dot" style="background:#0d6efd;"></div> Entidades principales</div>
+          <div class="er-legend-item"><div class="er-legend-dot" style="background:#198754;"></div> Inventario y movimientos</div>
+          <div class="er-legend-item"><div class="er-legend-dot" style="background:#6f42c1;"></div> Seguridad y permisos</div>
+          <div class="er-legend-item"><div class="er-legend-dot" style="background:#fd7e14;"></div> Comunicación</div>
+          <div class="er-legend-item"><div class="er-legend-dot" style="background:#dc3545;"></div> Auditoría</div>
+        </div>
+
+        <!-- Tabs para dividir el diagrama en partes legibles -->
+        <div class="diagram-tabs">
+          <button class="diagram-tab active" onclick="mostrarDiagrama('er-core')">
+            <i class='bx bx-user-detail'></i> Núcleo (Pacientes, Consultas)
+          </button>
+          <button class="diagram-tab" onclick="mostrarDiagrama('er-inventario')">
+            <i class='bx bxs-capsule'></i> Inventario y Solicitudes
+          </button>
+          <button class="diagram-tab" onclick="mostrarDiagrama('er-sistema')">
+            <i class='bx bx-shield'></i> Sistema (Usuarios, Permisos, Mensajes)
+          </button>
+          <button class="diagram-tab" onclick="mostrarDiagrama('er-completo')">
+            <i class='bx bx-expand'></i> Diagrama Completo
+          </button>
+        </div>
+
+        <!-- Panel: Núcleo -->
+        <div class="diagram-panel active" id="er-core">
+          <div class="mermaid-wrap">
+            <div class="mermaid" id="mermaid-core">
+erDiagram
+    USUARIOS {
+        bigint id PK
+        varchar username UK
+        varchar email UK
+        varchar password
+        varchar nombre_completo
+        enum rol
+        boolean activo
+        datetime ultimo_acceso
+    }
+    PACIENTES {
+        bigint id PK
+        varchar nombre
+        varchar apellido
+        varchar cedula UK
+        varchar telefono
+        varchar email
+        date fecha_nacimiento
+        enum genero
+        varchar tipo_sangre
+        text alergias
+    }
+    NOMINA {
+        bigint id PK
+        varchar nombre
+        varchar apellido
+        varchar cedula UK
+        varchar cargo
+        varchar departamento
+        decimal salario
+        date fecha_ingreso
+        enum estado
+    }
+    CONSULTAS {
+        bigint id PK
+        bigint paciente_id FK
+        bigint medico_id FK
+        bigint empleado_id FK
+        datetime fecha_hora
+        text motivo
+        text diagnostico
+        text tratamiento
+        enum estado
+    }
+    CONSULTAS_MEDICAMENTOS {
+        bigint id PK
+        bigint consulta_id FK
+        bigint medicamento_id FK
+        int cantidad
+        text indicaciones
+    }
+    INVENTARIO {
+        bigint id PK
+        varchar nombre_medicamento
+        int cantidad
+        varchar unidad
+        decimal precio
+        date fecha_vencimiento
+        varchar proveedor
+        int stock_minimo
+    }
+
+    PACIENTES        ||--o{ CONSULTAS              : "tiene"
+    USUARIOS         ||--o{ CONSULTAS              : "atiende"
+    NOMINA           ||--o{ CONSULTAS              : "atiende"
+    CONSULTAS        ||--o{ CONSULTAS_MEDICAMENTOS : "incluye"
+    INVENTARIO       ||--o{ CONSULTAS_MEDICAMENTOS : "se usa en"
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+        </div>
+
+        <!-- Panel: Inventario -->
+        <div class="diagram-panel" id="er-inventario">
+          <div class="mermaid-wrap">
+            <div class="mermaid" id="mermaid-inventario">
+erDiagram
+    INVENTARIO {
+        bigint id PK
+        varchar nombre_medicamento
+        int cantidad
+        varchar unidad
+        decimal precio
+        date fecha_vencimiento
+        varchar proveedor
+        varchar telefono_proveedor
+        int stock_minimo
+    }
+    INVENTARIO_MOVIMIENTOS {
+        bigint id PK
+        bigint medicamento_id FK
+        enum tipo_movimiento
+        int cantidad
+        int cantidad_anterior
+        int cantidad_nueva
+        varchar motivo
+        bigint consulta_id FK
+        bigint paciente_id FK
+        bigint usuario_id FK
+        varchar entregado_por_nombre
+        varchar recibido_por_nombre
+        varchar recibido_por_cedula
+        text observaciones_entrega
+    }
+    SOLICITUDES_INVENTARIO {
+        bigint id PK
+        varchar numero_orden UK
+        bigint medicamento_id FK
+        bigint solicitado_por FK
+        int cantidad_solicitada
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+        enum estado
+        varchar numero_factura
+        bigint atendida_por FK
+        datetime atendida_at
+        text notas
+    }
+    SOLICITUD_ITEMS {
+        bigint id PK
+        bigint solicitud_id FK
+        bigint medicamento_id FK
+        int cantidad
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+    }
+    USUARIOS {
+        bigint id PK
+        varchar username UK
+        varchar nombre_completo
+        enum rol
+    }
+    PACIENTES {
+        bigint id PK
+        varchar nombre
+        varchar apellido
+        varchar cedula UK
+    }
+
+    INVENTARIO       ||--o{ INVENTARIO_MOVIMIENTOS  : "registra"
+    USUARIOS         ||--o{ INVENTARIO_MOVIMIENTOS  : "realiza"
+    PACIENTES        ||--o{ INVENTARIO_MOVIMIENTOS  : "recibe"
+    INVENTARIO       ||--o{ SOLICITUDES_INVENTARIO  : "se solicita"
+    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "solicita"
+    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "atiende"
+    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS   : "contiene"
+    INVENTARIO       ||--o{ SOLICITUD_ITEMS         : "incluye"
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+        </div>
+
+        <!-- Panel: Sistema -->
+        <div class="diagram-panel" id="er-sistema">
+          <div class="mermaid-wrap">
+            <div class="mermaid" id="mermaid-sistema">
+erDiagram
+    USUARIOS {
+        bigint id PK
+        varchar username UK
+        varchar email UK
+        varchar password
+        varchar nombre_completo
+        enum rol
+        boolean activo
+        datetime ultimo_acceso
+    }
+    PERMISOS_USUARIO {
+        bigint id PK
+        bigint usuario_id FK
+        varchar modulo
+        boolean puede_ver
+        boolean puede_crear
+        boolean puede_editar
+        boolean puede_eliminar
+    }
+    MENSAJES {
+        bigint id PK
+        bigint remitente_id FK
+        bigint destinatario_id FK
+        varchar asunto
+        text contenido
+        boolean leido
+        boolean es_masivo
+    }
+    NOTIFICACIONES {
+        bigint id PK
+        bigint usuario_id FK
+        varchar tipo
+        varchar titulo
+        text mensaje
+        varchar icono
+        varchar color
+        varchar url
+        boolean leida
+    }
+    BITACORA {
+        bigint id PK
+        bigint usuario_id FK
+        varchar accion
+        varchar tabla
+        bigint registro_id
+        text detalles
+        varchar ip
+        datetime created_at
+    }
+
+    USUARIOS         ||--o{ PERMISOS_USUARIO : "tiene"
+    USUARIOS         ||--o{ MENSAJES         : "envia"
+    USUARIOS         ||--o{ MENSAJES         : "recibe"
+    USUARIOS         ||--o{ NOTIFICACIONES   : "recibe"
+    USUARIOS         ||--o{ BITACORA         : "genera"
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+        </div>
+
+        <!-- Panel: Completo -->
+        <div class="diagram-panel" id="er-completo">
+          <div class="mermaid-wrap" style="overflow-x:scroll;">
+            <div class="mermaid" id="mermaid-completo">
+erDiagram
+    USUARIOS ||--o{ CONSULTAS              : "atiende"
+    USUARIOS ||--o{ INVENTARIO_MOVIMIENTOS : "realiza"
+    USUARIOS ||--o{ MENSAJES               : "envia/recibe"
+    USUARIOS ||--o{ NOTIFICACIONES         : "recibe"
+    USUARIOS ||--o{ BITACORA               : "genera"
+    USUARIOS ||--o{ PERMISOS_USUARIO       : "tiene"
+    USUARIOS ||--o{ SOLICITUDES_INVENTARIO : "solicita/atiende"
+    PACIENTES ||--o{ CONSULTAS             : "tiene"
+    NOMINA    ||--o{ CONSULTAS             : "atiende"
+    CONSULTAS ||--o{ CONSULTAS_MEDICAMENTOS: "incluye"
+    INVENTARIO ||--o{ CONSULTAS_MEDICAMENTOS: "se usa en"
+    INVENTARIO ||--o{ INVENTARIO_MOVIMIENTOS: "registra"
+    INVENTARIO ||--o{ SOLICITUDES_INVENTARIO: "se solicita"
+    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS: "contiene"
+    INVENTARIO ||--o{ SOLICITUD_ITEMS      : "incluye"
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Diagrama simplificado — ver pestañas anteriores para detalle completo de cada entidad</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Diagramas UML de Casos de Uso -->
+    <div class="doc-section" id="uml-casos">
+      <div class="doc-section-header">
+        <div class="doc-section-icon icon-purple"><i class='bx bx-user-check'></i></div>
+        <div><h2>Diagramas de Casos de Uso UML</h2><p>Interacciones de los actores con el sistema por rol</p></div>
+      </div>
+      <div class="doc-section-body">
+
+        <div class="diagram-tabs">
+          <button class="diagram-tab active" onclick="mostrarUML('uml-admin')">
+            <i class='bx bxs-user-badge'></i> Administrador
+          </button>
+          <button class="diagram-tab" onclick="mostrarUML('uml-medico')">
+            <i class='bx bx-plus-medical'></i> Médico
+          </button>
+          <button class="diagram-tab" onclick="mostrarUML('uml-recep')">
+            <i class='bx bx-headphone'></i> Recepcionista
+          </button>
+        </div>
+
+        <!-- UML Admin -->
+        <div class="diagram-panel active" id="uml-admin">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart LR
+    A([👤 Administrador])
+
+    A --> B([Iniciar Sesión])
+    A --> C([Gestionar Usuarios])
+    A --> D([Configurar Permisos])
+    A --> E([Ver Bitácora])
+    A --> F([Gestionar Nómina])
+    A --> G([Aprobar Solicitudes])
+    A --> H([Ver Dashboard])
+    A --> I([Gestionar Pacientes])
+    A --> J([Gestionar Consultas])
+    A --> K([Gestionar Inventario])
+    A --> L([Enviar Mensajes])
+    A --> M([Exportar Reportes])
+    A --> N([Reporte Auditoría])
+
+    C --> C1[Crear Usuario]
+    C --> C2[Editar Usuario]
+    C --> C3[Activar / Desactivar]
+    C --> C4[Eliminar Usuario]
+
+    D --> D1[Asignar permisos por módulo]
+    D --> D2[Ver / Crear / Editar / Eliminar]
+
+    G --> G1[Aprobar → Entrada automática]
+    G --> G2[Rechazar Solicitud]
+    G --> G3[Marcar Completada]
+
+    M --> M1[PDF / Excel / CSV]
+    M --> M2[Por período o rango]
+
+    style A fill:#1e293b,color:#fff,stroke:#0d6efd,stroke-width:3px,font-size:16px
+    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style C fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
+    style D fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
+    style E fill:#fee2e2,color:#b91c1c,stroke:#dc3545
+    style F fill:#dcfce7,color:#15803d,stroke:#198754
+    style G fill:#fef9c3,color:#a16207,stroke:#d97706
+    style H fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style I fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style J fill:#cffafe,color:#0e7490,stroke:#0dcaf0
+    style K fill:#dcfce7,color:#15803d,stroke:#198754
+    style L fill:#ffedd5,color:#c2410c,stroke:#f97316
+    style M fill:#ffedd5,color:#c2410c,stroke:#f97316
+    style N fill:#fee2e2,color:#b91c1c,stroke:#dc3545
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> El Administrador tiene acceso total — desplaza para ver el diagrama completo</p>
+        </div>
+
+        <!-- UML Médico -->
+        <div class="diagram-panel" id="uml-medico">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart LR
+    A([👨‍⚕️ Médico])
+
+    A --> B([Iniciar Sesión])
+    A --> C([Ver Dashboard])
+    A --> D([Gestionar Pacientes])
+    A --> E([Gestionar Consultas])
+    A --> F([Ver Medicamentos])
+    A --> G([Registrar Movimientos])
+    A --> H([Crear Solicitudes])
+    A --> I([Enviar Mensajes])
+    A --> J([Ver Notificaciones])
+    A --> K([Actualizar Perfil])
+
+    D --> D1[Ver lista de pacientes]
+    D --> D2[Registrar nuevo paciente]
+    D --> D3[Editar datos del paciente]
+
+    E --> E1[Programar consulta]
+    E --> E2[Registrar diagnóstico]
+    E --> E3[Indicar tratamiento]
+    E --> E4[Cambiar estado]
+
+    G --> G1[Registrar Entrada]
+    G --> G2[Registrar Salida con firma]
+    G --> G3[Ver historial de movimientos]
+
+    H --> H1[Solicitar medicamentos]
+    H --> H2[Ver estado de solicitud]
+
+    style A fill:#1e293b,color:#fff,stroke:#0dcaf0,stroke-width:3px
+    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
+    style F fill:#dcfce7,color:#15803d,stroke:#198754
+    style G fill:#dcfce7,color:#15803d,stroke:#198754
+    style H fill:#fef9c3,color:#a16207,stroke:#d97706
+    style I fill:#ffedd5,color:#c2410c,stroke:#f97316
+    style J fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
+    style K fill:#f1f5f9,color:#475569,stroke:#94a3b8
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos del Médico son configurados por el Administrador</p>
+        </div>
+
+        <!-- UML Recepcionista -->
+        <div class="diagram-panel" id="uml-recep">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart LR
+    A([👩‍💼 Recepcionista])
+
+    A --> B([Iniciar Sesión])
+    A --> C([Ver Dashboard])
+    A --> D([Gestionar Pacientes])
+    A --> E([Programar Consultas])
+    A --> F([Ver Medicamentos])
+    A --> G([Crear Solicitudes])
+    A --> H([Enviar Mensajes])
+    A --> I([Ver Notificaciones])
+    A --> J([Actualizar Perfil])
+
+    D --> D1[Registrar nuevo paciente]
+    D --> D2[Buscar paciente por cédula]
+    D --> D3[Ver historial del paciente]
+    D --> D4[Editar datos de contacto]
+
+    E --> E1[Crear cita médica]
+    E --> E2[Asignar médico disponible]
+    E --> E3[Confirmar fecha y hora]
+    E --> E4[Cancelar consulta]
+
+    G --> G1[Solicitar reposición de stock]
+    G --> G2[Agregar múltiples medicamentos]
+    G --> G3[Indicar proveedor y teléfono]
+    G --> G4[Ver estado de solicitud]
+
+    style A fill:#1e293b,color:#fff,stroke:#94a3b8,stroke-width:3px
+    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
+    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
+    style F fill:#dcfce7,color:#15803d,stroke:#198754
+    style G fill:#fef9c3,color:#a16207,stroke:#d97706
+    style H fill:#ffedd5,color:#c2410c,stroke:#f97316
+    style I fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
+    style J fill:#f1f5f9,color:#475569,stroke:#94a3b8
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos de la Recepcionista son configurados por el Administrador</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tablas detalladas -->
+    <div class="doc-section" id="tablas">
+      <div class="doc-section-header">
+        <div class="doc-section-icon icon-purple"><i class='bx bx-table'></i></div>
+        <div><h2>Descripción de Tablas</h2><p>Columnas, tipos de datos y restricciones de cada tabla</p></div>
+      </div>
+      <div class="doc-section-body">
+        <div class="legend">
+            <div class="legend-item"><span class="badge badge-pk">PK</span> Clave primaria</div>
+            <div class="legend-item"><span class="badge badge-fk">FK</span> Clave foránea</div>
+            <div class="legend-item"><span class="badge badge-uk">UK</span> Valor único</div>
+            <div class="legend-item"><span class="badge badge-null">NULL</span> Opcional</div>
+        </div>
+
+        <div class="tables-grid">
+
+            <!-- USUARIOS -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    USUARIOS <span>Usuarios del sistema</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>username</code></td><td>VARCHAR(50)</td><td><span class="badge badge-uk">UK</span></td></tr>
+                        <tr><td><code>email</code></td><td>VARCHAR(100)</td><td><span class="badge badge-uk">UK</span></td></tr>
+                        <tr><td><code>password</code></td><td>VARCHAR(255)</td><td>bcrypt</td></tr>
+                        <tr><td><code>nombre_completo</code></td><td>VARCHAR(150)</td><td>—</td></tr>
+                        <tr><td><code>rol</code></td><td>ENUM</td><td>admin|medico|recepcionista</td></tr>
+                        <tr><td><code>activo</code></td><td>BOOLEAN</td><td>default: true</td></tr>
+                        <tr><td><code>ultimo_acceso</code></td><td>DATETIME</td><td><span class="badge badge-null">NULL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PACIENTES -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    PACIENTES <span>Pacientes registrados</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>nombre</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>apellido</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>cedula</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
+                        <tr><td><code>telefono</code></td><td>VARCHAR(20)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>email</code></td><td>VARCHAR(100)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha_nacimiento</code></td><td>DATE</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>genero</code></td><td>ENUM</td><td>M|F|Otro</td></tr>
+                        <tr><td><code>tipo_sangre</code></td><td>VARCHAR(5)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>alergias</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- NOMINA -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    NOMINA <span>Personal médico y administrativo</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>nombre</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>apellido</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>cedula</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
+                        <tr><td><code>cargo</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>departamento</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>salario</code></td><td>DECIMAL(10,2)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>fecha_ingreso</code></td><td>DATE</td><td>NOT NULL</td></tr>
+                        <tr><td><code>estado</code></td><td>ENUM</td><td>activo|inactivo</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CONSULTAS -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    CONSULTAS <span>Consultas médicas</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → PACIENTES</td></tr>
+                        <tr><td><code>medico_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha_hora</code></td><td>DATETIME</td><td>NOT NULL</td></tr>
+                        <tr><td><code>motivo</code></td><td>TEXT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>diagnostico</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>tratamiento</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>estado</code></td><td>ENUM</td><td>pendiente|en_proceso|completada|cancelada</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- INVENTARIO -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    INVENTARIO <span>Medicamentos en stock</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>nombre_medicamento</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>descripcion</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>cantidad</code></td><td>INT</td><td>default: 0</td></tr>
+                        <tr><td><code>unidad</code></td><td>VARCHAR(30)</td><td>default: unidades</td></tr>
+                        <tr><td><code>precio</code></td><td>DECIMAL(10,2)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>fecha_vencimiento</code></td><td>DATE</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>proveedor</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>stock_minimo</code></td><td>INT</td><td>default: 10</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- INVENTARIO_MOVIMIENTOS -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    INVENTARIO_MOVIMIENTOS <span>Entradas y salidas</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
+                        <tr><td><code>tipo_movimiento</code></td><td>ENUM</td><td>entrada|salida</td></tr>
+                        <tr><td><code>cantidad</code></td><td>INT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>cantidad_anterior</code></td><td>INT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>cantidad_nueva</code></td><td>INT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>motivo</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MENSAJES -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    MENSAJES <span>Mensajería interna</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>remitente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>destinatario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>asunto</code></td><td>VARCHAR(200)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>contenido</code></td><td>TEXT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>leido</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>es_masivo</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- NOTIFICACIONES -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    NOTIFICACIONES <span>Notificaciones en tiempo real</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>tipo</code></td><td>VARCHAR(50)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>titulo</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>mensaje</code></td><td>TEXT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>icono</code></td><td>VARCHAR(50)</td><td>default: bx-bell</td></tr>
+                        <tr><td><code>color</code></td><td>VARCHAR(20)</td><td>primary|success|danger|warning|info</td></tr>
+                        <tr><td><code>url</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>leida</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- BITACORA -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    BITACORA <span>Auditoría del sistema</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>accion</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>tabla</code></td><td>VARCHAR(50)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>registro_id</code></td><td>BIGINT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>detalles</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>ip</code></td><td>VARCHAR(45)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SOLICITUDES_INVENTARIO -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    SOLICITUDES_INVENTARIO <span>Solicitudes de reposicion</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>numero_orden</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
+                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
+                        <tr><td><code>solicitado_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>cantidad_solicitada</code></td><td>INT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>proveedor_sugerido</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>telefono_proveedor</code></td><td>VARCHAR(30)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>estado</code></td><td>ENUM</td><td>pendiente|aprobada|rechazada|completada</td></tr>
+                        <tr><td><code>numero_factura</code></td><td>VARCHAR(50)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>atendida_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>atendida_at</code></td><td>DATETIME</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>notas</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PERMISOS_USUARIO -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    PERMISOS_USUARIO <span>Permisos granulares por usuario</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>modulo</code></td><td>VARCHAR(50)</td><td>pacientes|consultas|medicina|inventario|mensajes|nomina|usuarios|solicitudes|bitacora</td></tr>
+                        <tr><td><code>puede_ver</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>puede_crear</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>puede_editar</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>puede_eliminar</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SOLICITUD_ITEMS -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    SOLICITUD_ITEMS <span>Items de solicitud</span>
+                </div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>solicitud_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → SOLICITUDES_INVENTARIO</td></tr>
+                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
+                        <tr><td><code>cantidad</code></td><td>INT</td><td>NOT NULL</td></tr>
+                        <tr><td><code>proveedor_sugerido</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>telefono_proveedor</code></td><td>VARCHAR(30)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Relaciones -->
+    <div class="doc-section" id="relaciones">
+      <div class="doc-section-header">
+        <div class="doc-section-icon icon-green"><i class='bx bx-git-branch'></i></div>
+        <div><h2>Relaciones entre Entidades</h2><p>Cardinalidad y comportamiento ON DELETE de cada relación</p></div>
+      </div>
+      <div class="doc-section-body">
+        <ul class="rel-list">
+            <li><code>PACIENTES</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un paciente puede tener muchas consultas. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un usuario médico puede atender muchas consultas. ON DELETE SET NULL.</li>
+            <li><code>NOMINA</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un empleado médico puede atender muchas consultas.</li>
+            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>CONSULTAS_MEDICAMENTOS</code> <span class="rel-type">1 a N</span> Una consulta puede incluir varios medicamentos. ON DELETE CASCADE.</li>
+            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>CONSULTAS_MEDICAMENTOS</code> <span class="rel-type">1 a N</span> Un medicamento puede estar en varias consultas.</li>
+            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Un medicamento tiene muchos movimientos. ON DELETE CASCADE.</li>
+            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Una consulta puede generar salidas de inventario. ON DELETE SET NULL.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Un usuario registra los movimientos.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>MENSAJES</code> <span class="rel-type">1 a N</span> Un usuario puede enviar y recibir muchos mensajes. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>BITACORA</code> <span class="rel-type">1 a N</span> Cada acción del usuario queda registrada. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>NOTIFICACIONES</code> <span class="rel-type">1 a N</span> Un usuario puede recibir muchas notificaciones. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>SOLICITUDES_INVENTARIO</code> <span class="rel-type">1 a N</span> Un usuario puede crear muchas solicitudes. ON DELETE CASCADE.</li>
+            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUDES_INVENTARIO</code> <span class="rel-type">1 a N</span> Un medicamento puede tener muchas solicitudes.</li>
+            <li><code>SOLICITUDES_INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Una solicitud contiene uno o varios items. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>PERMISOS_USUARIO</code> <span class="rel-type">1 a N</span> Un usuario puede tener permisos configurados para múltiples módulos. ON DELETE CASCADE.</li>
+            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Un medicamento puede aparecer en varios items de solicitud.</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <strong>SISGECLIN v2.5</strong> &mdash; Diagramas del Sistema (ER + UML) &mdash; Base de datos: sisgeclin_laravel &mdash; &copy; 2026
+</footer>
+
+<script>
+// Inicializar Mermaid — todos los diagramas se renderizan al cargar
+// (los paneles usan visibility:hidden en lugar de display:none para que Mermaid los procese)
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    er: {
+        diagramPadding: 30,
+        layoutDirection: 'TB',
+        minEntityWidth: 150,
+        minEntityHeight: 90,
+        entityPadding: 20,
+        useMaxWidth: false,
+    },
+    flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'basis',
+        padding: 30,
+        nodeSpacing: 60,
+        rankSpacing: 80,
+    },
+    themeVariables: {
+        primaryColor: '#dbeafe',
+        primaryTextColor: '#1e293b',
+        primaryBorderColor: '#0d6efd',
+        lineColor: '#475569',
+        secondaryColor: '#f0fdf4',
+        tertiaryColor: '#fef9c3',
+        fontSize: '15px',
+        fontFamily: 'Inter, Segoe UI, sans-serif',
+    }
+});
+
+// Cambiar pestaña ER
+function mostrarDiagrama(id) {
+    document.querySelectorAll('#diagrama .diagram-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#diagrama .diagram-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// Cambiar pestaña UML
+function mostrarUML(id) {
+    document.querySelectorAll('#uml-casos .diagram-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#uml-casos .diagram-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// Scroll activo en sidebar
+const sections = document.querySelectorAll('.doc-section, [id]');
+const links    = document.querySelectorAll('.doc-sidebar-menu a');
+window.addEventListener('scroll', () => {
+    let current = '';
+    document.querySelectorAll('[id]').forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    links.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+});
+</script>
+</body>
+</html>

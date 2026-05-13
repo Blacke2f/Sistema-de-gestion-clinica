@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SISGECLIN - Documentacion Tecnica</title><link rel="icon" type="image/png" href="/SISGECLIN/public/img/image-Photoroom.png"><link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"><link rel="stylesheet" href="/SISGECLIN/docs/docs.css"></head><body><header class="doc-header"><div class="doc-header-inner"><div class="doc-header-brand"><img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo"><div><h1>Documentacion Tecnica</h1><p>SISGECLIN v2.5 &mdash; Laravel 13 | PHP 8.2+ | MySQL</p></div></div><nav class="doc-header-nav"><a href="/SISGECLIN/docs/manual_usuario.html"><i class="bx bxs-book-open"></i> Manual</a><a href="/SISGECLIN/docs/documentacion_tecnica.html" class="active"><i class="bx bx-code-alt"></i> Tecnica</a><a href="/SISGECLIN/docs/modelo_er.html"><i class="bx bx-data"></i> Modelo ER</a><a href="/SISGECLIN/docs/documentacion_codigo.html"><i class="bx bx-code-curly"></i> Codigo</a></nav></div></header><div class="doc-layout">
+<aside class="doc-sidebar"><div class="doc-sidebar-inner"><div class="doc-sidebar-title">Contenido</div><nav class="doc-sidebar-menu">
+<a href="#descripcion"><i class="bx bx-info-circle"></i> Descripcion General</a>
+<a href="#arquitectura"><i class="bx bx-git-branch"></i> Arquitectura</a>
+<a href="#requisitos"><i class="bx bx-server"></i> Requisitos</a>
+<a href="#instalacion"><i class="bx bx-download"></i> Instalacion</a>
+<a href="#estructura"><i class="bx bx-folder-open"></i> Estructura</a>
+<a href="#base-datos"><i class="bx bx-data"></i> Base de Datos</a>
+<a href="#modulos"><i class="bx bxs-grid-alt"></i> Modulos</a>
+<a href="#rutas"><i class="bx bx-map"></i> API de Rutas</a>
+<a href="#seguridad"><i class="bx bx-shield-check"></i> Seguridad</a>
+<a href="#exportaciones"><i class="bx bxs-file-pdf"></i> Exportaciones</a>
+<a href="#notificaciones"><i class="bx bxs-bell"></i> Notificaciones</a>
+<a href="#solicitudes-bd"><i class="bx bx-send"></i> Solicitudes</a>
+<a href="#bitacora-bd"><i class="bx bx-history"></i> Bitacora</a>
+<a href="#permisos-bd"><i class="bx bx-shield"></i> Permisos</a>
+<a href="#red-local"><i class="bx bx-wifi"></i> Red Local</a>
+<a href="#mantenimiento"><i class="bx bx-wrench"></i> Mantenimiento</a>
+</nav></div></aside>
+<main class="doc-content"><section class="doc-section" id="descripcion">
+<div class="doc-section-header"><div class="doc-section-icon icon-blue"><i class="bx bx-info-circle"></i></div><div><h2>Descripcion General</h2><p>Stack tecnologico y caracteristicas del sistema</p></div></div>
+<div class="doc-section-body">
+<div class="info-grid">
+<div class="info-card"><div class="info-card-icon icon-blue"><i class="bx bxl-php"></i></div><div><h3>PHP 8.2+</h3><p>Lenguaje base</p></div></div>
+<div class="info-card"><div class="info-card-icon icon-red"><i class="bx bxs-data"></i></div><div><h3>Laravel 13</h3><p>Framework MVC</p></div></div>
+<div class="info-card"><div class="info-card-icon icon-orange"><i class="bx bx-data"></i></div><div><h3>MySQL</h3><p>Base de datos</p></div></div>
+<div class="info-card"><div class="info-card-icon icon-green"><i class="bx bx-server"></i></div><div><h3>Apache</h3><p>Servidor web XAMPP</p></div></div>
+</div>
+<table class="doc-table" style="margin-top:20px;">
+<thead><tr><th>Componente</th><th>Tecnologia</th><th>Version</th></tr></thead>
+<tbody>
+<tr><td>Framework</td><td>Laravel</td><td><span class="badge badge-red">13.x</span></td></tr>
+<tr><td>Lenguaje</td><td>PHP</td><td><span class="badge badge-blue">8.2+</span></td></tr>
+<tr><td>Base de datos</td><td>MySQL / MariaDB</td><td><span class="badge badge-orange">5.7+ / 10.4+</span></td></tr>
+<tr><td>ORM</td><td>Eloquent</td><td><span class="badge badge-green">Incluido en Laravel</span></td></tr>
+<tr><td>Autenticacion</td><td>Laravel Auth (sesiones file)</td><td><span class="badge badge-gray">Driver: file</span></td></tr>
+<tr><td>PDF</td><td>mPDF</td><td><span class="badge badge-blue">8.3</span></td></tr>
+<tr><td>Excel</td><td>PhpSpreadsheet</td><td><span class="badge badge-green">5.7</span></td></tr>
+<tr><td>Iconos</td><td>Boxicons</td><td><span class="badge badge-cyan">2.1.4</span></td></tr>
+</tbody>
+</table>
+</div>
+</section><section class="doc-section" id="arquitectura">
+<div class="doc-section-header"><div class="doc-section-icon icon-purple"><i class="bx bx-git-branch"></i></div><div><h2>Arquitectura del Sistema</h2><p>Patron MVC con deteccion dinamica de URL</p></div></div>
+<div class="doc-section-body">
+<div class="feature-grid">
+<div class="feature-item"><i class="bx bx-globe" style="color:#0d6efd;"></i><div><h4>Punto de entrada</h4><p><code>SISGECLIN/index.php</code> detecta el host actual y redirige a <code>public/</code> automaticamente.</p></div></div>
+<div class="feature-item"><i class="bx bx-transfer-alt" style="color:#198754;"></i><div><h4>mod_rewrite</h4><p><code>public/.htaccess</code> redirige todas las peticiones a <code>public/index.php</code> (front controller).</p></div></div>
+<div class="feature-item"><i class="bx bx-link" style="color:#6f42c1;"></i><div><h4>URL Dinamica</h4><p><code>AppServiceProvider</code> llama a <code>URL::forceRootUrl()</code> con el host real. Funciona desde localhost y desde cualquier IP de red.</p></div></div>
+<div class="feature-item"><i class="bx bx-lock" style="color:#dc3545;"></i><div><h4>Middleware</h4><p><code>auth</code> protege todas las rutas autenticadas. <code>role:admin</code> restringe modulos administrativos.</p></div></div>
+<div class="feature-item"><i class="bx bx-layer" style="color:#fd7e14;"></i><div><h4>Vistas Blade</h4><p>Layout principal <code>layouts/app.blade.php</code> con sidebar, navbar, notificaciones y modo oscuro.</p></div></div>
+<div class="feature-item"><i class="bx bx-file" style="color:#0dcaf0;"></i><div><h4>Sesiones</h4><p>Driver <code>file</code> almacenado en <code>storage/framework/sessions/</code>. Cookie sin dominio fijo para compatibilidad multi-IP.</p></div></div>
+</div>
+<h3 class="doc-subtitle" style="margin-top:20px;">Flujo de una peticion</h3>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-body"><h4>Cliente</h4><p>El navegador hace una peticion HTTP a <code>http://IP/SISGECLIN/public/ruta</code></p></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-body"><h4>Apache + .htaccess</h4><p>mod_rewrite redirige todo a <code>public/index.php</code></p></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-body"><h4>Bootstrap</h4><p>Laravel carga <code>bootstrap/app.php</code>, registra middleware y service providers</p></div></div>
+<div class="step"><div class="step-num">4</div><div class="step-body"><h4>Router</h4><p><code>routes/web.php</code> resuelve la ruta y aplica middleware (auth, role)</p></div></div>
+<div class="step"><div class="step-num">5</div><div class="step-body"><h4>Controller</h4><p>El controlador ejecuta la logica, consulta modelos Eloquent y retorna una vista o JSON</p></div></div>
+<div class="step"><div class="step-num">6</div><div class="step-body"><h4>Vista Blade</h4><p>La plantilla se compila y se envia al cliente como HTML</p></div></div>
+</div>
+</div>
+</section><section class="doc-section" id="requisitos">
+<div class="doc-section-header"><div class="doc-section-icon icon-orange"><i class="bx bx-server"></i></div><div><h2>Requisitos del Sistema</h2><p>Software necesario para ejecutar SISGECLIN</p></div></div>
+<div class="doc-section-body">
+<h3 class="doc-subtitle">Servidor</h3>
+<table class="doc-table">
+<thead><tr><th>Componente</th><th>Minimo</th><th>Recomendado</th></tr></thead>
+<tbody>
+<tr><td>PHP</td><td><span class="badge badge-red">8.2</span></td><td><span class="badge badge-green">8.2 o superior</span></td></tr>
+<tr><td>MySQL / MariaDB</td><td><span class="badge badge-blue">5.7 / 10.4</span></td><td><span class="badge badge-green">8.0 / 10.6+</span></td></tr>
+<tr><td>Apache</td><td><span class="badge badge-blue">2.4</span></td><td><span class="badge badge-green">2.4 con mod_rewrite</span></td></tr>
+<tr><td>Composer</td><td><span class="badge badge-blue">2.x</span></td><td><span class="badge badge-green">2.x</span></td></tr>
+<tr><td>Disco</td><td><span class="badge badge-gray">80 MB</span></td><td><span class="badge badge-green">200 MB+</span></td></tr>
+</tbody>
+</table>
+<h3 class="doc-subtitle" style="margin-top:20px;">Extensiones PHP requeridas</h3>
+<div class="feature-grid">
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>pdo_mysql</h4><p>Conexion a base de datos MySQL</p></div></div>
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>mbstring</h4><p>Manejo de cadenas multibyte (UTF-8)</p></div></div>
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>openssl</h4><p>Cifrado y generacion de tokens CSRF</p></div></div>
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>gd / imagick</h4><p>Procesamiento de imagenes para mPDF</p></div></div>
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>fileinfo</h4><p>Deteccion de tipos MIME para exportaciones</p></div></div>
+<div class="feature-item"><i class="bx bx-check-circle" style="color:#198754;"></i><div><h4>bcmath / json</h4><p>Calculos numericos y serializacion JSON</p></div></div>
+</div>
+<h3 class="doc-subtitle" style="margin-top:20px;">Cliente (Navegador)</h3>
+<table class="doc-table">
+<thead><tr><th>Navegador</th><th>Version minima</th></tr></thead>
+<tbody>
+<tr><td>Google Chrome</td><td><span class="badge badge-green">90+</span></td></tr>
+<tr><td>Mozilla Firefox</td><td><span class="badge badge-green">88+</span></td></tr>
+<tr><td>Microsoft Edge</td><td><span class="badge badge-green">90+</span></td></tr>
+<tr><td>Safari</td><td><span class="badge badge-green">14+</span></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="doc-section" id="instalacion">
+<div class="doc-section-header"><div class="doc-section-icon icon-green"><i class="bx bx-download"></i></div><div><h2>Instalacion y Configuracion</h2><p>Pasos para poner en marcha el sistema</p></div></div>
+<div class="doc-section-body">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-body"><h4>Copiar el proyecto</h4><p>Coloca la carpeta <code>SISGECLIN</code> en <code>E:\Xampp\htdocs\</code></p></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-body"><h4>Instalar dependencias</h4><p>Abre CMD en la carpeta del proyecto y ejecuta: <code>composer install</code></p></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-body"><h4>Configurar .env</h4><p>Copia <code>.env.example</code> a <code>.env</code> y edita los datos de base de datos.</p></div></div>
+<div class="step"><div class="step-num">4</div><div class="step-body"><h4>Crear la base de datos</h4><p>En phpMyAdmin crea la BD: <code>CREATE DATABASE sisgeclin_laravel CHARACTER SET utf8mb4;</code></p></div></div>
+<div class="step"><div class="step-num">5</div><div class="step-body"><h4>Importar el SQL</h4><p>Importa <code>database/sisgeclin_laravel.sql</code> en phpMyAdmin. Incluye estructura y datos iniciales.</p></div></div>
+<div class="step"><div class="step-num">6</div><div class="step-body"><h4>Limpiar cache</h4><p>Ejecuta: <code>php artisan config:clear &amp;&amp; php artisan view:clear</code></p></div></div>
+<div class="step"><div class="step-num">7</div><div class="step-body"><h4>Acceder</h4><p>Abre el navegador en <code>http://localhost/SISGECLIN/public</code></p></div></div>
+</div>
+<h3 class="doc-subtitle" style="margin-top:24px;">Configuracion .env clave</h3>
+<pre><code>APP_NAME=SISGECLIN
+APP_DEBUG=false
+APP_URL=http://localhost/SISGECLIN/public
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=sisgeclin_laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+SESSION_DRIVER=file
+SESSION_DOMAIN=
+SESSION_SECURE_COOKIE=false</code></pre>
+<div class="doc-alert warning" style="margin-top:16px;"><i class="bx bx-error"></i><div><strong>APP_URL</strong> solo es un fallback. El sistema detecta el host real automaticamente, por lo que funciona desde localhost y desde cualquier IP de red sin cambiar este valor.</div></div>
+<h3 class="doc-subtitle" style="margin-top:20px;">Credenciales por defecto</h3>
+<table class="doc-table">
+<thead><tr><th>Usuario</th><th>Contrasena</th><th>Rol</th></tr></thead>
+<tbody>
+<tr><td><code>admin</code></td><td><code>admin123</code></td><td><span class="badge badge-red">Administrador</span></td></tr>
+<tr><td><code>medico</code></td><td><code>admin123</code></td><td><span class="badge badge-blue">Medico</span></td></tr>
+<tr><td><code>recepcion</code></td><td><code>admin123</code></td><td><span class="badge badge-gray">Recepcionista</span></td></tr>
+</tbody>
+</table>
+</div>
+</section><section class="doc-section" id="estructura">
+<div class="doc-section-header"><div class="doc-section-icon icon-cyan"><i class="bx bx-folder-open"></i></div><div><h2>Estructura del Proyecto</h2><p>Organizacion de carpetas y archivos principales</p></div></div>
+<div class="doc-section-body">
+<table class="doc-table">
+<thead><tr><th>Ruta</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><code>app/Http/Controllers/</code></td><td>12 controladores — logica de negocio de cada modulo</td></tr>
+<tr><td><code>app/Http/Middleware/CheckRole.php</code></td><td>Control de acceso por rol (admin)</td></tr>
+<tr><td><code>app/Models/</code></td><td>9 modelos Eloquent con relaciones, scopes y accessors</td></tr>
+<tr><td><code>app/Providers/AppServiceProvider.php</code></td><td>URL dinamica + paginacion personalizada</td></tr>
+<tr><td><code>bootstrap/app.php</code></td><td>Registro del alias de middleware <code>role</code></td></tr>
+<tr><td><code>config/auth.php</code></td><td>Guard web apuntando al modelo <code>Usuario</code></td></tr>
+<tr><td><code>database/migrations/</code></td><td>13 migraciones en orden de dependencia</td></tr>
+<tr><td><code>database/seeders/DatabaseSeeder.php</code></td><td>Datos iniciales: usuarios, nomina, pacientes, inventario</td></tr>
+<tr><td><code>database/sisgeclin_laravel.sql</code></td><td>Dump completo UTF-8 listo para importar</td></tr>
+<tr><td><code>docs/</code></td><td>Documentacion HTML interactiva (este archivo)</td></tr>
+<tr><td><code>public/index.php</code></td><td>Front controller de Laravel</td></tr>
+<tr><td><code>public/.htaccess</code></td><td>Rewrite rules para mod_rewrite</td></tr>
+<tr><td><code>public/css/</code></td><td>Estilos CSS y script.js del sistema</td></tr>
+<tr><td><code>resources/views/layouts/app.blade.php</code></td><td>Layout principal con sidebar, navbar y notificaciones</td></tr>
+<tr><td><code>resources/views/exports/</code></td><td>Plantillas Blade para generacion de PDF</td></tr>
+<tr><td><code>routes/web.php</code></td><td>52 rutas organizadas por modulo y middleware</td></tr>
+<tr><td><code>storage/app/mpdf/</code></td><td>Directorio temporal para generacion de PDF</td></tr>
+<tr><td><code>storage/framework/sessions/</code></td><td>Archivos de sesion de usuarios</td></tr>
+<tr><td><code>storage/logs/laravel.log</code></td><td>Log de errores del sistema</td></tr>
+<tr><td><code>.env</code></td><td>Variables de entorno (BD, URL, sesion)</td></tr>
+<tr><td><code>index.php</code></td><td>Redireccion dinamica a <code>public/</code></td></tr>
+<tr><td><code>ABRIR_FIREWALL.bat</code></td><td>Script para habilitar acceso desde red local</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="doc-section" id="base-datos">
+<div class="doc-section-header"><div class="doc-section-icon icon-orange"><i class="bx bx-data"></i></div><div><h2>Base de Datos</h2><p>Tablas, roles y relaciones del esquema sisgeclin_laravel</p></div></div>
+<div class="doc-section-body">
+<table class="doc-table">
+<thead><tr><th>Tabla</th><th>Descripcion</th><th>Filas iniciales</th></tr></thead>
+<tbody>
+<tr><td><code>usuarios</code></td><td>Usuarios del sistema con roles y credenciales</td><td><span class="badge badge-blue">3</span></td></tr>
+<tr><td><code>pacientes</code></td><td>Pacientes registrados con datos clinicos</td><td><span class="badge badge-blue">5</span></td></tr>
+<tr><td><code>nomina</code></td><td>Personal medico y administrativo</td><td><span class="badge badge-blue">6</span></td></tr>
+<tr><td><code>consultas</code></td><td>Consultas medicas con estado y diagnostico</td><td><span class="badge badge-blue">5</span></td></tr>
+<tr><td><code>inventario</code></td><td>Medicamentos con stock y stock minimo</td><td><span class="badge badge-blue">8</span></td></tr>
+<tr><td><code>inventario_movimientos</code></td><td>Historial de entradas y salidas</td><td><span class="badge badge-blue">3+</span></td></tr>
+<tr><td><code>mensajes</code></td><td>Mensajeria interna entre usuarios</td><td><span class="badge badge-blue">3</span></td></tr>
+<tr><td><code>bitacora</code></td><td>Auditoria de acciones del sistema</td><td><span class="badge badge-gray">Auto</span></td></tr>
+<tr><td><code>notificaciones</code></td><td>Notificaciones en tiempo real</td><td><span class="badge badge-gray">Auto</span></td></tr>
+<tr><td><code>consultas_medicamentos</code></td><td>Relacion N:M consulta-medicamento</td><td><span class="badge badge-gray">—</span></td></tr>
+<tr><td><code>solicitudes_inventario</code></td><td>Solicitudes de reposicion de medicamentos</td><td><span class="badge badge-gray">Auto</span></td></tr>
+<tr><td><code>solicitud_items</code></td><td>Items individuales de cada solicitud</td><td><span class="badge badge-gray">—</span></td></tr>
+<tr><td><code>permisos_usuario</code></td><td>Permisos granulares por usuario y módulo</td><td><span class="badge badge-gray">Auto</span></td></tr>
+</tbody>
+</table>
+<div class="doc-alert info" style="margin-top:16px;"><i class="bx bx-info-circle"></i><div>Ver el <a href="/SISGECLIN/docs/modelo_er.html" style="color:#0d6efd;font-weight:600;">Modelo Entidad-Relacion</a> para el diagrama visual completo con todas las relaciones y restricciones de integridad.</div></div>
+</div>
+</section><section class="doc-section" id="modulos">
+<div class="doc-section-header"><div class="doc-section-icon icon-green"><i class="bx bxs-grid-alt"></i></div><div><h2>Modulos del Sistema</h2><p>Descripcion funcional de cada modulo</p></div></div>
+<div class="doc-section-body">
+<div class="feature-grid">
+<div class="feature-item"><i class="bx bx-log-in" style="color:#0d6efd;"></i><div><h4>Autenticacion</h4><p>Login bcrypt, registro con cuenta deshabilitada, regeneracion de sesion, bitacora automatica.</p></div></div>
+<div class="feature-item"><i class="bx bxs-dashboard" style="color:#6f42c1;"></i><div><h4>Dashboard</h4><p>Estadisticas en tiempo real, consultas recientes, acciones rapidas, bitacora (admin).</p></div></div>
+<div class="feature-item"><i class="bx bxs-user-detail" style="color:#0d6efd;"></i><div><h4>Pacientes</h4><p>CRUD completo, busqueda, paginacion 15/30/50, exportacion CSV/PDF/Excel, notificacion automatica.</p></div></div>
+<div class="feature-item"><i class="bx bx-clipboard" style="color:#0dcaf0;"></i><div><h4>Consultas</h4><p>CRUD con estados, asignacion a medico de nomina o usuario, exportacion por periodo.</p></div></div>
+<div class="feature-item"><i class="bx bxs-capsule" style="color:#fd7e14;"></i><div><h4>Medicamentos</h4><p>CRUD con alerta de stock bajo, exportacion PDF/Excel/CSV con indicador de estado.</p></div></div>
+<div class="feature-item"><i class="bx bx-transfer" style="color:#198754;"></i><div><h4>Movimientos</h4><p>Entradas y salidas con historial, estadisticas por periodo, alerta automatica de stock bajo.</p></div></div>
+<div class="feature-item"><i class="bx bx-send" style="color:#856404;"></i><div><h4>Solicitudes (recep/medico)</h4><p>Solicitudes de reposicion multi-medicamento con numero de orden SOL-AAAAMM-XXXX. Aprobacion automatica registra entrada al inventario.</p></div></div>
+<div class="feature-item"><i class="bx bx-history" style="color:#1a2234;"></i><div><h4>Bitacora (admin)</h4><p>Auditoria completa con filtros por accion, usuario y fecha. Paginacion con selector 10/15/20/50 registros.</p></div></div>
+<div class="feature-item"><i class="bx bx-shield" style="color:#6f42c1;"></i><div><h4>Permisos (admin)</h4><p>Sistema ACL granular: el admin define qué puede ver, crear, editar y eliminar cada usuario en cada módulo. Middleware CheckPermiso protege todas las rutas.</p></div></div>
+<div class="feature-item"><i class="bx bxs-envelope" style="color:#0dcaf0;"></i><div><h4>Mensajes</h4><p>Mensajeria individual y masiva (admin), badge en tiempo real, notificacion al destinatario.</p></div></div>
+<div class="feature-item"><i class="bx bxs-group" style="color:#6f42c1;"></i><div><h4>Nomina (admin)</h4><p>CRUD de empleados, cargos medicos aparecen en selector de consultas, exportacion CSV.</p></div></div>
+<div class="feature-item"><i class="bx bxs-user-account" style="color:#1a2234;"></i><div><h4>Usuarios (admin)</h4><p>CRUD, activar/desactivar cuentas, bitacora de todas las acciones.</p></div></div>
+<div class="feature-item"><i class="bx bxs-user-circle" style="color:#856404;"></i><div><h4>Perfil</h4><p>Actualizacion de datos personales y cambio de contrasena con verificacion.</p></div></div>
+<div class="feature-item"><i class="bx bxs-bell" style="color:#ffc107;"></i><div><h4>Notificaciones</h4><p>Dropdown con ultimas 10, polling cada 30s, 7 tipos de eventos, marcar como leidas.</p></div></div>
+<div class="feature-item"><i class="bx bxs-file-pdf" style="color:#dc3545;"></i><div><h4>Exportaciones</h4><p>PDF (mPDF), Excel (PhpSpreadsheet), CSV para pacientes, consultas, medicamentos, movimientos.</p></div></div>
+</div>
+</div>
+</section>
+
+<section class="doc-section" id="rutas">
+<div class="doc-section-header"><div class="doc-section-icon icon-blue"><i class="bx bx-map"></i></div><div><h2>API de Rutas</h2><p>52 rutas organizadas por modulo y nivel de acceso</p></div></div>
+<div class="doc-section-body">
+<h3 class="doc-subtitle">Publicas (sin autenticacion)</h3>
+<table class="doc-table">
+<thead><tr><th>Metodo</th><th>Ruta</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/login</code></td><td>Formulario de login</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/login</code></td><td>Procesar autenticacion</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/register</code></td><td>Formulario de registro</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/register</code></td><td>Crear cuenta (activo=false)</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/logout</code></td><td>Cerrar sesion y redirigir al login</td></tr>
+</tbody>
+</table>
+<h3 class="doc-subtitle" style="margin-top:20px;">Autenticadas (middleware auth)</h3>
+<table class="doc-table">
+<thead><tr><th>Metodo</th><th>Ruta</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/</code></td><td>Dashboard principal</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/pacientes</code></td><td>Listar pacientes con paginacion</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/pacientes</code></td><td>Crear paciente (JSON)</td></tr>
+<tr><td><span class="badge badge-yellow">PUT</span></td><td><code>/pacientes/{id}</code></td><td>Actualizar paciente (JSON)</td></tr>
+<tr><td><span class="badge badge-red">DELETE</span></td><td><code>/pacientes/{id}</code></td><td>Eliminar paciente y consultas</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/consultas</code></td><td>Listar consultas</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/consultas</code></td><td>Crear consulta (JSON)</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/medicina</code></td><td>Listar medicamentos</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/inventario</code></td><td>Listar movimientos</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/inventario/entrada</code></td><td>Registrar entrada de stock</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/inventario/salida</code></td><td>Registrar salida de stock</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/notificaciones/count</code></td><td>Conteo para badges (polling)</td></tr>
+<tr><td><span class="badge badge-cyan">PATCH</span></td><td><code>/notificaciones/read-all</code></td><td>Marcar todas como leidas</td></tr>
+</tbody>
+</table>
+<h3 class="doc-subtitle" style="margin-top:20px;">Solo Admin (middleware role:admin)</h3>
+<table class="doc-table">
+<thead><tr><th>Metodo</th><th>Ruta</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/nomina</code></td><td>Listar empleados</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/usuarios</code></td><td>Listar usuarios del sistema</td></tr>
+<tr><td><span class="badge badge-cyan">PATCH</span></td><td><code>/usuarios/{id}/toggle</code></td><td>Activar o desactivar cuenta</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/mensajes/masivo</code></td><td>Enviar mensaje a grupo de usuarios</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/export/consultas</code></td><td>PDF/Excel de consultas</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/export/pacientes</code></td><td>PDF/Excel de pacientes</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/export/medicamentos</code></td><td>PDF/Excel/CSV de medicamentos</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/export/movimientos</code></td><td>PDF de movimientos con estadisticas</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/solicitudes</code></td><td>Listar solicitudes de inventario</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/solicitudes</code></td><td>Crear solicitud (recep/medico)</td></tr>
+<tr><td><span class="badge badge-cyan">PATCH</span></td><td><code>/solicitudes/{id}/atender</code></td><td>Aprobar/rechazar/completar (admin)</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/bitacora</code></td><td>Ver bitacora del sistema (admin)</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td><code>/usuarios/{id}/permisos</code></td><td>Obtener permisos actuales del usuario (JSON)</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td><code>/usuarios/{id}/permisos</code></td><td>Guardar permisos del usuario</td></tr>
+</tbody>
+</table>
+</div>
+</section><section class="doc-section" id="seguridad">
+<div class="doc-section-header"><div class="doc-section-icon icon-red"><i class="bx bx-shield-check"></i></div><div><h2>Seguridad</h2><p>Mecanismos de proteccion implementados</p></div></div>
+<div class="doc-section-body">
+<div class="feature-grid">
+<div class="feature-item"><i class="bx bx-lock" style="color:#dc3545;"></i><div><h4>Bcrypt (12 rounds)</h4><p>Todas las contrasenas se almacenan hasheadas. Nunca en texto plano.</p></div></div>
+<div class="feature-item"><i class="bx bx-shield" style="color:#0d6efd;"></i><div><h4>CSRF Token</h4><p>Todos los formularios incluyen token CSRF de Laravel. Las peticiones AJAX lo envian en el header.</p></div></div>
+<div class="feature-item"><i class="bx bx-refresh" style="color:#198754;"></i><div><h4>Session Fixation</h4><p>La sesion se regenera tras cada login exitoso para prevenir ataques de fijacion de sesion.</p></div></div>
+<div class="feature-item"><i class="bx bx-user-x" style="color:#856404;"></i><div><h4>Cuentas Desactivadas</h4><p>Los usuarios con activo=false no pueden iniciar sesion aunque tengan credenciales validas.</p></div></div>
+<div class="feature-item"><i class="bx bx-key" style="color:#6f42c1;"></i><div><h4>Control por Rol</h4><p>Middleware CheckRole.php verifica el rol antes de cada accion administrativa.</p></div></div>
+<div class="feature-item"><i class="bx bx-history" style="color:#0dcaf0;"></i><div><h4>Bitacora de Auditoria</h4><p>Todas las acciones criticas se registran con usuario, IP, fecha y detalles.</p></div></div>
+</div>
+<h3 class="doc-subtitle" style="margin-top:20px;">Acciones registradas en bitacora</h3>
+<table class="doc-table">
+<thead><tr><th>Accion</th><th>Cuando se registra</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-blue">INICIO SESION</span></td><td>Al autenticarse correctamente</td></tr>
+<tr><td><span class="badge badge-gray">CIERRE SESION</span></td><td>Al hacer logout</td></tr>
+<tr><td><span class="badge badge-green">CREAR USUARIO</span></td><td>Al crear un nuevo usuario</td></tr>
+<tr><td><span class="badge badge-yellow">EDITAR USUARIO</span></td><td>Al modificar datos o contrasena</td></tr>
+<tr><td><span class="badge badge-red">ELIMINAR USUARIO</span></td><td>Al eliminar una cuenta</td></tr>
+<tr><td><span class="badge badge-green">ACTIVAR USUARIO</span></td><td>Al habilitar una cuenta desactivada</td></tr>
+<tr><td><span class="badge badge-red">DESACTIVAR USUARIO</span></td><td>Al bloquear el acceso de un usuario</td></tr>
+<tr><td><span class="badge badge-green">ENTRADA INVENTARIO</span></td><td>Al registrar entrada de medicamento</td></tr>
+<tr><td><span class="badge badge-red">SALIDA INVENTARIO</span></td><td>Al registrar salida de medicamento</td></tr>
+<tr><td><span class="badge badge-yellow">ACTUALIZAR PERFIL</span></td><td>Al cambiar nombre o email propio</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="doc-section" id="exportaciones">
+<div class="doc-section-header"><div class="doc-section-icon icon-red"><i class="bx bxs-file-pdf"></i></div><div><h2>Exportaciones</h2><p>Formatos disponibles y librerias utilizadas</p></div></div>
+<div class="doc-section-body">
+<table class="doc-table">
+<thead><tr><th>Modulo</th><th>CSV</th><th>PDF</th><th>Excel</th><th>Notas</th></tr></thead>
+<tbody>
+<tr><td>Pacientes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td>Exportacion directa o por periodo</td></tr>
+<tr><td>Consultas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td>Semana, mes, rango, todos</td></tr>
+<tr><td>Medicamentos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td>PDF resalta stock bajo en rojo</td></tr>
+<tr><td>Movimientos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td>PDF incluye tarjetas de estadisticas</td></tr>
+<tr><td>Nomina</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-gray">No</span></td><td>Solo admin</td></tr>
+</tbody>
+</table>
+<div class="feature-grid" style="margin-top:20px;">
+<div class="feature-item"><i class="bx bxs-file-pdf" style="color:#dc3545;"></i><div><h4>mPDF 8.3</h4><p>Plantillas Blade en <code>resources/views/exports/</code>. Temp en <code>storage/app/mpdf/</code>. Orientacion A4 o A4-L segun modulo.</p></div></div>
+<div class="feature-item"><i class="bx bxs-file" style="color:#198754;"></i><div><h4>PhpSpreadsheet 5.7</h4><p>Formato profesional con encabezados de color, filas alternadas y bordes. Columnas con ancho automatico.</p></div></div>
+<div class="feature-item"><i class="bx bx-export" style="color:#0d6efd;"></i><div><h4>CSV con BOM UTF-8</h4><p>Incluye BOM (chr(0xEF).chr(0xBB).chr(0xBF)) para compatibilidad con Excel en Windows.</p></div></div>
+</div>
+</div>
+</section>
+
+<section class="doc-section" id="notificaciones">
+<div class="doc-section-header"><div class="doc-section-icon icon-yellow"><i class="bx bxs-bell"></i></div><div><h2>Sistema de Notificaciones</h2><p>Eventos automaticos y polling en tiempo real</p></div></div>
+<div class="doc-section-body">
+<table class="doc-table">
+<thead><tr><th>Tipo</th><th>Evento</th><th>Destinatarios</th><th>Color</th></tr></thead>
+<tbody>
+<tr><td><code>paciente_nuevo</code></td><td>Al registrar un paciente</td><td>Todos (excepto quien registra)</td><td><span class="badge badge-green">Verde</span></td></tr>
+<tr><td><code>consulta_nueva</code></td><td>Al crear una consulta</td><td>Todos (excepto quien registra)</td><td><span class="badge badge-blue">Azul</span></td></tr>
+<tr><td><code>entrada_inventario</code></td><td>Al registrar entrada</td><td>Todos (excepto quien registra)</td><td><span class="badge badge-green">Verde</span></td></tr>
+<tr><td><code>salida_inventario</code></td><td>Al registrar salida</td><td>Todos (excepto quien registra)</td><td><span class="badge badge-yellow">Amarillo</span></td></tr>
+<tr><td><code>stock_bajo</code></td><td>Cuando stock cae al minimo</td><td>Todos los usuarios</td><td><span class="badge badge-red">Rojo</span></td></tr>
+<tr><td><code>mensaje_nuevo</code></td><td>Al recibir un mensaje</td><td>Solo el destinatario</td><td><span class="badge badge-cyan">Cyan</span></td></tr>
+<tr><td><code>registro_pendiente</code></td><td>Cuando alguien solicita acceso</td><td>Solo administradores</td><td><span class="badge badge-yellow">Amarillo</span></td></tr>
+</tbody>
+</table>
+<div class="doc-alert info" style="margin-top:16px;"><i class="bx bx-info-circle"></i><div>El endpoint <code>GET /notificaciones/count</code> devuelve <code>{ notificaciones: N, mensajes: N }</code> y es consultado cada 30 segundos por el JavaScript del layout para actualizar los badges sin recargar la pagina.</div></div>
+</div>
+</section>
+
+<section class="doc-section" id="red-local">
+<div class="doc-section-header"><div class="doc-section-icon icon-cyan"><i class="bx bx-wifi"></i></div><div><h2>Acceso en Red Local</h2><p>Como acceder desde otros dispositivos en la misma red</p></div></div>
+<div class="doc-section-body">
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ejecutar ABRIR_FIREWALL.bat</h4><p>Clic derecho sobre el archivo en la raiz del proyecto y selecciona <strong>Ejecutar como administrador</strong>. Solo necesario una vez.</p></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-body"><h4>Verificar la IP del servidor</h4><p>Abre CMD y ejecuta <code>ipconfig</code>. Busca la IPv4 de tu adaptador de red (ej: <code>192.168.1.3</code>).</p></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-body"><h4>Acceder desde otro dispositivo</h4><p>En el navegador del otro dispositivo escribe: <code>http://192.168.1.3/SISGECLIN/public</code></p></div></div>
+</div>
+<div class="doc-alert success" style="margin-top:16px;"><i class="bx bx-check-circle"></i><div>El sistema detecta automaticamente el host de cada peticion gracias a <code>URL::forceRootUrl()</code> en <code>AppServiceProvider</code>. No es necesario cambiar el <code>.env</code> para acceso desde red.</div></div>
+<div class="doc-alert warning" style="margin-top:12px;"><i class="bx bx-error"></i><div>Ambos dispositivos deben estar conectados a la misma red WiFi o LAN. El servidor XAMPP debe estar corriendo.</div></div>
+</div>
+</section>
+
+<section class="doc-section" id="mantenimiento">
+<div class="doc-section-header"><div class="doc-section-icon icon-dark"><i class="bx bx-wrench"></i></div><div><h2>Mantenimiento</h2><p>Comandos utiles y procedimientos de backup</p></div></div>
+<div class="doc-section-body">
+<h3 class="doc-subtitle">Comandos Artisan frecuentes</h3>
+<pre><code>php artisan config:clear      # Limpiar cache de configuracion
+php artisan view:clear        # Limpiar vistas compiladas
+php artisan cache:clear       # Limpiar cache de aplicacion
+php artisan route:clear       # Limpiar cache de rutas
+php artisan migrate:status    # Ver estado de migraciones
+php artisan migrate:fresh --seed  # Recrear BD con datos iniciales</code></pre>
+<h3 class="doc-subtitle" style="margin-top:20px;">Generar nuevo dump SQL</h3>
+<pre><code>E:\Xampp\mysql\bin\mysqldump.exe ^
+  --user=root ^
+  --default-character-set=utf8mb4 ^
+  --no-tablespaces ^
+  sisgeclin_laravel ^
+  --result-file=database\sisgeclin_laravel.sql</code></pre>
+<h3 class="doc-subtitle" style="margin-top:20px;">Logs del sistema</h3>
+<p class="doc-text">Los errores se registran en <code>storage/logs/laravel.log</code>. Con <code>APP_DEBUG=false</code> los errores no se muestran al usuario, solo se registran en el log.</p>
+<h3 class="doc-subtitle" style="margin-top:20px;">Backup recomendado</h3>
+<table class="doc-table">
+<thead><tr><th>Que respaldar</th><th>Frecuencia</th><th>Como</th></tr></thead>
+<tbody>
+<tr><td>Base de datos</td><td><span class="badge badge-red">Diaria</span></td><td>Regenerar <code>sisgeclin_laravel.sql</code> con mysqldump</td></tr>
+<tr><td>Carpeta del proyecto</td><td><span class="badge badge-yellow">Semanal</span></td><td>Copiar <code>SISGECLIN/</code> (excluir <code>vendor/</code>)</td></tr>
+<tr><td>Archivo .env</td><td><span class="badge badge-yellow">Semanal</span></td><td>Guardar en lugar seguro (contiene credenciales)</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="doc-section" id="solicitudes-bd">
+<div class="doc-section-header"><div class="doc-section-icon icon-yellow"><i class="bx bx-send"></i></div><div><h2>Modulo de Solicitudes</h2><p>Flujo de reposicion de inventario con trazabilidad completa</p></div></div>
+<div class="doc-section-body">
+<h3 class="doc-subtitle">Tablas involucradas</h3>
+<table class="doc-table">
+<thead><tr><th>Tabla</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><code>solicitudes_inventario</code></td><td>Cabecera de la solicitud: numero_orden, estado, solicitado_por, atendida_por, numero_factura, atendida_at</td></tr>
+<tr><td><code>solicitud_items</code></td><td>Items de la solicitud: medicamento_id, cantidad, proveedor_sugerido, telefono_proveedor</td></tr>
+</tbody>
+</table>
+<h3 class="doc-subtitle" style="margin-top:20px;">Numero de orden</h3>
+<p class="doc-text">Formato: <code>SOL-AAAAMM-XXXX</code> donde AAAAMM es el año y mes actual y XXXX es un correlativo de 4 digitos. Ejemplo: <code>SOL-202605-0001</code>. Se genera automaticamente al crear la solicitud.</p>
+<h3 class="doc-subtitle" style="margin-top:20px;">Flujo de aprobacion</h3>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="step-body"><h4>Recepcionista/Medico crea solicitud</h4><p>POST /solicitudes con array de items. Estado inicial: pendiente. Notificacion automatica a admins.</p></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-body"><h4>Admin aprueba</h4><p>PATCH /solicitudes/{id}/atender con estado=aprobada. El frontend hace una segunda llamada a POST /inventario/entrada automaticamente.</p></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-body"><h4>Entrada registrada</h4><p>El motivo de la entrada incluye el numero de orden y el numero de factura para trazabilidad completa.</p></div></div>
+</div>
+</div>
+</section>
+
+<section class="doc-section" id="bitacora-bd">
+<div class="doc-section-header"><div class="doc-section-icon icon-dark"><i class="bx bx-history"></i></div><div><h2>Bitacora de Auditoria</h2><p>Registro inmutable de todas las acciones criticas del sistema</p></div></div>
+<div class="doc-section-body">
+<p class="doc-text">La tabla <code>bitacora</code> se escribe automaticamente desde los controladores usando el metodo estatico <code>Bitacora::registrar()</code>. Las llamadas estan envueltas en try/catch para que un fallo en la bitacora nunca interrumpa la operacion principal.</p>
+<table class="doc-table" style="margin-top:16px;">
+<thead><tr><th>Campo</th><th>Descripcion</th></tr></thead>
+<tbody>
+<tr><td><code>usuario_id</code></td><td>ID del usuario que realizo la accion</td></tr>
+<tr><td><code>accion</code></td><td>Etiqueta de la accion (CREAR USUARIO, ENTRADA INVENTARIO, etc.)</td></tr>
+<tr><td><code>tabla</code></td><td>Tabla afectada (usuarios, nomina, inventario_movimientos, etc.)</td></tr>
+<tr><td><code>registro_id</code></td><td>ID del registro afectado</td></tr>
+<tr><td><code>detalles</code></td><td>Descripcion legible de la accion realizada</td></tr>
+<tr><td><code>ip</code></td><td>Direccion IP del cliente</td></tr>
+</tbody>
+</table>
+<div class="doc-alert info" style="margin-top:16px;"><i class="bx bx-info-circle"></i><div>La vista de bitacora solo es accesible para administradores (middleware <code>role:admin</code>). Incluye paginacion con selector 10/15/20/50 registros y filtros por accion, usuario y rango de fechas.</div></div>
+</div>
+</section>
+
+<section class="doc-section" id="permisos-bd">
+<div class="doc-section-header"><div class="doc-section-icon icon-purple"><i class="bx bx-shield"></i></div><div><h2>Sistema de Permisos (ACL)</h2><p>Control granular de acceso por usuario y modulo</p></div></div>
+<div class="doc-section-body">
+<p class="doc-text">El sistema de permisos permite al administrador definir exactamente qué puede hacer cada usuario en cada módulo. Se implementa con dos componentes principales:</p>
+<div class="feature-grid" style="margin-top:16px;">
+<div class="feature-item"><i class="bx bx-data" style="color:#6f42c1;"></i><div><h4>Tabla permisos_usuario</h4><p>Almacena un registro por usuario+módulo con 4 campos booleanos: puede_ver, puede_crear, puede_editar, puede_eliminar.</p></div></div>
+<div class="feature-item"><i class="bx bx-shield-check" style="color:#0d6efd;"></i><div><h4>Middleware CheckPermiso</h4><p>Se aplica a cada ruta con <code>->middleware('permiso:modulo,accion')</code>. Verifica el permiso antes de ejecutar el controlador.</p></div></div>
+<div class="feature-item"><i class="bx bx-user-check" style="color:#198754;"></i><div><h4>Método puedeEn()</h4><p>Método del modelo Usuario que verifica un permiso. Los admins siempre retornan true sin consultar la BD.</p></div></div>
+<div class="feature-item"><i class="bx bxs-grid-alt" style="color:#fd7e14;"></i><div><h4>Sidebar dinámico</h4><p>El menú lateral carga los permisos del usuario una vez y oculta los módulos a los que no tiene acceso de ver.</p></div></div>
+</div>
+<h3 class="doc-subtitle" style="margin-top:20px;">Módulos protegidos</h3>
+<table class="doc-table">
+<thead><tr><th>Módulo</th><th>Clave</th><th>Acciones protegidas</th></tr></thead>
+<tbody>
+<tr><td>Pacientes</td><td><code>pacientes</code></td><td>ver, crear, editar, eliminar</td></tr>
+<tr><td>Consultas</td><td><code>consultas</code></td><td>ver, crear, editar, eliminar</td></tr>
+<tr><td>Medicamentos</td><td><code>medicina</code></td><td>ver, crear, editar, eliminar</td></tr>
+<tr><td>Movimientos</td><td><code>inventario</code></td><td>ver, crear (entradas/salidas)</td></tr>
+<tr><td>Mensajes</td><td><code>mensajes</code></td><td>ver, crear, eliminar</td></tr>
+<tr><td>Solicitudes</td><td><code>solicitudes</code></td><td>ver, crear</td></tr>
+</tbody>
+</table>
+<div class="doc-alert info" style="margin-top:16px;"><i class="bx bx-info-circle"></i><div>Los módulos de Nómina, Usuarios y Bitácora son exclusivos de administradores y usan el middleware <code>role:admin</code>, no el sistema de permisos granulares.</div></div>
+</div>
+</section>
+
+</main>
+</div>
+
+<footer class="doc-footer">
+  <strong>SISGECLIN v2.5</strong> &mdash; Documentacion Tecnica &mdash; Laravel 13 | PHP 8.2+ | MySQL &mdash; &copy; 2026
+</footer>
+
+<script>
+const sections = document.querySelectorAll('.doc-section');
+const links = document.querySelectorAll('.doc-sidebar-menu a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html>
