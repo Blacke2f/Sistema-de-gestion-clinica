@@ -1,0 +1,12 @@
+  # Contenedor de tu Aplicación Laravel desde GitHub
+  web:
+    container_name: sisgeclin_web
+    build:
+      # Reemplaza con la URL real de tu repositorio público de GitHub
+      context: https://github.com/Blacke2f/Sistema-de-gestion-clinica.git
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    restart: always
+    depends_on:
+      - db
