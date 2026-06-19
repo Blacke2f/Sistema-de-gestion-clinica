@@ -210,7 +210,6 @@ class Usuario extends Authenticatable
 
     /**
      * Verifica si el usuario es administrador.
-     * Uso: if ($usuario->isAdmin()) { ... }
      */
     public function isAdmin(): bool
     {
@@ -219,10 +218,91 @@ class Usuario extends Authenticatable
 
     /**
      * Verifica si el usuario tiene rol de médico.
-     * Uso: if ($usuario->isMedico()) { ... }
      */
     public function isMedico(): bool
     {
         return $this->rol === 'medico';
+    }
+
+    /**
+     * Verifica si el usuario tiene rol de enfermera.
+     */
+    public function isEnfermera(): bool
+    {
+        return $this->rol === 'enfermera';
+    }
+
+    /**
+     * Verifica si el usuario tiene rol de farmacéutico.
+     */
+    public function isFarmaceutico(): bool
+    {
+        return $this->rol === 'farmaceutico';
+    }
+
+    /**
+     * Verifica si el usuario tiene rol de contador.
+     */
+    public function isContador(): bool
+    {
+        return $this->rol === 'contador';
+    }
+
+    /**
+     * Verifica si el usuario tiene rol de laboratorista.
+     */
+    public function isLaboratorista(): bool
+    {
+        return $this->rol === 'laboratorista';
+    }
+
+    /**
+     * Retorna el nombre legible del rol.
+     */
+    public function getRolTextoAttribute(): string
+    {
+        return match ($this->rol) {
+            'admin'          => 'Administrador',
+            'medico'         => 'Médico',
+            'recepcionista'  => 'Recepcionista',
+            'enfermera'      => 'Enfermera',
+            'farmaceutico'   => 'Farmacéutico',
+            'contador'       => 'Contador',
+            'laboratorista'  => 'Laboratorista',
+            default          => ucfirst($this->rol),
+        };
+    }
+
+    /**
+     * Retorna el color badge del rol para la UI.
+     */
+    public function getRolColorAttribute(): string
+    {
+        return match ($this->rol) {
+            'admin'          => 'danger',
+            'medico'         => 'primary',
+            'recepcionista'  => 'secondary',
+            'enfermera'      => 'info',
+            'farmaceutico'   => 'success',
+            'contador'       => 'warning',
+            'laboratorista'  => 'purple',
+            default          => 'secondary',
+        };
+    }
+
+    /**
+     * Lista de todos los roles disponibles con su información.
+     */
+    public static function roles(): array
+    {
+        return [
+            'admin'         => ['label' => 'Administrador', 'color' => 'danger',    'icon' => 'bxs-shield'],
+            'medico'        => ['label' => 'Médico',        'color' => 'primary',   'icon' => 'bx-plus-medical'],
+            'recepcionista' => ['label' => 'Recepcionista', 'color' => 'secondary', 'icon' => 'bx-user'],
+            'enfermera'     => ['label' => 'Enfermera',     'color' => 'info',      'icon' => 'bx-heart'],
+            'farmaceutico'  => ['label' => 'Farmacéutico',  'color' => 'success',   'icon' => 'bxs-capsule'],
+            'contador'      => ['label' => 'Contador',      'color' => 'warning',   'icon' => 'bx-calculator'],
+            'laboratorista' => ['label' => 'Laboratorista', 'color' => 'purple',    'icon' => 'bx-test-tube'],
+        ];
     }
 }

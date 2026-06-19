@@ -1,0 +1,13 @@
+node_modules/
+vendor/
+.git/
+.env.local
+*.log
+.vscode/
+.idea/
+.DS_Store
+storage/logs/
+bootstrap/cache/
+public/hot
+dist/
+.turbo/

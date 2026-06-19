@@ -114,7 +114,7 @@
                         </td>
                         <td>
                             <div class="cell-user">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($s->solicitadoPor->nombre_completo) }}&background=6f42c1&color=fff&size=32" alt="">
+                                <img src="" data-avatar="{{ $s->solicitadoPor->nombre_completo }}" data-bg="#6f42c1" data-size="32" alt="">
                                 <div>
                                     <div style="font-size:13px;font-weight:500;">{{ $s->solicitadoPor->nombre_completo }}</div>
                                     <span class="text-muted">{{ $s->created_at->format('d/m/Y') }}</span>

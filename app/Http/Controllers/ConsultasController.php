@@ -164,6 +164,14 @@ class ConsultasController extends Controller
 
         try {
             $consulta->update($data);
+
+            if ($data['estado'] === 'completada') {
+                $cita = \App\Models\Cita::where('consulta_id', $consulta->id)->first();
+                if ($cita) {
+                    $cita->update(['estado' => 'completada']);
+                }
+            }
+
             return response()->json(['success' => true, 'message' => 'Consulta actualizada correctamente.']);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => 'Error al actualizar: ' . $e->getMessage()], 500);

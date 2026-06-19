@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SISGECLIN — Documentacion del Codigo</title>
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
+<link rel="stylesheet" href="/SISGECLIN/docs/docs.css?v=5.0">
 <style>
 .process-counter {
     display: grid;
@@ -153,7 +153,7 @@
       <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
       <div>
         <h1>Documentacion del Codigo</h1>
-        <p>SISGECLIN v2.5 &mdash; Como funciona el sistema</p>
+        <p>SISGECLIN v3.0 &mdash; Como funciona el sistema</p>
       </div>
     </div>
     <nav class="doc-header-nav">
@@ -175,18 +175,25 @@
         <a href="#flujo-peticion"><i class="bx bx-transfer-alt"></i> Flujo de Peticion</a>
         <a href="#autenticacion"><i class="bx bx-lock"></i> Autenticacion</a>
         <a href="#permisos"><i class="bx bx-shield"></i> Sistema de Permisos</a>
-        <a href="#mod-pacientes"><i class="bx bxs-user-detail"></i> Modulo Pacientes</a>
-        <a href="#mod-consultas"><i class="bx bx-clipboard"></i> Modulo Consultas</a>
-        <a href="#mod-inventario"><i class="bx bxs-capsule"></i> Modulo Inventario</a>
-        <a href="#mod-movimientos"><i class="bx bx-transfer"></i> Modulo Movimientos</a>
-        <a href="#mod-solicitudes"><i class="bx bx-send"></i> Modulo Solicitudes</a>
-        <a href="#mod-nomina"><i class="bx bxs-group"></i> Modulo Nomina</a>
-        <a href="#mod-usuarios"><i class="bx bxs-user-account"></i> Modulo Usuarios</a>
-        <a href="#mod-mensajes"><i class="bx bxs-envelope"></i> Modulo Mensajes</a>
+        <a href="#mod-pacientes"><i class="bx bxs-user-detail"></i> Pacientes</a>
+        <a href="#expediente"><i class="bx bx-folder-open"></i> Expediente Clinico</a>
+        <a href="#agenda"><i class="bx bx-calendar-event"></i> Agenda de Citas</a>
+        <a href="#mod-consultas"><i class="bx bx-clipboard"></i> Consultas</a>
+        <a href="#signos"><i class="bx bx-heart-circle"></i> Signos Vitales</a>
+        <a href="#recetas-doc"><i class="bx bx-file-blank"></i> Recetas Medicas</a>
+        <a href="#mod-inventario"><i class="bx bxs-capsule"></i> Inventario</a>
+        <a href="#mod-movimientos"><i class="bx bx-transfer"></i> Movimientos</a>
+        <a href="#mod-solicitudes"><i class="bx bx-send"></i> Solicitudes</a>
+        <a href="#mod-nomina"><i class="bx bxs-group"></i> Nomina</a>
+        <a href="#mod-usuarios"><i class="bx bxs-user-account"></i> Usuarios</a>
+        <a href="#roles-doc"><i class="bx bxs-user-badge"></i> Roles y Permisos</a>
+        <a href="#mod-mensajes"><i class="bx bxs-envelope"></i> Mensajes</a>
         <a href="#mod-notificaciones"><i class="bx bxs-bell"></i> Notificaciones</a>
         <a href="#mod-bitacora"><i class="bx bx-history"></i> Bitacora</a>
+        <a href="#reportes-doc"><i class="bx bx-bar-chart-alt-2"></i> Reportes</a>
         <a href="#exportaciones"><i class="bx bxs-file-pdf"></i> Exportaciones</a>
         <a href="#busqueda"><i class="bx bx-search"></i> Busqueda AJAX</a>
+        <a href="#scheduler-doc"><i class="bx bx-time-five"></i> Scheduler y Backup</a>
       </nav>
     </div>
   </aside>
@@ -196,17 +203,17 @@
 <div class="doc-section" id="resumen">
   <div class="doc-section-header">
     <div class="doc-section-icon icon-blue"><i class="bx bx-stats"></i></div>
-    <div><h2>Resumen del Sistema</h2><p>SISGECLIN v2.5 — Sistema de Gestion Clinica</p></div>
+    <div><h2>Resumen del Sistema</h2><p>SISGECLIN v3.0 — Sistema de Gestion Clinica Institucional</p></div>
   </div>
   <div class="doc-section-body">
-    <p class="doc-text">SISGECLIN es una aplicacion web desarrollada con <strong>Laravel 13</strong> (PHP 8.2+) que gestiona todos los procesos operativos de una clinica medica. Implementa el patron <strong>MVC</strong> con autenticacion por sesiones, control de acceso por roles y permisos granulares por modulo.</p>
+    <p class="doc-text">SISGECLIN es una aplicacion web desarrollada con <strong><i class="bx bxl-php" style="color:#ef4444;"></i> Laravel 13</strong> (PHP 8.2+) que gestiona todos los procesos operativos de una clinica medica. Implementa el patron <strong><i class="bx bx-git-branch" style="color:#10b981;"></i> MVC</strong> con autenticacion por sesiones, control de acceso por roles y permisos granulares por modulo.</p>
     <div class="info-grid">
-      <div class="info-card"><div class="info-card-icon icon-blue"><i class="bx bx-code-alt"></i></div><div><h3>Laravel 13</h3><p>Framework PHP</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-orange"><i class="bx bx-data"></i></div><div><h3>MySQL</h3><p>Base de datos</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-green"><i class="bx bxs-grid-alt"></i></div><div><h3>14</h3><p>Modulos del sistema</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-purple"><i class="bx bx-cog"></i></div><div><h3>47+</h3><p>Procesos automatizados</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-red"><i class="bx bx-map"></i></div><div><h3>65+</h3><p>Rutas HTTP</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-cyan"><i class="bx bx-table"></i></div><div><h3>13</h3><p>Tablas en la BD</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-red"><i class="bx bxl-php"></i></div><div><h3>Laravel 13</h3><p>Framework PHP</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-orange"><i class="bx bxs-data"></i></div><div><h3>MySQL</h3><p>Base de datos</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class="bx bx-grid-alt"></i></div><div><h3>21</h3><p>Modulos del sistema</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-purple"><i class="bx bx-cog"></i></div><div><h3>60+</h3><p>Procesos automatizados</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class="bx bx-map-alt"></i></div><div><h3>130+</h3><p>Rutas HTTP</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-cyan"><i class="bx bx-table"></i></div><div><h3>22</h3><p>Tablas activas en BD</p></div></div>
     </div>
   </div>
 </div>
@@ -261,9 +268,10 @@
         <tr><td>19</td><td>Editar Medicamento</td><td>Medicamentos</td><td>Actualiza datos del medicamento en el catalogo</td><td><span class="badge badge-gray">No</span></td></tr>
         <tr><td>20</td><td>Exportar Medicamentos</td><td>Medicamentos</td><td>Genera CSV/PDF/Excel con estado de stock</td><td><span class="badge badge-gray">No</span></td></tr>
         <tr><td>21</td><td>Registrar Entrada</td><td>Movimientos</td><td>Suma stock, crea movimiento, notifica, registra bitacora</td><td><span class="badge badge-green">Si</span></td></tr>
-        <tr><td>22</td><td>Registrar Salida con Firma</td><td>Movimientos</td><td>Resta stock, guarda quien entrega y quien recibe</td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>22</td><td>Registrar Salida con Firma</td><td>Movimientos</td><td>Resta stock, guarda quien entrega y quien recibe, vincula a receta activa</td><td><span class="badge badge-green">Si</span></td></tr>
         <tr><td>23</td><td>Alerta Stock Bajo Post-Salida</td><td>Movimientos</td><td>Verifica stock despues de salida y notifica si es bajo</td><td><span class="badge badge-green">Si</span></td></tr>
-        <tr><td>24</td><td>Reporte Auditoria Inventario</td><td>Movimientos</td><td>Genera PDF con entradas/salidas/stock para contraloria</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>24</td><td>Sincronizar Salida desde Receta</td><td>Movimientos</td><td>Autocompletar medicamento, paciente, receptor y motivo desde receta activa seleccionada</td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>25</td><td>Reporte Auditoria Inventario</td><td>Movimientos</td><td>Genera PDF con entradas/salidas/stock/firmas para contraloria mensual</td><td><span class="badge badge-gray">No</span></td></tr>
         <tr><td>25</td><td>Crear Solicitud</td><td>Solicitudes</td><td>Genera numero de orden SOL-AAAAMM-XXXX y notifica admins</td><td><span class="badge badge-green">Si</span></td></tr>
         <tr><td>26</td><td>Aprobar Solicitud</td><td>Solicitudes</td><td>Aprueba y registra entrada automatica al inventario</td><td><span class="badge badge-green">Si</span></td></tr>
         <tr><td>27</td><td>Verificar Stock al Crear Solicitud</td><td>Solicitudes</td><td>Avisa si el stock esta bien antes de crear solicitud</td><td><span class="badge badge-green">Si</span></td></tr>
@@ -320,6 +328,9 @@
           <li>Notificacion.php — notificaciones del sistema</li>
           <li>Bitacora.php — auditoria de acciones</li>
           <li>PermisoUsuario.php — permisos granulares ACL</li>
+          <li>InformeMedico.php — informes medico-ocupacionales</li>
+          <li>GastoMedico.php / GastoMedicoItem.php — gastos medicos</li>
+          <li>ExamenLaboratorio.php — solicitudes de examenes de lab.</li>
         </ul>
       </div>
       <div class="module-card">
@@ -330,19 +341,27 @@
         <p>Reciben las peticiones HTTP, llaman a los modelos, aplican logica de negocio y retornan vistas o JSON.</p>
         <ul class="process-list">
           <li>AuthController — login, logout, registro</li>
-          <li>DashboardController — estadisticas y resumen</li>
-          <li>PacientesController — CRUD pacientes</li>
-          <li>ConsultasController — CRUD consultas</li>
+          <li>DashboardController — estadisticas, graficas, citas del dia</li>
+          <li>PacientesController — CRUD pacientes, exportacion</li>
+          <li>ExpedienteController — historial clinico unificado</li>
+          <li>CitasController — agenda, calendario FullCalendar</li>
+          <li>ConsultasController — CRUD consultas, exportacion</li>
+          <li>SignosVitalesController — registro y historial de signos</li>
+          <li>RecetasController — recetas medicas, PDF A5 digital y manuscrita</li>
+          <li>InformeMedicoController — informes medico-ocupacionales + PDF Maxical</li>
+          <li>GastoMedicoController — gastos medicos + PDF, digital y manuscrita</li>
+          <li>ExamenLaboratorioController — solicitudes examenes laboratorio + PDF</li>
           <li>MedicinaController — CRUD medicamentos</li>
-          <li>InventarioMovimientosController — entradas/salidas</li>
-          <li>SolicitudesInventarioController — solicitudes</li>
-          <li>NominaController — CRUD empleados</li>
-          <li>UsuariosController — CRUD usuarios + permisos</li>
-          <li>MensajesController — mensajeria</li>
-          <li>NotificacionesController — notificaciones</li>
-          <li>BitacoraController — auditoria</li>
-          <li>PerfilController — perfil y contrasena</li>
-          <li>ExportController — exportaciones PDF/Excel/CSV</li>
+          <li>InventarioMovimientosController — entradas/salidas, auditoria PDF</li>
+          <li>SolicitudesInventarioController — solicitudes de reposicion</li>
+          <li>MensajesController — mensajeria individual y masiva</li>
+          <li>NotificacionesController — notificaciones en tiempo real</li>
+          <li>NominaController — CRUD empleados (admin)</li>
+          <li>UsuariosController — CRUD usuarios, permisos por rol</li>
+          <li>BitacoraController — auditoria del sistema (admin)</li>
+          <li>ExportController — PDF/Excel/CSV multi-modulo</li>
+          <li>ReportesController — estadisticas y graficas Chart.js</li>
+          <li>PerfilController — perfil y cambio de contrasena</li>
         </ul>
       </div>
       <div class="module-card">
@@ -360,6 +379,8 @@
           <li>inventario/, solicitudes/, nomina/ — modulos</li>
           <li>usuarios/, mensajes/, bitacora/ — modulos</li>
           <li>exports/ — templates PDF para mPDF</li>
+          <li>informes-medicos/, gastos-medicos/, examenes-laboratorio/ — modulos ocupacionales</li>
+          <li>recetas/pdf_maxical.blade.php — formato Informe Medico Maxical A5</li>
         </ul>
       </div>
       <div class="module-card">
@@ -381,9 +402,9 @@
     <div class="code-block">
 <span class="cm">SISGECLIN/</span>
 ├── <span class="kw">app/</span>
-│   ├── <span class="fn">Http/Controllers/</span>   <span class="cm">← 14 controladores</span>
+│   ├── <span class="fn">Http/Controllers/</span>   <span class="cm">← 22 controladores</span>
 │   ├── <span class="fn">Http/Middleware/</span>    <span class="cm">← CheckRole, CheckPermiso</span>
-│   ├── <span class="fn">Models/</span>             <span class="cm">← 11 modelos Eloquent</span>
+│   ├── <span class="fn">Models/</span>             <span class="cm">← 22 modelos Eloquent</span>
 │   └── <span class="fn">Providers/</span>          <span class="cm">← AppServiceProvider</span>
 ├── <span class="kw">bootstrap/</span>
 │   └── <span class="fn">app.php</span>             <span class="cm">← registro de middleware alias</span>
@@ -415,7 +436,7 @@
       <div class="flow-num">1</div>
       <div class="flow-body">
         <h4>Navegador → <code>public/index.php</code></h4>
-        <p>El servidor web (Apache/XAMPP) redirige todas las peticiones a <code>public/index.php</code> gracias al <code>.htaccess</code>. Este archivo arranca el framework Laravel.</p>
+        <p>El servidor web (Apache/Laragon) redirige todas las peticiones a <code>public/index.php</code> gracias al <code>.htaccess</code>. Este archivo arranca el framework Laravel.</p>
       </div>
     </div>
     <div class="flow-step">
@@ -535,7 +556,7 @@
       <thead><tr><th>Campo</th><th>Tipo</th><th>Descripcion</th></tr></thead>
       <tbody>
         <tr><td><code>usuario_id</code></td><td>FK</td><td>Usuario al que aplica el permiso</td></tr>
-        <tr><td><code>modulo</code></td><td>VARCHAR</td><td>Nombre del modulo: pacientes, consultas, medicina, inventario, nomina, mensajes, usuarios, bitacora, solicitudes</td></tr>
+        <tr><td><code>modulo</code></td><td>VARCHAR</td><td>Nombre del modulo: pacientes, consultas, citas, recetas, informes, gastos, examenes, medicina, inventario, nomina, mensajes, usuarios, bitacora, solicitudes, reportes</td></tr>
         <tr><td><code>puede_ver</code></td><td>BOOLEAN</td><td>Puede acceder a la lista del modulo</td></tr>
         <tr><td><code>puede_crear</code></td><td>BOOLEAN</td><td>Puede crear nuevos registros</td></tr>
         <tr><td><code>puede_editar</code></td><td>BOOLEAN</td><td>Puede modificar registros existentes</td></tr>
@@ -1156,10 +1177,231 @@
   </div>
 </div>
 
+  </div>
+</div>
+
+<!-- ══ NUEVOS MODULOS v3.0 ══ -->
+
+<div class="doc-section" id="agenda">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class="bx bx-calendar-event"></i></div>
+    <div><h2>Modulo Agenda de Citas</h2><p>CitasController.php — Modelo: Cita.php — Tabla: citas</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Gestiona la agenda de citas medicas con calendario interactivo FullCalendar. Permite programar, confirmar, reprogramar (Drag & Drop), cancelar y convertir citas en consultas.</p>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>index()</h4><p>Carga citas paginadas + datos para el calendario. Retorna vista con tabs: Calendario / Lista.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>calendario()</h4><p>Retorna JSON con eventos para FullCalendar. Cada evento incluye IDs crudos para el Drag & Drop interactivo.</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><h4>store() / update()</h4><p>Crea o edita la cita. Bloquea si hay conflictos horarios e integra duraciones del catálogo <b>ServicioMedico</b>.</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><h4>convertirAConsulta()</h4><p>Crea una Consulta con los datos de la cita, vincula la cita a la consulta (consulta_id) y cambia el estado a en_curso.</p></div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Cron Jobs Automatizados</h3>
+    <ul class="process-list">
+      <li><code>citas:actualizar-estados</code> - Marca inasistencias automáticamente (Diario 23:55).</li>
+      <li><code>citas:enviar-recordatorios</code> - Notifica citas para el día siguiente (Diario 08:00 AM).</li>
+    </ul>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Modelo Cita — Accessors y Scopes</h3>
+    <div class="code-block">
+<span class="cm">// Accessors</span>
+<span class="var">$cita</span>-><span class="fn">medico_nombre</span>    <span class="cm">// empleado o usuario medico</span>
+<span class="var">$cita</span>-><span class="fn">estado_texto</span>     <span class="cm">// 'en_curso' → 'En Curso'</span>
+<span class="var">$cita</span>-><span class="fn">estado_color</span>     <span class="cm">// 'warning', 'success', etc.</span>
+<span class="var">$cita</span>-><span class="fn">fecha_hora_fin</span>   <span class="cm">// fecha_hora + duracion_minutos</span>
+
+<span class="cm">// Scopes</span>
+Cita::<span class="fn">hoy</span>()-><span class="fn">get</span>()
+Cita::<span class="fn">proximas</span>(7)-><span class="fn">get</span>()
+Cita::<span class="fn">pendientes</span>()-><span class="fn">get</span>()
+Cita::<span class="fn">byDateRange</span>(<span class="str">'2026-05-01'</span>, <span class="str">'2026-05-31'</span>)-><span class="fn">get</span>()
+    </div>
+  </div>
+</div>
+
+<div class="doc-section" id="expediente">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-blue"><i class="bx bx-folder-open"></i></div>
+    <div><h2>Expediente Clinico</h2><p>ExpedienteController.php — Vista unificada del historial del paciente</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Vista unificada que consolida todo el historial medico de un paciente: consultas con sus relaciones, signos vitales, recetas y estadisticas. Diseñada para revision clinica completa en una sola pantalla.</p>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>show(Paciente $paciente)</h4><p>Carga consultas con eager loading de 5 relaciones: empleado, medico, medicamentos, signosVitales, recetas.items. Calcula estadisticas del paciente y top 5 medicamentos mas recetados.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>resumen(Paciente $paciente)</h4><p>Retorna JSON con ultima consulta, ultimos signos vitales y contadores. Usado para modales rapidos desde otras vistas.</p></div></div>
+    <div class="code-block">
+<span class="cm">// Eager loading en el expediente — evita N+1 queries</span>
+Consulta::<span class="fn">with</span>([
+    <span class="str">'empleado'</span>,
+    <span class="str">'medico'</span>,
+    <span class="str">'medicamentos'</span>,    <span class="cm">// sin withTimestamps — tabla pivote sin updated_at</span>
+    <span class="str">'signosVitales'</span>,
+    <span class="str">'recetas.items'</span>,   <span class="cm">// nested eager loading</span>
+])-><span class="fn">where</span>(<span class="str">'paciente_id'</span>, <span class="var">$paciente</span>->id)-><span class="fn">get</span>();
+    </div>
+  </div>
+</div>
+
+<div class="doc-section" id="signos">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-red"><i class="bx bx-heart-circle"></i></div>
+    <div><h2>Signos Vitales</h2><p>SignosVitalesController.php — Modelo: SignoVital.php — Tabla: signos_vitales</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Registra y consulta signos vitales por consulta. El IMC se calcula automaticamente. El formulario usa IDs en lugar de name para evitar conflictos con el form padre de consultas.</p>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>store()</h4><p>Usa updateOrCreate() — si ya existen signos para esa consulta los actualiza, si no los crea. Calcula IMC automaticamente si hay peso y talla.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>porConsulta()</h4><p>Retorna JSON con los signos de una consulta especifica. Usado por el modal de edicion de consultas para pre-llenar los campos.</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><h4>historialPaciente()</h4><p>Retorna las ultimas 10 mediciones del paciente para mostrar tendencias en el expediente clinico.</p></div></div>
+    <div class="code-block">
+<span class="cm">// Calculo de IMC — metodo estatico</span>
+SignoVital::<span class="fn">calcularImc</span>(75.0, 170.0); <span class="cm">// peso kg, talla cm → 25.95</span>
+
+<span class="cm">// Clasificacion OMS — accessor</span>
+<span class="var">$signo</span>-><span class="fn">clasificacion_imc</span>; <span class="cm">// 'Normal', 'Sobrepeso', 'Obesidad I'...</span>
+<span class="var">$signo</span>-><span class="fn">presion_arterial</span>;   <span class="cm">// '120/80 mmHg'</span>
+
+<span class="cm">// IMPORTANTE: el partial usa IDs, no name, para evitar form anidado</span>
+<span class="cm">// Los datos se recolectan manualmente via FormData en guardarSignosVitales()</span>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section" id="recetas-doc">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-green"><i class="bx bx-file-blank"></i></div>
+    <div><h2>Modulo Recetas Medicas</h2><p>RecetasController.php — Modelos: Receta.php, RecetaItem.php — Tablas: recetas, receta_items</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Genera recetas medicas con numero correlativo automatico (REC-AAAA-XXXX). Cada receta tiene multiples items de medicamentos. El PDF se genera con mPDF en formato A5.</p>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>store()</h4><p>Crea la receta y sus items en una transaccion DB::transaction(). Por cada item, si tiene medicamento_id vinculado al inventario, descuenta el stock automaticamente y registra un InventarioMovimiento de tipo 'salida'. Si el stock es insuficiente, registra la salida parcial (hasta 0) y genera notificacion de stock agotado.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>imprimir(Receta $receta)</h4><p>Genera PDF A5 con mPDF. Incluye datos del paciente, alergias, lista de medicamentos con dosis/frecuencia/duracion, diagnostico y firma del medico. Se sirve inline para previsualizar en el navegador.</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><h4>dispensar(Receta $receta)</h4><p>Confirma manualmente la dispensacion de medicamentos. Recibe array dispensar[item_id] = 'si'|'no'. Por cada 'si' descuenta el stock e imprime movimiento. Permite control fino sobre que medicamentos se entregaron del inventario vs cuales el paciente adquiere por su cuenta.</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><h4>anular(Receta $receta)</h4><p>Cambia el estado a 'anulada'. No revierte los movimientos de inventario ya registrados.</p></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><h4>Vencimiento automatico</h4><p>El scheduler de Laravel ejecuta diariamente a medianoche: marca como 'vencida' toda receta activa cuya fecha_vencimiento ya paso.</p></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><h4>consultasPorPaciente() / recetasActivasPaciente()</h4><p>Endpoints JSON para los selectores del modal. Retornan las consultas recientes del paciente y sus recetas activas con stock actual de cada item.</p></div></div>
+    <div class="code-block">
+<span class="cm">// Generacion de numero correlativo</span>
+Receta::<span class="fn">generarNumero</span>(); <span class="cm">// → 'REC-2026-0001'</span>
+
+<span class="cm">// Transaccion: crea receta + items + salidas de inventario</span>
+DB::<span class="fn">transaction</span>(<span class="kw">function</span>() <span class="kw">use</span> (<span class="var">$request</span>, &<span class="var">$receta</span>) {
+    <span class="var">$receta</span> = Receta::<span class="fn">create</span>([...]);
+    <span class="kw">foreach</span> (<span class="var">$request</span>->items <span class="kw">as</span> <span class="var">$item</span>) {
+        RecetaItem::<span class="fn">create</span>([<span class="str">'receta_id'</span> => <span class="var">$receta</span>->id, ...]);
+
+        <span class="cm">// Sincronizacion automatica con inventario</span>
+        <span class="kw">if</span> (!<span class="fn">empty</span>(<span class="var">$item</span>[<span class="str">'medicamento_id'</span>])) {
+            <span class="var">$med</span> = Medicamento::<span class="fn">find</span>(<span class="var">$item</span>[<span class="str">'medicamento_id'</span>]);
+            <span class="kw">if</span> (<span class="var">$med</span> && <span class="var">$med</span>->cantidad >= <span class="var">$item</span>[<span class="str">'cantidad'</span>]) {
+                <span class="var">$med</span>-><span class="fn">update</span>([<span class="str">'cantidad'</span> => <span class="var">$med</span>->cantidad - <span class="var">$item</span>[<span class="str">'cantidad'</span>]]);
+                InventarioMovimiento::<span class="fn">create</span>([
+                    <span class="str">'tipo_movimiento'</span> => <span class="str">'salida'</span>,
+                    <span class="str">'motivo'</span>         => <span class="str">'Dispensado por receta '</span> . <span class="var">$receta</span>->numero_receta,
+                    ...
+                ]);
+            } <span class="cm">// stock insuficiente: dispensa parcial hasta 0</span>
+        }
+    }
+});
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Logica de sincronizacion de inventario</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="background:#f1f5f9;"><th style="padding:8px 12px;text-align:left;border:1px solid #e2e8f0;">Escenario</th><th style="padding:8px 12px;text-align:left;border:1px solid #e2e8f0;">Accion del sistema</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:8px 12px;border:1px solid #e2e8f0;">Medicamento vinculado al inventario, stock suficiente</td><td style="padding:8px 12px;border:1px solid #e2e8f0;">Descuenta cantidad exacta + registra movimiento de salida + bitacora</td></tr>
+        <tr style="background:#f8fafc;"><td style="padding:8px 12px;border:1px solid #e2e8f0;">Medicamento vinculado, stock insuficiente pero &gt; 0</td><td style="padding:8px 12px;border:1px solid #e2e8f0;">Descuenta todo el stock disponible + registra dispensa parcial + notificacion de stock agotado</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e2e8f0;">Medicamento vinculado, stock = 0</td><td style="padding:8px 12px;border:1px solid #e2e8f0;">No mueve inventario + notificacion de stock agotado</td></tr>
+        <tr style="background:#f8fafc;"><td style="padding:8px 12px;border:1px solid #e2e8f0;">Medicamento no vinculado (nombre libre)</td><td style="padding:8px 12px;border:1px solid #e2e8f0;">Solo se registra en la receta, sin afectar inventario</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e2e8f0;">Stock queda bajo el minimo tras el despacho</td><td style="padding:8px 12px;border:1px solid #e2e8f0;">Notificacion automatica a todos los usuarios con enlace al modulo Medicina</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="doc-section" id="reportes-doc">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class="bx bx-bar-chart-alt-2"></i></div>
+    <div><h2>Modulo Reportes Estadisticos</h2><p>ReportesController.php — Graficas con Chart.js</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Genera estadisticas y graficas para la toma de decisiones. Usa agregaciones SQL con GROUP BY y las pasa al frontend como JSON para Chart.js.</p>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><h4>index()</h4><p>Ejecuta queries de agregacion: consultas por mes, pacientes nuevos por mes, estados de consultas, top medicamentos recetados y despachados, distribucion por genero. Filtra por ano/mes seleccionado.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><h4>datos()</h4><p>Endpoint AJAX para graficas dinamicas. Acepta tipo: consultas_semana, consultas_mes, movimientos_mes. Retorna JSON con arrays de fecha y total.</p></div></div>
+    <div class="code-block">
+<span class="cm">// Ejemplo de query de agregacion</span>
+Consulta::<span class="fn">select</span>(
+    DB::<span class="fn">raw</span>(<span class="str">'YEAR(fecha_hora) as año'</span>),
+    DB::<span class="fn">raw</span>(<span class="str">'MONTH(fecha_hora) as mes'</span>),
+    DB::<span class="fn">raw</span>(<span class="str">'COUNT(*) as total'</span>)
+)-><span class="fn">where</span>(<span class="str">'fecha_hora'</span>, <span class="str">'>='</span>, now()-><span class="fn">subMonths</span>(11)-><span class="fn">startOfMonth</span>())
+ -><span class="fn">groupBy</span>(<span class="str">'año'</span>, <span class="str">'mes'</span>)
+ -><span class="fn">orderBy</span>(<span class="str">'año'</span>)-><span class="fn">orderBy</span>(<span class="str">'mes'</span>)
+ -><span class="fn">get</span>();
+    </div>
+  </div>
+</div>
+
+<div class="doc-section" id="roles-doc">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-purple"><i class="bx bxs-user-badge"></i></div>
+    <div><h2>Sistema de Roles Ampliado</h2><p>7 roles con permisos por defecto — PermisosPorRol.php</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">El sistema ahora soporta 7 roles. Al crear un usuario, se aplican automaticamente los permisos por defecto segun su rol mediante la clase <code>PermisosPorRol</code>.</p>
+    <table class="doc-table">
+      <thead><tr><th>Rol</th><th>Enum value</th><th>Permisos por defecto</th></tr></thead>
+      <tbody>
+        <tr><td>Administrador</td><td><code>admin</code></td><td>Acceso total — no usa tabla permisos_usuario</td></tr>
+        <tr><td>Medico</td><td><code>medico</code></td><td>Pacientes, Consultas, Citas, Recetas, Medicamentos (ver), Mensajes, Reportes</td></tr>
+        <tr><td>Recepcionista</td><td><code>recepcionista</code></td><td>Pacientes, Citas, Consultas, Recetas (ver), Medicamentos (ver), Mensajes, Solicitudes</td></tr>
+        <tr><td>Enfermera</td><td><code>enfermera</code></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Medicamentos (ver), Mensajes</td></tr>
+        <tr><td>Farmaceutico</td><td><code>farmaceutico</code></td><td>Recetas (ver), Medicamentos (completo), Movimientos (completo), Solicitudes</td></tr>
+        <tr><td>Contador</td><td><code>contador</code></td><td>Pacientes (ver), Movimientos (ver), Solicitudes (ver), Reportes, Mensajes</td></tr>
+        <tr><td>Laboratorista</td><td><code>laboratorista</code></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Mensajes</td></tr>
+      </tbody>
+    </table>
+    <div class="code-block">
+<span class="cm">// Aplicar permisos al crear usuario</span>
+PermisosPorRol::<span class="fn">aplicar</span>(<span class="var">$usuario</span>->id, <span class="var">$usuario</span>->rol);
+
+<span class="cm">// Si cambia el rol, re-aplicar permisos del nuevo rol</span>
+<span class="kw">if</span> (<span class="var">$rolAnterior</span> !== <span class="var">$nuevoRol</span> && !<span class="var">$usuario</span>-><span class="fn">isAdmin</span>()) {
+    PermisosPorRol::<span class="fn">aplicar</span>(<span class="var">$usuario</span>->id, <span class="var">$nuevoRol</span>);
+}
+
+<span class="cm">// Nuevos accessors del modelo Usuario</span>
+<span class="var">$usuario</span>-><span class="fn">rol_texto</span>;  <span class="cm">// 'farmaceutico' → 'Farmacéutico'</span>
+<span class="var">$usuario</span>-><span class="fn">rol_color</span>;  <span class="cm">// 'success' (para badge CSS)</span>
+Usuario::<span class="fn">roles</span>();     <span class="cm">// array con todos los roles y sus metadatos</span>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section" id="scheduler-doc">
+  <div class="doc-section-header">
+    <div class="doc-section-icon icon-orange"><i class="bx bx-time-five"></i></div>
+    <div><h2>Scheduler y Backup</h2><p>routes/console.php — Tareas automatizadas de Laravel</p></div>
+  </div>
+  <div class="doc-section-body">
+    <p class="doc-text">Laravel Scheduler ejecuta tareas periodicas. Para activarlo en produccion agregar al crontab: <code>* * * * * cd /ruta && php artisan schedule:run</code></p>
+    <table class="doc-table">
+      <thead><tr><th>Tarea</th><th>Frecuencia</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><code>db:backup --keep=7</code></td><td>Diario 02:00 AM</td><td>Genera dump SQL en storage/app/backups/. Detecta mysqldump en Laragon y en el PATH del sistema automaticamente.</td></tr>
+        <tr><td>recetas:vencer</td><td>Diario medianoche</td><td>Marca como 'vencida' toda receta activa con fecha_vencimiento pasada.</td></tr>
+      </tbody>
+    </table>
+    <div class="code-block">
+<span class="cm">// Ejecutar backup manualmente</span>
+php artisan db:backup
+php artisan db:backup --keep=14
+
+<span class="cm">// El comando detecta mysqldump automaticamente</span>
+<span class="cm">// Busca en: Laragon, PATH del sistema</span>
+<span class="cm">// Guarda en: storage/app/backups/backup_sisgeclin_AAAA-MM-DD_HH-mm-ss.sql</span>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <div class="doc-footer">
-  <strong>SISGECLIN v2.5</strong> &mdash; Sistema de Gestion Clinica &mdash; Documentacion del Codigo<br>
-  <span>Laravel 13 &bull; PHP 8.2 &bull; MySQL &bull; mPDF &bull; PhpSpreadsheet</span>
+  <strong>SISGECLIN v3.0</strong> &mdash; Sistema de Gestion Clinica &mdash; Documentacion del Codigo<br>
+  <span>Laravel 13 &bull; PHP 8.2 &bull; MySQL &bull; mPDF &bull; PhpSpreadsheet &bull; Chart.js &bull; FullCalendar</span>
 </div>
 
   </main>
@@ -1187,3 +1429,8 @@
 </script>
 </body>
 </html>
+
+
+
+
+

@@ -49,15 +49,36 @@
                         <td>{{ $usuarios->firstItem() + $i }}</td>
                         <td>
                             <div class="cell-user">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($u->nombre_completo) }}&background=0d6efd&color=fff&size=32" alt="">
+                                <img src="" data-avatar="{{ $u->nombre_completo }}" data-bg="#0d6efd" data-size="32" alt="">
                                 <strong>{{ $u->username }}</strong>
                             </div>
                         </td>
                         <td>{{ $u->nombre_completo }}</td>
                         <td>{{ $u->email }}</td>
                         <td>
-                            <span class="badge badge-{{ $u->rol === 'admin' ? 'danger' : ($u->rol === 'medico' ? 'primary' : 'secondary') }}">
-                                {{ ucfirst($u->rol) }}
+                            @php
+                                $rolColors = [
+                                    'admin'         => 'danger',
+                                    'medico'        => 'primary',
+                                    'recepcionista' => 'secondary',
+                                    'enfermera'     => 'info',
+                                    'farmaceutico'  => 'success',
+                                    'contador'      => 'warning',
+                                    'laboratorista' => 'purple',
+                                ];
+                                $rolIcons = [
+                                    'admin'         => 'bxs-shield',
+                                    'medico'        => 'bx-plus-medical',
+                                    'recepcionista' => 'bx-user',
+                                    'enfermera'     => 'bx-heart',
+                                    'farmaceutico'  => 'bxs-capsule',
+                                    'contador'      => 'bx-calculator',
+                                    'laboratorista' => 'bx-test-tube',
+                                ];
+                            @endphp
+                            <span class="badge badge-{{ $rolColors[$u->rol] ?? 'secondary' }}">
+                                <i class='bx {{ $rolIcons[$u->rol] ?? 'bx-user' }}'></i>
+                                {{ $u->rol_texto }}
                             </span>
                         </td>
                         <td>
@@ -130,8 +151,15 @@
                     <select name="rol" id="usuario-rol">
                         <option value="recepcionista">Recepcionista</option>
                         <option value="medico">Médico</option>
+                        <option value="enfermera">Enfermera</option>
+                        <option value="farmaceutico">Farmacéutico</option>
+                        <option value="contador">Contador</option>
+                        <option value="laboratorista">Laboratorista</option>
                         <option value="admin">Administrador</option>
                     </select>
+                    <small style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block;">
+                        <i class='bx bx-info-circle'></i> Los permisos por defecto se asignan automáticamente según el rol.
+                    </small>
                 </div>
                 <div class="form-group">
                     <label>Estado</label>
@@ -271,7 +299,7 @@ async function verUsuario(id) {
         const rolBadge = { admin: 'badge-danger', medico: 'badge-primary', recepcionista: 'badge-secondary' };
         document.getElementById('ver-usuario-content').innerHTML = `
             <div style="text-align:center;margin-bottom:20px;">
-                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(u.nombre_completo)}&background=0d6efd&color=fff&size=80"
+                <img src="${window.generarAvatar ? window.generarAvatar(u.nombre_completo, '#0d6efd', 160) : ''}"
                      style="width:80px;height:80px;border-radius:50%;border:3px solid var(--border-color);" alt="">
                 <h3 style="margin-top:10px;color:var(--text-primary);">${u.nombre_completo}</h3>
                 <span class="badge ${rolBadge[u.rol] || 'badge-secondary'}">${u.rol.charAt(0).toUpperCase() + u.rol.slice(1)}</span>

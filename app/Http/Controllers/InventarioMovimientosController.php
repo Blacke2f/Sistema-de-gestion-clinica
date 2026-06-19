@@ -35,7 +35,12 @@ class InventarioMovimientosController extends Controller
 
         [$fechaInicio, $fechaFin] = $this->getPeriodoDates($periodo);
 
-        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario'])
+        $movimientos = InventarioMovimiento::with([
+                'medicamento',
+                'usuario',
+                'paciente',
+                'consulta.recetas',
+            ])
             ->byDateRange($fechaInicio, $fechaFin)
             ->when($tipo, fn ($q) => $q->where('tipo_movimiento', $tipo))
             ->when($search, function ($q) use ($search) {
@@ -308,7 +313,7 @@ class InventarioMovimientosController extends Controller
 
         [$fechaInicio, $fechaFin] = $this->getPeriodoDates($periodo);
 
-        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario'])
+        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario', 'paciente', 'consulta'])
             ->when($periodo !== 'todos', fn ($q) => $q->byDateRange($fechaInicio, $fechaFin))
             ->when($tipo, fn ($q) => $q->where('tipo_movimiento', $tipo))
             ->latest()
@@ -324,19 +329,29 @@ class InventarioMovimientosController extends Controller
         $callback = function () use ($movimientos) {
             $output = fopen('php://output', 'w');
             fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
-            fputcsv($output, ['ID', 'Fecha/Hora', 'Medicamento', 'Tipo', 'Cantidad', 'Stock Anterior', 'Stock Nuevo', 'Motivo', 'Usuario', 'Consulta ID']);
+            fputcsv($output, [
+                'ID', 'Fecha/Hora', 'Medicamento', 'Tipo', 'Cantidad',
+                'Stock Anterior', 'Stock Nuevo', 'Paciente', 'Consulta ID',
+                'Entregado Por', 'Recibido Por', 'Cédula Receptor',
+                'Motivo', 'Observaciones', 'Usuario'
+            ]);
             foreach ($movimientos as $m) {
                 fputcsv($output, [
                     $m->id,
                     $m->created_at->format('d/m/Y H:i'),
-                    $m->medicamento->nombre_medicamento,
+                    $m->medicamento->nombre_medicamento ?? '',
                     ucfirst($m->tipo_movimiento),
                     $m->cantidad,
                     $m->cantidad_anterior,
                     $m->cantidad_nueva,
-                    $m->motivo ?? '',
-                    $m->usuario->nombre_completo,
+                    $m->paciente?->nombre_completo ?? '',
                     $m->consulta_id ?? '',
+                    $m->entregado_por_nombre ?? '',
+                    $m->recibido_por_nombre ?? '',
+                    $m->recibido_por_cedula ?? '',
+                    $m->motivo ?? '',
+                    $m->observaciones_entrega ?? '',
+                    $m->usuario->nombre_completo ?? '',
                 ]);
             }
             fclose($output);

@@ -4,9 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SISGECLIN — Diagramas del Sistema</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
-<link rel="stylesheet" href="/SISGECLIN/docs/modelo_er.css">
+<!--
+  Mermaid.js: se carga desde CDN para garantizar que los diagramas
+  se rendericen correctamente (incluye fuentes y assets necesarios).
+  Si no hay internet, se usa la copia local como fallback.
+-->
+<script>
+(function() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+    s.onerror = function() {
+        // Fallback a versión local si no hay internet
+        var local = document.createElement('script');
+        local.src = 'vendor/mermaid/mermaid.min.js';
+        document.head.appendChild(local);
+    };
+    document.head.appendChild(s);
+})();
+</script>
+<link rel="stylesheet" href="/SISGECLIN/docs/docs.css?v=5.0">
+<link rel="stylesheet" href="/SISGECLIN/docs/modelo_er.css?v=4.0">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <style>
 /* ── Diagramas ER y UML — tamaño grande y legible ── */
 .mermaid-wrap {
@@ -111,7 +129,7 @@
       <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
       <div>
         <h1>Diagramas del Sistema</h1>
-        <p>SISGECLIN v2.5 &mdash; Modelo ER + Casos de Uso UML</p>
+        <p>SISGECLIN v3.0 &mdash; Modelo ER + Casos de Uso UML</p>
       </div>
     </div>
     <nav class="doc-header-nav">
@@ -130,8 +148,9 @@
       <div class="doc-sidebar-title">Contenido</div>
       <nav class="doc-sidebar-menu">
         <a href="#diagrama"><i class='bx bx-sitemap'></i> Diagrama ER</a>
-        <a href="#uml-casos"><i class='bx bx-user-check'></i> Casos de Uso</a>
-        <a href="#tablas"><i class='bx bx-table'></i> Tablas</a>
+        <a href="#uml-casos"><i class='bx bx-user-check'></i> Casos de Uso UML</a>
+        <a href="#tablas"><i class='bx bx-table'></i> Tablas v2.5</a>
+        <a href="#tablas-nuevas"><i class='bx bx-plus-circle'></i> Tablas v3.0</a>
         <a href="#relaciones"><i class='bx bx-git-branch'></i> Relaciones</a>
       </nav>
     </div>
@@ -158,20 +177,25 @@
         <!-- Tabs para dividir el diagrama en partes legibles -->
         <div class="diagram-tabs">
           <button class="diagram-tab active" onclick="mostrarDiagrama('er-core')">
-            <i class='bx bx-user-detail'></i> Núcleo (Pacientes, Consultas)
+            <i class='bx bx-clinic'></i> Núcleo Clínico
           </button>
           <button class="diagram-tab" onclick="mostrarDiagrama('er-inventario')">
-            <i class='bx bxs-capsule'></i> Inventario y Solicitudes
+            <i class='bx bxs-capsule'></i> Inventario
           </button>
           <button class="diagram-tab" onclick="mostrarDiagrama('er-sistema')">
-            <i class='bx bx-shield'></i> Sistema (Usuarios, Permisos, Mensajes)
+            <i class='bx bx-shield'></i> Sistema
+          </button>
+          <button class="diagram-tab" onclick="mostrarDiagrama('er-ocupacional')">
+            <i class='bx bx-id-card'></i> Ocupacional
           </button>
           <button class="diagram-tab" onclick="mostrarDiagrama('er-completo')">
-            <i class='bx bx-expand'></i> Diagrama Completo
+            <i class='bx bx-expand'></i> Completo v3.0
           </button>
         </div>
 
-        <!-- Panel: Núcleo -->
+        <!-- UML Admin -->
+        
+        <!-- Panel: Núcleo Clínico -->
         <div class="diagram-panel active" id="er-core">
           <div class="mermaid-wrap">
             <div class="mermaid" id="mermaid-core">
@@ -184,7 +208,6 @@ erDiagram
         varchar nombre_completo
         enum rol
         boolean activo
-        datetime ultimo_acceso
     }
     PACIENTES {
         bigint id PK
@@ -192,11 +215,11 @@ erDiagram
         varchar apellido
         varchar cedula UK
         varchar telefono
-        varchar email
         date fecha_nacimiento
         enum genero
         varchar tipo_sangre
         text alergias
+        timestamp deleted_at
     }
     NOMINA {
         bigint id PK
@@ -208,6 +231,7 @@ erDiagram
         decimal salario
         date fecha_ingreso
         enum estado
+        timestamp deleted_at
     }
     CONSULTAS {
         bigint id PK
@@ -219,33 +243,77 @@ erDiagram
         text diagnostico
         text tratamiento
         enum estado
+        timestamp deleted_at
     }
-    CONSULTAS_MEDICAMENTOS {
+    CITAS {
+        bigint id PK
+        bigint paciente_id FK
+        bigint medico_id FK
+        bigint empleado_id FK
+        bigint consulta_id FK
+        bigint creado_por FK
+        datetime fecha_hora
+        int duracion_minutos
+        varchar motivo
+        enum estado
+        timestamp deleted_at
+    }
+    SIGNOS_VITALES {
         bigint id PK
         bigint consulta_id FK
-        bigint medicamento_id FK
-        int cantidad
-        text indicaciones
+        bigint paciente_id FK
+        bigint registrado_por FK
+        decimal presion_sistolica
+        decimal presion_diastolica
+        decimal frecuencia_cardiaca
+        decimal temperatura
+        decimal saturacion_oxigeno
+        decimal peso
+        decimal talla
+        decimal imc
+        decimal glucosa
     }
-    INVENTARIO {
+    RECETAS {
         bigint id PK
-        varchar nombre_medicamento
-        int cantidad
-        varchar unidad
-        decimal precio
-        date fecha_vencimiento
-        varchar proveedor
-        int stock_minimo
+        varchar numero_receta UK
+        bigint consulta_id FK
+        bigint paciente_id FK
+        bigint medico_id FK
+        bigint empleado_id FK
+        text diagnostico
+        varchar imagen_receta
+        enum tipo_receta
+        date fecha_emision
+        enum estado
+        timestamp deleted_at
     }
-
-    PACIENTES        ||--o{ CONSULTAS              : "tiene"
-    USUARIOS         ||--o{ CONSULTAS              : "atiende"
-    NOMINA           ||--o{ CONSULTAS              : "atiende"
-    CONSULTAS        ||--o{ CONSULTAS_MEDICAMENTOS : "incluye"
-    INVENTARIO       ||--o{ CONSULTAS_MEDICAMENTOS : "se usa en"
+    RECETA_ITEMS {
+        bigint id PK
+        bigint receta_id FK
+        bigint medicamento_id FK
+        varchar nombre_medicamento
+        varchar dosis
+        varchar frecuencia
+        varchar duracion
+        int cantidad
+    }
+    PACIENTES ||--o{ CONSULTAS : "tiene"
+    PACIENTES ||--o{ CITAS : "agenda"
+    PACIENTES ||--o{ SIGNOS_VITALES : "posee"
+    PACIENTES ||--o{ RECETAS : "recibe"
+    NOMINA ||--o{ CONSULTAS : "atiende"
+    NOMINA ||--o{ CITAS : "atiende"
+    NOMINA ||--o{ RECETAS : "emite"
+    USUARIOS ||--o{ CONSULTAS : "atiende"
+    USUARIOS ||--o{ CITAS : "crea"
+    USUARIOS ||--o{ RECETAS : "emite"
+    CONSULTAS ||--o{ SIGNOS_VITALES : "registra"
+    CONSULTAS ||--o{ RECETAS : "genera"
+    CONSULTAS ||--|| CITAS : "proviene de"
+    RECETAS ||--o{ RECETA_ITEMS : "contiene"
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Núcleo clínico: Pacientes, Consultas, Citas, Signos Vitales y Recetas</p>
         </div>
 
         <!-- Panel: Inventario -->
@@ -256,13 +324,13 @@ erDiagram
     INVENTARIO {
         bigint id PK
         varchar nombre_medicamento
+        text descripcion
         int cantidad
         varchar unidad
-        decimal precio
         date fecha_vencimiento
         varchar proveedor
-        varchar telefono_proveedor
         int stock_minimo
+        timestamp deleted_at
     }
     INVENTARIO_MOVIMIENTOS {
         bigint id PK
@@ -274,11 +342,10 @@ erDiagram
         varchar motivo
         bigint consulta_id FK
         bigint paciente_id FK
-        bigint usuario_id FK
         varchar entregado_por_nombre
         varchar recibido_por_nombre
         varchar recibido_por_cedula
-        text observaciones_entrega
+        bigint usuario_id FK
     }
     SOLICITUDES_INVENTARIO {
         bigint id PK
@@ -287,45 +354,31 @@ erDiagram
         bigint solicitado_por FK
         int cantidad_solicitada
         varchar proveedor_sugerido
-        varchar telefono_proveedor
         enum estado
-        varchar numero_factura
         bigint atendida_por FK
-        datetime atendida_at
-        text notas
     }
     SOLICITUD_ITEMS {
         bigint id PK
         bigint solicitud_id FK
         bigint medicamento_id FK
-        int cantidad
+        int cantidad_solicitada
         varchar proveedor_sugerido
-        varchar telefono_proveedor
     }
-    USUARIOS {
+    CONSULTAS_MEDICAMENTOS {
         bigint id PK
-        varchar username UK
-        varchar nombre_completo
-        enum rol
+        bigint consulta_id FK
+        bigint medicamento_id FK
+        int cantidad
+        text indicaciones
     }
-    PACIENTES {
-        bigint id PK
-        varchar nombre
-        varchar apellido
-        varchar cedula UK
-    }
-
-    INVENTARIO       ||--o{ INVENTARIO_MOVIMIENTOS  : "registra"
-    USUARIOS         ||--o{ INVENTARIO_MOVIMIENTOS  : "realiza"
-    PACIENTES        ||--o{ INVENTARIO_MOVIMIENTOS  : "recibe"
-    INVENTARIO       ||--o{ SOLICITUDES_INVENTARIO  : "se solicita"
-    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "solicita"
-    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "atiende"
-    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS   : "contiene"
-    INVENTARIO       ||--o{ SOLICITUD_ITEMS         : "incluye"
+    INVENTARIO ||--o{ INVENTARIO_MOVIMIENTOS : "registra"
+    INVENTARIO ||--o{ SOLICITUDES_INVENTARIO : "se solicita"
+    INVENTARIO ||--o{ SOLICITUD_ITEMS : "incluye"
+    INVENTARIO ||--o{ CONSULTAS_MEDICAMENTOS : "se usa en"
+    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS : "contiene"
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Inventario: Medicamentos, Movimientos y Solicitudes de reposición</p>
         </div>
 
         <!-- Panel: Sistema -->
@@ -337,20 +390,8 @@ erDiagram
         bigint id PK
         varchar username UK
         varchar email UK
-        varchar password
-        varchar nombre_completo
         enum rol
         boolean activo
-        datetime ultimo_acceso
-    }
-    PERMISOS_USUARIO {
-        bigint id PK
-        bigint usuario_id FK
-        varchar modulo
-        boolean puede_ver
-        boolean puede_crear
-        boolean puede_editar
-        boolean puede_eliminar
     }
     MENSAJES {
         bigint id PK
@@ -380,42 +421,139 @@ erDiagram
         bigint registro_id
         text detalles
         varchar ip
-        datetime created_at
     }
-
-    USUARIOS         ||--o{ PERMISOS_USUARIO : "tiene"
-    USUARIOS         ||--o{ MENSAJES         : "envia"
-    USUARIOS         ||--o{ MENSAJES         : "recibe"
-    USUARIOS         ||--o{ NOTIFICACIONES   : "recibe"
-    USUARIOS         ||--o{ BITACORA         : "genera"
+    PERMISOS_USUARIO {
+        bigint id PK
+        bigint usuario_id FK
+        varchar modulo
+        boolean puede_ver
+        boolean puede_crear
+        boolean puede_editar
+        boolean puede_eliminar
+    }
+    USUARIOS ||--o{ MENSAJES : "envia/recibe"
+    USUARIOS ||--o{ NOTIFICACIONES : "recibe"
+    USUARIOS ||--o{ BITACORA : "genera"
+    USUARIOS ||--o{ PERMISOS_USUARIO : "tiene"
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Sistema: Usuarios, Mensajes, Notificaciones, Bitácora y Permisos</p>
         </div>
 
-        <!-- Panel: Completo -->
+        <!-- Panel: Ocupacional -->
+        <div class="diagram-panel" id="er-ocupacional">
+          <div class="mermaid-wrap">
+            <div class="mermaid" id="mermaid-ocupacional">
+erDiagram
+    informes_medicos {
+        int id PK
+        string numero_informe
+        int paciente_id FK
+        int consulta_id FK
+        int empleado_id FK
+        string nombre_empresa
+        string tipo_consulta
+        string aptitud
+        string diagnostico
+        string tipo_documento
+        string imagen_escaneo
+        date fecha
+    }
+    gastos_medicos {
+        int id PK
+        string numero_gasto
+        int paciente_id FK
+        int consulta_id FK
+        int empleado_id FK
+        string nombre_empresa
+        string tipo_documento
+        string imagen_escaneo
+        date fecha
+    }
+    gasto_medico_items {
+        int id PK
+        int gasto_medico_id FK
+        string concepto
+        decimal monto
+    }
+    examenes_laboratorio {
+        int id PK
+        string numero_solicitud
+        int paciente_id FK
+        int consulta_id FK
+        int empleado_id FK
+        boolean hematologia_completa
+        boolean glicemia_ayunas
+        boolean urea
+        boolean creatinina
+        boolean colesterol_total
+        boolean trigliceridos
+        boolean examen_orina
+        boolean examen_heces
+        string tipo_documento
+        string imagen_escaneo
+        date fecha
+    }
+    pacientes ||--o{ informes_medicos : "tiene"
+    consultas ||--o{ informes_medicos : "genera"
+    nomina ||--o{ informes_medicos : "atiende"
+    pacientes ||--o{ gastos_medicos : "tiene"
+    consultas ||--o{ gastos_medicos : "genera"
+    nomina ||--o{ gastos_medicos : "atiende"
+    gastos_medicos ||--o{ gasto_medico_items : "contiene"
+    pacientes ||--o{ examenes_laboratorio : "tiene"
+    consultas ||--o{ examenes_laboratorio : "genera"
+    nomina ||--o{ examenes_laboratorio : "solicita"
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Modulos ocupacionales: Informes Medicos, Gastos Medicos, Examenes de Laboratorio</p>
+        </div>
+
+        <!-- Panel: Completo v3.0 -->
         <div class="diagram-panel" id="er-completo">
           <div class="mermaid-wrap" style="overflow-x:scroll;">
             <div class="mermaid" id="mermaid-completo">
 erDiagram
-    USUARIOS ||--o{ CONSULTAS              : "atiende"
-    USUARIOS ||--o{ INVENTARIO_MOVIMIENTOS : "realiza"
-    USUARIOS ||--o{ MENSAJES               : "envia/recibe"
-    USUARIOS ||--o{ NOTIFICACIONES         : "recibe"
-    USUARIOS ||--o{ BITACORA               : "genera"
-    USUARIOS ||--o{ PERMISOS_USUARIO       : "tiene"
-    USUARIOS ||--o{ SOLICITUDES_INVENTARIO : "solicita/atiende"
-    PACIENTES ||--o{ CONSULTAS             : "tiene"
-    NOMINA    ||--o{ CONSULTAS             : "atiende"
-    CONSULTAS ||--o{ CONSULTAS_MEDICAMENTOS: "incluye"
+    USUARIOS ||--o{ CONSULTAS               : "atiende"
+    USUARIOS ||--o{ CITAS                   : "crea/atiende"
+    USUARIOS ||--o{ INVENTARIO_MOVIMIENTOS  : "realiza"
+    USUARIOS ||--o{ MENSAJES                : "envia/recibe"
+    USUARIOS ||--o{ NOTIFICACIONES          : "recibe"
+    USUARIOS ||--o{ BITACORA                : "genera"
+    USUARIOS ||--o{ PERMISOS_USUARIO        : "tiene"
+    USUARIOS ||--o{ SOLICITUDES_INVENTARIO  : "solicita/atiende"
+    USUARIOS ||--o{ RECETAS                 : "emite"
+    USUARIOS ||--o{ SIGNOS_VITALES          : "registra"
+    PACIENTES ||--o{ CONSULTAS              : "tiene"
+    PACIENTES ||--o{ CITAS                  : "agenda"
+    PACIENTES ||--o{ SIGNOS_VITALES         : "posee"
+    PACIENTES ||--o{ RECETAS                : "recibe"
+    NOMINA    ||--o{ CONSULTAS              : "atiende"
+    NOMINA    ||--o{ CITAS                  : "atiende"
+    NOMINA    ||--o{ RECETAS                : "emite"
+    CONSULTAS ||--o{ CONSULTAS_MEDICAMENTOS : "incluye"
+    CONSULTAS ||--o{ SIGNOS_VITALES         : "registra"
+    CONSULTAS ||--o{ RECETAS                : "genera"
+    CONSULTAS ||--|| CITAS                  : "proviene de"
     INVENTARIO ||--o{ CONSULTAS_MEDICAMENTOS: "se usa en"
     INVENTARIO ||--o{ INVENTARIO_MOVIMIENTOS: "registra"
     INVENTARIO ||--o{ SOLICITUDES_INVENTARIO: "se solicita"
+    INVENTARIO ||--o{ RECETA_ITEMS          : "se prescribe"
     SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS: "contiene"
-    INVENTARIO ||--o{ SOLICITUD_ITEMS      : "incluye"
+    RECETAS ||--o{ RECETA_ITEMS             : "contiene"
+    PACIENTES ||--o{ INFORMES_MEDICOS       : "tiene"
+    NOMINA    ||--o{ INFORMES_MEDICOS       : "emite"
+    CONSULTAS ||--o{ INFORMES_MEDICOS       : "genera"
+    PACIENTES ||--o{ GASTOS_MEDICOS         : "tiene"
+    NOMINA    ||--o{ GASTOS_MEDICOS         : "atiende"
+    CONSULTAS ||--o{ GASTOS_MEDICOS         : "genera"
+    GASTOS_MEDICOS ||--o{ GASTO_MEDICO_ITEMS: "contiene"
+    PACIENTES ||--o{ EXAMENES_LABORATORIO   : "tiene"
+    NOMINA    ||--o{ EXAMENES_LABORATORIO   : "solicita"
+    CONSULTAS ||--o{ EXAMENES_LABORATORIO   : "genera"
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Diagrama simplificado — ver pestañas anteriores para detalle completo de cada entidad</p>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> Diagrama completo v3.0 — 22 tablas activas (sistema institucional)</p>
         </div>
 
       </div>
@@ -425,10 +563,9 @@ erDiagram
     <div class="doc-section" id="uml-casos">
       <div class="doc-section-header">
         <div class="doc-section-icon icon-purple"><i class='bx bx-user-check'></i></div>
-        <div><h2>Diagramas de Casos de Uso UML</h2><p>Interacciones de los actores con el sistema por rol</p></div>
+        <div><h2>Diagramas de Casos de Uso UML</h2><p>Interacciones de los 7 roles con el sistema</p></div>
       </div>
       <div class="doc-section-body">
-
         <div class="diagram-tabs">
           <button class="diagram-tab active" onclick="mostrarUML('uml-admin')">
             <i class='bx bxs-user-badge'></i> Administrador
@@ -439,160 +576,154 @@ erDiagram
           <button class="diagram-tab" onclick="mostrarUML('uml-recep')">
             <i class='bx bx-headphone'></i> Recepcionista
           </button>
+          <button class="diagram-tab" onclick="mostrarUML('uml-farmacia')">
+            <i class='bx bxs-capsule'></i> Farmacéutico
+          </button>
+          <button class="diagram-tab" onclick="mostrarUML('uml-otros')">
+            <i class='bx bx-group'></i> Otros Roles
+          </button>
         </div>
 
-        <!-- UML Admin -->
         <div class="diagram-panel active" id="uml-admin">
           <div class="mermaid-wrap">
             <div class="mermaid">
 flowchart LR
-    A([👤 Administrador])
-
-    A --> B([Iniciar Sesión])
-    A --> C([Gestionar Usuarios])
-    A --> D([Configurar Permisos])
-    A --> E([Ver Bitácora])
-    A --> F([Gestionar Nómina])
+    A([Administrador])
+    A --> B([Dashboard con graficas])
+    A --> C([Gestionar Usuarios 7 roles])
+    A --> D([Configurar Permisos ACL])
+    A --> E([Ver Bitacora de Auditoria])
+    A --> F([Gestionar Nomina])
     A --> G([Aprobar Solicitudes])
-    A --> H([Ver Dashboard])
-    A --> I([Gestionar Pacientes])
-    A --> J([Gestionar Consultas])
-    A --> K([Gestionar Inventario])
-    A --> L([Enviar Mensajes])
-    A --> M([Exportar Reportes])
-    A --> N([Reporte Auditoría])
-
-    C --> C1[Crear Usuario]
-    C --> C2[Editar Usuario]
-    C --> C3[Activar / Desactivar]
-    C --> C4[Eliminar Usuario]
-
-    D --> D1[Asignar permisos por módulo]
-    D --> D2[Ver / Crear / Editar / Eliminar]
-
-    G --> G1[Aprobar → Entrada automática]
-    G --> G2[Rechazar Solicitud]
-    G --> G3[Marcar Completada]
-
-    M --> M1[PDF / Excel / CSV]
-    M --> M2[Por período o rango]
-
-    style A fill:#1e293b,color:#fff,stroke:#0d6efd,stroke-width:3px,font-size:16px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style D fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style E fill:#fee2e2,color:#b91c1c,stroke:#dc3545
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#fef9c3,color:#a16207,stroke:#d97706
-    style H fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style I fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style J fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style K fill:#dcfce7,color:#15803d,stroke:#198754
-    style L fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style M fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style N fill:#fee2e2,color:#b91c1c,stroke:#dc3545
+    A --> H([Pacientes y Expediente])
+    A --> I([Agenda de Citas])
+    A --> J([Consultas y Signos Vitales])
+    A --> K([Recetas Medicas])
+    A --> L([Inventario Completo])
+    A --> M([Reportes Estadisticos])
+    A --> N([Exportar PDF Excel CSV])
+    A --> O([Mensajes y Notificaciones])
+    A --> P([Backup BD automatico])
+    C --> C1[7 roles disponibles]
+    C --> C2[Activar Desactivar cuentas]
+    D --> D1[Ver Crear Editar Eliminar por modulo]
+    G --> G1[Aprobar entrada automatica]
+    G --> G2[Rechazar o completar]
+    style A fill:#1e293b,color:#fff,stroke:#0d6efd,stroke-width:3px
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> El Administrador tiene acceso total — desplaza para ver el diagrama completo</p>
+          <p class="zoom-hint"><i class='bx bx-mouse'></i> El Administrador tiene acceso total a los 17 módulos del sistema</p>
         </div>
 
-        <!-- UML Médico -->
         <div class="diagram-panel" id="uml-medico">
           <div class="mermaid-wrap">
             <div class="mermaid">
 flowchart LR
-    A([👨‍⚕️ Médico])
-
-    A --> B([Iniciar Sesión])
-    A --> C([Ver Dashboard])
-    A --> D([Gestionar Pacientes])
-    A --> E([Gestionar Consultas])
-    A --> F([Ver Medicamentos])
-    A --> G([Registrar Movimientos])
-    A --> H([Crear Solicitudes])
-    A --> I([Enviar Mensajes])
-    A --> J([Ver Notificaciones])
-    A --> K([Actualizar Perfil])
-
-    D --> D1[Ver lista de pacientes]
-    D --> D2[Registrar nuevo paciente]
-    D --> D3[Editar datos del paciente]
-
-    E --> E1[Programar consulta]
-    E --> E2[Registrar diagnóstico]
-    E --> E3[Indicar tratamiento]
-    E --> E4[Cambiar estado]
-
-    G --> G1[Registrar Entrada]
-    G --> G2[Registrar Salida con firma]
-    G --> G3[Ver historial de movimientos]
-
-    H --> H1[Solicitar medicamentos]
-    H --> H2[Ver estado de solicitud]
-
+    A([Medico])
+    A --> B([Dashboard])
+    A --> C([Pacientes ver crear editar])
+    A --> D([Expediente Clinico])
+    A --> E([Agenda de Citas])
+    A --> F([Consultas completo])
+    A --> G([Signos Vitales])
+    A --> H([Recetas crear imprimir])
+    A --> I([Medicamentos ver])
+    A --> J([Movimientos ver])
+    A --> K([Solicitudes crear])
+    A --> L([Reportes ver])
+    A --> M([Mensajes])
+    E --> E1[Programar cita]
+    E --> E2[Convertir cita en consulta]
+    F --> F1[Diagnostico y tratamiento]
+    F --> F2[Registrar signos vitales]
+    H --> H1[Receta digital con medicamentos]
+    H --> H2[Receta manuscrita escaneada]
+    H --> H3[PDF A5 imprimible]
     style A fill:#1e293b,color:#fff,stroke:#0dcaf0,stroke-width:3px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#dcfce7,color:#15803d,stroke:#198754
-    style H fill:#fef9c3,color:#a16207,stroke:#d97706
-    style I fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style J fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style K fill:#f1f5f9,color:#475569,stroke:#94a3b8
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos del Médico son configurados por el Administrador</p>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Permisos configurables por el Administrador</p>
         </div>
 
-        <!-- UML Recepcionista -->
         <div class="diagram-panel" id="uml-recep">
           <div class="mermaid-wrap">
             <div class="mermaid">
 flowchart LR
-    A([👩‍💼 Recepcionista])
-
-    A --> B([Iniciar Sesión])
-    A --> C([Ver Dashboard])
-    A --> D([Gestionar Pacientes])
-    A --> E([Programar Consultas])
-    A --> F([Ver Medicamentos])
-    A --> G([Crear Solicitudes])
-    A --> H([Enviar Mensajes])
-    A --> I([Ver Notificaciones])
-    A --> J([Actualizar Perfil])
-
-    D --> D1[Registrar nuevo paciente]
-    D --> D2[Buscar paciente por cédula]
-    D --> D3[Ver historial del paciente]
-    D --> D4[Editar datos de contacto]
-
-    E --> E1[Crear cita médica]
-    E --> E2[Asignar médico disponible]
-    E --> E3[Confirmar fecha y hora]
-    E --> E4[Cancelar consulta]
-
-    G --> G1[Solicitar reposición de stock]
-    G --> G2[Agregar múltiples medicamentos]
-    G --> G3[Indicar proveedor y teléfono]
-    G --> G4[Ver estado de solicitud]
-
+    A([Recepcionista])
+    A --> B([Dashboard])
+    A --> C([Pacientes completo])
+    A --> D([Agenda de Citas completo])
+    A --> E([Consultas ver crear editar])
+    A --> F([Recetas ver])
+    A --> G([Medicamentos ver])
+    A --> H([Movimientos ver])
+    A --> I([Solicitudes crear])
+    A --> J([Mensajes])
+    C --> C1[Registro rapido desde consulta]
+    C --> C2[Buscar por cedula]
+    D --> D1[Programar y confirmar citas]
+    D --> D2[Cancelar o marcar no asistio]
+    D --> D3[Convertir cita en consulta]
     style A fill:#1e293b,color:#fff,stroke:#94a3b8,stroke-width:3px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#fef9c3,color:#a16207,stroke:#d97706
-    style H fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style I fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style J fill:#f1f5f9,color:#475569,stroke:#94a3b8
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos de la Recepcionista son configurados por el Administrador</p>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Permisos configurables por el Administrador</p>
         </div>
 
+        <div class="diagram-panel" id="uml-farmacia">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart LR
+    A([Farmaceutico])
+    A --> B([Recetas ver])
+    A --> C([Medicamentos completo])
+    A --> D([Movimientos completo])
+    A --> E([Solicitudes completo])
+    A --> F([Reportes ver])
+    A --> G([Mensajes])
+    C --> C1[Registrar nuevo medicamento]
+    C --> C2[Actualizar stock]
+    C --> C3[Controlar vencimientos]
+    D --> D1[Registrar entrada con proveedor]
+    D --> D2[Registrar salida con firma]
+    D --> D3[Reporte de auditoria PDF]
+    E --> E1[Crear solicitud de reposicion]
+    E --> E2[Gestionar solicitudes pendientes]
+    style A fill:#1e293b,color:#fff,stroke:#198754,stroke-width:3px
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Rol especializado en control de inventario de medicamentos</p>
+        </div>
+
+        <div class="diagram-panel" id="uml-otros">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart TD
+    E([Enfermera])
+    C([Contador])
+    L([Laboratorista])
+    E --> E1([Pacientes ver])
+    E --> E2([Consultas ver editar])
+    E --> E3([Signos Vitales registrar])
+    E --> E4([Citas ver])
+    E --> E5([Medicamentos ver])
+    E --> E6([Solicitudes crear])
+    C --> C1([Pacientes ver])
+    C --> C2([Movimientos ver])
+    C --> C3([Solicitudes ver])
+    C --> C4([Reportes ver])
+    C --> C5([Mensajes])
+    L --> L1([Pacientes ver])
+    L --> L2([Consultas ver editar])
+    L --> L3([Citas ver])
+    L --> L4([Mensajes])
+    style E fill:#1e293b,color:#fff,stroke:#0dcaf0,stroke-width:2px
+    style C fill:#1e293b,color:#fff,stroke:#ffc107,stroke-width:2px
+    style L fill:#1e293b,color:#fff,stroke:#6f42c1,stroke-width:2px
+            </div>
+          </div>
+          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Todos los permisos son configurables individualmente por el Administrador</p>
+        </div>
       </div>
     </div>
 
@@ -831,7 +962,7 @@ flowchart LR
                     <tbody>
                         <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
                         <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>modulo</code></td><td>VARCHAR(50)</td><td>pacientes|consultas|medicina|inventario|mensajes|nomina|usuarios|solicitudes|bitacora</td></tr>
+                        <tr><td><code>modulo</code></td><td>VARCHAR(50)</td><td>pacientes|consultas|citas|recetas|informes|gastos|examenes|medicina|inventario|mensajes|nomina|usuarios|solicitudes|bitacora|reportes</td></tr>
                         <tr><td><code>puede_ver</code></td><td>BOOLEAN</td><td>default: false</td></tr>
                         <tr><td><code>puede_crear</code></td><td>BOOLEAN</td><td>default: false</td></tr>
                         <tr><td><code>puede_editar</code></td><td>BOOLEAN</td><td>default: false</td></tr>
@@ -862,6 +993,190 @@ flowchart LR
       </div>
     </div>
 
+    <!-- Nuevas tablas v3.0 -->
+    <div class="doc-section" id="tablas-nuevas">
+      <div class="doc-section-header">
+        <div class="doc-section-icon icon-green"><i class='bx bx-plus-circle'></i></div>
+        <div><h2>Nuevas Tablas v3.0</h2><p>Tablas agregadas en la version 3.0 del sistema</p></div>
+      </div>
+      <div class="doc-section-body">
+        <div class="tables-grid">
+
+            <!-- CITAS -->
+            <div class="table-card">
+                <div class="table-card-header">CITAS <span>Agenda de citas medicas</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → PACIENTES</td></tr>
+                        <tr><td><code>medico_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>creado_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>fecha_hora</code></td><td>DATETIME</td><td>NOT NULL</td></tr>
+                        <tr><td><code>duracion_minutos</code></td><td>INT</td><td>default: 30</td></tr>
+                        <tr><td><code>motivo</code></td><td>VARCHAR(255)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>estado</code></td><td>ENUM</td><td>programada|confirmada|en_curso|completada|cancelada|no_asistio</td></tr>
+                        <tr><td><code>color</code></td><td>VARCHAR(20)</td><td>default: #0d6efd</td></tr>
+                        <tr><td><code>deleted_at</code></td><td>TIMESTAMP</td><td>Soft Delete</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SIGNOS_VITALES -->
+            <div class="table-card">
+                <div class="table-card-header">SIGNOS_VITALES <span>Signos vitales por consulta</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → CONSULTAS</td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → PACIENTES</td></tr>
+                        <tr><td><code>registrado_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
+                        <tr><td><code>presion_sistolica</code></td><td>DECIMAL(5,1)</td><td><span class="badge badge-null">NULL</span> mmHg</td></tr>
+                        <tr><td><code>presion_diastolica</code></td><td>DECIMAL(5,1)</td><td><span class="badge badge-null">NULL</span> mmHg</td></tr>
+                        <tr><td><code>frecuencia_cardiaca</code></td><td>DECIMAL(5,1)</td><td><span class="badge badge-null">NULL</span> lpm</td></tr>
+                        <tr><td><code>temperatura</code></td><td>DECIMAL(4,1)</td><td><span class="badge badge-null">NULL</span> °C</td></tr>
+                        <tr><td><code>saturacion_oxigeno</code></td><td>DECIMAL(4,1)</td><td><span class="badge badge-null">NULL</span> %</td></tr>
+                        <tr><td><code>peso</code></td><td>DECIMAL(5,2)</td><td><span class="badge badge-null">NULL</span> kg</td></tr>
+                        <tr><td><code>talla</code></td><td>DECIMAL(5,2)</td><td><span class="badge badge-null">NULL</span> cm</td></tr>
+                        <tr><td><code>imc</code></td><td>DECIMAL(5,2)</td><td><span class="badge badge-null">NULL</span> calculado</td></tr>
+                        <tr><td><code>glucosa</code></td><td>DECIMAL(6,1)</td><td><span class="badge badge-null">NULL</span> mg/dL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RECETAS -->
+            <div class="table-card">
+                <div class="table-card-header">RECETAS <span>Recetas medicas emitidas</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>numero_receta</code></td><td>VARCHAR(20)</td><td>UNIQUE — REC-AAAA-XXXX</td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → CONSULTAS</td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → PACIENTES</td></tr>
+                        <tr><td><code>medico_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>diagnostico</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha_emision</code></td><td>DATE</td><td>NOT NULL</td></tr>
+                        <tr><td><code>fecha_vencimiento</code></td><td>DATE</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>estado</code></td><td>ENUM</td><td>activa|dispensada|vencida|anulada</td></tr>
+                        <tr><td><code>deleted_at</code></td><td>TIMESTAMP</td><td>Soft Delete</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RECETA_ITEMS -->
+            <div class="table-card">
+                <div class="table-card-header">RECETA_ITEMS <span>Medicamentos de cada receta</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>receta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → RECETAS</td></tr>
+                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>nombre_medicamento</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>dosis</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>frecuencia</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>duracion</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>cantidad</code></td><td>INT</td><td>default: 1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+            <!-- INFORMES_MEDICOS -->
+            <div class="table-card">
+                <div class="table-card-header">INFORMES_MEDICOS <span>Informes medico-ocupacionales</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>numero_informe</code></td><td>VARCHAR(20)</td><td>UNIQUE</td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; PACIENTES</td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>nombre_empresa</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>tipo_consulta</code></td><td>ENUM</td><td>preempleo|prevacacional|postvacacional|egreso|reubicacion|otros</td></tr>
+                        <tr><td><code>aptitud</code></td><td>ENUM</td><td>apto|no_apto|apto_condicionado</td></tr>
+                        <tr><td><code>diagnostico</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>tipo_documento</code></td><td>ENUM</td><td>digital|manuscrita</td></tr>
+                        <tr><td><code>imagen_escaneo</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha</code></td><td>DATE</td><td>NOT NULL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GASTOS_MEDICOS -->
+            <div class="table-card">
+                <div class="table-card-header">GASTOS_MEDICOS <span>Gastos de atencion medica</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>numero_gasto</code></td><td>VARCHAR(20)</td><td>UNIQUE</td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; PACIENTES</td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>nombre_empresa</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>descripcion</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>tipo_documento</code></td><td>ENUM</td><td>digital|manuscrita</td></tr>
+                        <tr><td><code>imagen_escaneo</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha</code></td><td>DATE</td><td>NOT NULL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GASTO_MEDICO_ITEMS -->
+            <div class="table-card">
+                <div class="table-card-header">GASTO_MEDICO_ITEMS <span>Conceptos de cada gasto</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>gasto_medico_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; GASTOS_MEDICOS ON DELETE CASCADE</td></tr>
+                        <tr><td><code>concepto</code></td><td>VARCHAR(255)</td><td>NOT NULL</td></tr>
+                        <tr><td><code>monto</code></td><td>DECIMAL(10,2)</td><td>NOT NULL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EXAMENES_LABORATORIO -->
+            <div class="table-card">
+                <div class="table-card-header">EXAMENES_LABORATORIO <span>Solicitudes de examenes</span></div>
+                <table>
+                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
+                        <tr><td><code>numero_solicitud</code></td><td>VARCHAR(20)</td><td>UNIQUE</td></tr>
+                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; PACIENTES</td></tr>
+                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> &rarr; NOMINA <span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>hematologia_completa</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>glicemia_ayunas</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>urea</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>creatinina</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>colesterol_total</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>trigliceridos</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>examen_orina</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>examen_heces</code></td><td>BOOLEAN</td><td>default: false</td></tr>
+                        <tr><td><code>otros</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>tipo_documento</code></td><td>ENUM</td><td>digital|manuscrita</td></tr>
+                        <tr><td><code>imagen_escaneo</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
+                        <tr><td><code>fecha</code></td><td>DATE</td><td>NOT NULL</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Las tablas <strong>PACIENTES, CONSULTAS, NOMINA e INVENTARIO</strong> ahora tienen columna <code>deleted_at</code> para borrado logico (Soft Delete). Los registros eliminados se conservan en la BD con <code>deleted_at != NULL</code>.</div></div>
+        <div class="doc-alert info" style="margin-top:8px;"><i class='bx bx-info-circle'></i><div>La tabla <strong>USUARIOS</strong> ahora soporta 7 roles: admin, medico, recepcionista, enfermera, farmaceutico, contador, laboratorista.</div></div>
+        <div class="doc-alert warning" style="margin-top:8px;"><i class='bx bx-info-circle'></i><div><strong>Sistema institucional:</strong> Los medicamentos se reciben por asignacion/donacion. No existen tablas de precios ni facturacion en esta instalacion.</div></div>
+      </div>
+    </div>
+
     <!-- Relaciones -->
     <div class="doc-section" id="relaciones">
       <div class="doc-section-header">
@@ -886,6 +1201,16 @@ flowchart LR
             <li><code>SOLICITUDES_INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Una solicitud contiene uno o varios items. ON DELETE CASCADE.</li>
             <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>PERMISOS_USUARIO</code> <span class="rel-type">1 a N</span> Un usuario puede tener permisos configurados para múltiples módulos. ON DELETE CASCADE.</li>
             <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Un medicamento puede aparecer en varios items de solicitud.</li>
+            <!-- Nuevas relaciones v3.0 -->
+            <li><code>PACIENTES</code> <span class="rel-arrow">→</span> <code>CITAS</code> <span class="rel-type">1 a N</span> Un paciente puede tener muchas citas. ON DELETE CASCADE.</li>
+            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>CITAS</code> <span class="rel-type">1 a N</span> Un medico puede tener muchas citas asignadas. ON DELETE SET NULL.</li>
+            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>CITAS</code> <span class="rel-type">1 a 1</span> Una cita puede convertirse en una consulta. ON DELETE SET NULL.</li>
+            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>SIGNOS_VITALES</code> <span class="rel-type">1 a 1</span> Cada consulta tiene un registro de signos vitales. ON DELETE CASCADE.</li>
+            <li><code>PACIENTES</code> <span class="rel-arrow">→</span> <code>SIGNOS_VITALES</code> <span class="rel-type">1 a N</span> Un paciente tiene historial de signos vitales. ON DELETE CASCADE.</li>
+            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>RECETAS</code> <span class="rel-type">1 a N</span> Una consulta puede generar varias recetas. ON DELETE CASCADE.</li>
+            <li><code>PACIENTES</code> <span class="rel-arrow">→</span> <code>RECETAS</code> <span class="rel-type">1 a N</span> Un paciente puede tener muchas recetas. ON DELETE CASCADE.</li>
+            <li><code>RECETAS</code> <span class="rel-arrow">→</span> <code>RECETA_ITEMS</code> <span class="rel-type">1 a N</span> Una receta contiene uno o varios medicamentos. ON DELETE CASCADE.</li>
+            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>RECETA_ITEMS</code> <span class="rel-type">1 a N</span> Un medicamento puede aparecer en muchas recetas. ON DELETE SET NULL.</li>
         </ul>
       </div>
     </div>
@@ -894,7 +1219,7 @@ flowchart LR
 </div>
 
 <footer class="doc-footer">
-  <strong>SISGECLIN v2.5</strong> &mdash; Diagramas del Sistema (ER + UML) &mdash; Base de datos: sisgeclin_laravel &mdash; &copy; 2026
+  <strong>SISGECLIN v3.0</strong> &mdash; Diagramas del Sistema (ER + UML) &mdash; Base de datos: sisgeclin_laravel &mdash; 17 tablas activas (sin facturas — sistema institucional) &mdash; &copy; 2026
 </footer>
 
 <script>
@@ -962,3 +1287,7 @@ window.addEventListener('scroll', () => {
 </script>
 </body>
 </html>
+
+
+
+

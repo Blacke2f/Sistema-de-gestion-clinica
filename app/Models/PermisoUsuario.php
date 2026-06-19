@@ -77,16 +77,21 @@ class PermisoUsuario extends Model
     public static function modulos(): array
     {
         return [
-            // clave          => [etiqueta,          ícono Boxicons,       color hex]
-            'pacientes'   => ['label' => 'Pacientes',     'icon' => 'bxs-user-detail',  'color' => '#0d6efd'],
-            'consultas'   => ['label' => 'Consultas',     'icon' => 'bx-clipboard',     'color' => '#0dcaf0'],
-            'medicina'    => ['label' => 'Medicamentos',  'icon' => 'bxs-capsule',      'color' => '#fd7e14'],
-            'inventario'  => ['label' => 'Movimientos',   'icon' => 'bx-transfer',      'color' => '#198754'],
-            'solicitudes' => ['label' => 'Solicitudes',   'icon' => 'bx-send',          'color' => '#856404'],
-            'mensajes'    => ['label' => 'Mensajes',      'icon' => 'bxs-envelope',     'color' => '#0dcaf0'],
-            'nomina'      => ['label' => 'Nómina',        'icon' => 'bxs-group',        'color' => '#6f42c1'],
-            'usuarios'    => ['label' => 'Usuarios',      'icon' => 'bxs-user-account', 'color' => '#1a2234'],
-            'bitacora'    => ['label' => 'Bitácora',      'icon' => 'bx-history',       'color' => '#64748b'],
+            'pacientes'   => ['label' => 'Pacientes',     'icon' => 'bxs-user-detail',   'color' => '#0d6efd'],
+            'consultas'   => ['label' => 'Consultas',     'icon' => 'bx-clipboard',      'color' => '#0dcaf0'],
+            'citas'       => ['label' => 'Agenda/Citas',  'icon' => 'bx-calendar-event', 'color' => '#0d6efd'],
+            'recetas'     => ['label' => 'Recetas',       'icon' => 'bx-file-blank',     'color' => '#198754'],
+            'informes'    => ['label' => 'Informes Medicos',  'icon' => 'bx-id-card',   'color' => '#0dcaf0'],
+            'gastos'      => ['label' => 'Gastos Medicos',    'icon' => 'bx-receipt',   'color' => '#fd7e14'],
+            'examenes'    => ['label' => 'Examenes de Lab.',  'icon' => 'bx-test-tube', 'color' => '#198754'],
+            'medicina'    => ['label' => 'Medicamentos',  'icon' => 'bxs-capsule',       'color' => '#fd7e14'],
+            'inventario'  => ['label' => 'Movimientos',   'icon' => 'bx-transfer',       'color' => '#198754'],
+            'solicitudes' => ['label' => 'Solicitudes',   'icon' => 'bx-send',           'color' => '#856404'],
+            'mensajes'    => ['label' => 'Mensajes',      'icon' => 'bxs-envelope',      'color' => '#0dcaf0'],
+            'reportes'    => ['label' => 'Reportes',      'icon' => 'bx-bar-chart-alt-2','color' => '#6f42c1'],
+            'nomina'      => ['label' => 'Nómina',        'icon' => 'bxs-group',         'color' => '#6f42c1'],
+            'usuarios'    => ['label' => 'Usuarios',      'icon' => 'bxs-user-account',  'color' => '#1a2234'],
+            'bitacora'    => ['label' => 'Bitácora',      'icon' => 'bx-history',        'color' => '#64748b'],
         ];
     }
 

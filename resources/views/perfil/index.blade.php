@@ -24,7 +24,7 @@
         </div>
         <div style="padding:20px;">
             <div style="text-align:center; margin-bottom:20px;">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode($usuario->nombre_completo) }}&background=0d6efd&color=fff&size=80" alt="Avatar" style="border-radius:50%; width:80px; height:80px;">
+                <img src="" data-avatar="{{ $usuario->nombre_completo }}" data-bg="#0d6efd" data-size="80" alt="Avatar" style="border-radius:50%; width:80px; height:80px;">
                 <h3 style="margin-top:10px;">{{ $usuario->nombre_completo }}</h3>
                 <span class="badge badge-primary">{{ ucfirst($usuario->rol) }}</span>
             </div>
