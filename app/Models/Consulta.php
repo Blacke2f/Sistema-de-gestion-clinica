@@ -15,22 +15,25 @@ namespace App\Models;
  */
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Consulta extends Model
 {
+    use SoftDeletes;
     // Nombre de la tabla en la base de datos
     protected $table = 'consultas';
 
     // Campos que se pueden asignar masivamente (mass assignment)
     protected $fillable = [
-        'paciente_id',   // ID del paciente que recibe la consulta
-        'medico_id',     // ID del usuario con rol médico (opcional)
-        'empleado_id',   // ID del empleado de nómina que atiende (opcional)
-        'fecha_hora',    // Fecha y hora programada de la consulta
-        'motivo',        // Motivo o razón de la consulta
-        'diagnostico',   // Diagnóstico médico (se llena después)
-        'tratamiento',   // Tratamiento indicado (se llena después)
-        'estado',        // Estado: pendiente, en_proceso, completada, cancelada
+        'paciente_id',    // ID del paciente que recibe la consulta
+        'medico_id',      // ID del usuario con rol médico (opcional)
+        'empleado_id',    // ID del empleado de nómina que atiende (opcional)
+        'fecha_hora',     // Fecha y hora programada de la consulta
+        'motivo',         // Motivo o razón de la consulta
+        'diagnostico',    // Diagnóstico médico (se llena después)
+        'tratamiento',    // Tratamiento indicado (se llena después)
+        'estado',         // Estado: pendiente, en_proceso, completada, cancelada
+        'tipo_consulta',  // Tipo: preempleo, prevacacional, postvacacional, egreso, reubicacion, otros
     ];
 
     // Conversión automática de tipos al leer de la BD
@@ -48,7 +51,7 @@ class Consulta extends Model
      */
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_id');
+        return $this->belongsTo(Paciente::class, 'paciente_id')->withTrashed();
     }
 
     /**
@@ -66,7 +69,7 @@ class Consulta extends Model
      */
     public function empleado()
     {
-        return $this->belongsTo(Empleado::class, 'empleado_id');
+        return $this->belongsTo(Empleado::class, 'empleado_id')->withTrashed();
     }
 
     /**
@@ -78,12 +81,12 @@ class Consulta extends Model
     {
         return $this->belongsToMany(
             Medicamento::class,
-            'consultas_medicamentos', // tabla pivote
-            'consulta_id',            // clave foránea de esta tabla
-            'medicamento_id'          // clave foránea de la otra tabla
+            'consultas_medicamentos',
+            'consulta_id',
+            'medicamento_id'
         )
-        ->withPivot('cantidad', 'indicaciones') // campos extra de la tabla pivote
-        ->withTimestamps();
+        ->withPivot('cantidad', 'indicaciones');
+        // Sin withTimestamps() — la tabla solo tiene created_at, no updated_at
     }
 
     /**
@@ -93,6 +96,46 @@ class Consulta extends Model
     public function movimientos()
     {
         return $this->hasMany(InventarioMovimiento::class, 'consulta_id');
+    }
+
+    /**
+     * Signos vitales registrados en esta consulta.
+     */
+    public function signosVitales()
+    {
+        return $this->hasMany(SignoVital::class, 'consulta_id');
+    }
+
+    /**
+     * Recetas emitidas en esta consulta.
+     */
+    public function recetas()
+    {
+        return $this->hasMany(Receta::class, 'consulta_id');
+    }
+
+    /**
+     * Informes médicos de esta consulta.
+     */
+    public function informesMedicos()
+    {
+        return $this->hasMany(InformeMedico::class, 'consulta_id');
+    }
+
+    /**
+     * Gastos médicos de esta consulta.
+     */
+    public function gastosMedicos()
+    {
+        return $this->hasMany(GastoMedico::class, 'consulta_id');
+    }
+
+    /**
+     * Solicitudes de exámenes de laboratorio de esta consulta.
+     */
+    public function examenesLaboratorio()
+    {
+        return $this->hasMany(ExamenLaboratorio::class, 'consulta_id');
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -130,6 +173,23 @@ class Consulta extends Model
     public function getEstadoTextoAttribute(): string
     {
         return ucfirst(str_replace('_', ' ', $this->estado));
+    }
+
+    /**
+     * Convierte el tipo de consulta a texto legible en español.
+     * Uso: $consulta->tipo_consulta_texto
+     */
+    public function getTipoConsultaTextoAttribute(): string
+    {
+        return match ($this->tipo_consulta) {
+            'preempleo'      => 'Pre-empleo',
+            'prevacacional'  => 'Pre-vacacional',
+            'postvacacional' => 'Post-vacacional',
+            'egreso'         => 'Egreso',
+            'reubicacion'    => 'Reubicación',
+            'otros'          => 'Otros',
+            default          => '—',
+        };
     }
 
     // ══════════════════════════════════════════════════════════════════════════

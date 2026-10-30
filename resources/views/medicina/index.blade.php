@@ -38,6 +38,31 @@
 <div class="table-container">
     <div class="table-header">
         <h3><i class='bx bxs-capsule'></i> Inventario de Medicamentos</h3>
+        @php
+            $allMeds = \App\Models\Medicamento::all();
+            $kpiTotalMeds = $allMeds->count();
+            $kpiTotalUds  = $allMeds->sum('cantidad');
+            $kpiStockBajo = $allMeds->filter(fn($item) => $item->tieneStockBajo())->count();
+            $kpiPorVencer = $allMeds->filter(fn($item) => $item->fecha_vencimiento && $item->fecha_vencimiento->lte(now()->addDays(30)))->count();
+        @endphp
+        <div style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin:10px 0 4px;">
+            <div style="background:linear-gradient(135deg,#0d6efd,#3b82f6);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bxs-capsule' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiTotalMeds }}</div><small style="opacity:.9;font-size:11px;">En Catálogo</small></div>
+            </div>
+            <div style="background:linear-gradient(135deg,#198754,#10b981);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bx-package' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ number_format($kpiTotalUds) }}</div><small style="opacity:.9;font-size:11px;">Unidades en Stock</small></div>
+            </div>
+            <div style="background:linear-gradient(135deg,#dc3545,#f43f5e);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bx-error-circle' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiStockBajo }}</div><small style="opacity:.9;font-size:11px;">Con Stock Bajo</small></div>
+            </div>
+            <div style="background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bx-calendar-exclamation' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiPorVencer }}</div><small style="opacity:.9;font-size:11px;">Vencidos / &le;30 días</small></div>
+            </div>
+        </div>
         <span class="badge badge-info">{{ $medicamentos->total() }} registros</span>
     </div>
     <div class="table-responsive">
@@ -48,7 +73,6 @@
                     <th>Medicamento</th>
                     <th>Cantidad</th>
                     <th>Unidad</th>
-                    <th>Precio</th>
                     <th>Vencimiento</th>
                     <th>Proveedor</th>
                     <th>Stock Mín.</th>
@@ -63,8 +87,29 @@
                         <td><strong>{{ $m->nombre_medicamento }}</strong><br><small class="text-muted">{{ Str::limit($m->descripcion, 30) }}</small></td>
                         <td><span class="{{ $m->tieneStockBajo() ? 'text-danger fw-bold' : '' }}">{{ $m->cantidad }}</span></td>
                         <td>{{ $m->unidad }}</td>
-                        <td>${{ number_format($m->precio, 2) }}</td>
-                        <td>{{ $m->fecha_vencimiento?->format('d/m/Y') ?? '-' }}</td>
+                        <td>
+                            @if($m->fecha_vencimiento)
+                                @php
+                                    $diasVenc = (int) now()->startOfDay()->diffInDays($m->fecha_vencimiento->startOfDay(), false);
+                                @endphp
+                                <div>{{ $m->fecha_vencimiento->format('d/m/Y') }}</div>
+                                @if($diasVenc < 0)
+                                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;background:rgba(220,53,69,.15);color:#dc3545;">
+                                        <i class='bx bxs-circle' style="font-size:7px;"></i> Vencido
+                                    </span>
+                                @elseif($diasVenc <= 30)
+                                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;background:rgba(245,158,11,.18);color:#d97706;">
+                                        <i class='bx bxs-circle' style="font-size:7px;"></i> Vence en {{ $diasVenc }} d.
+                                    </span>
+                                @else
+                                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:12px;background:rgba(25,135,84,.12);color:#198754;">
+                                        <i class='bx bxs-circle' style="font-size:7px;"></i> Vigente
+                                    </span>
+                                @endif
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td>{{ $m->proveedor ?? '-' }}</td>
                         <td>{{ $m->stock_minimo }}</td>
                         <td>
@@ -138,17 +183,13 @@
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Precio *</label>
-                    <input type="number" name="precio" id="medicina-precio" min="0" step="0.01" required value="0">
-                </div>
-                <div class="form-group">
                     <label>Stock Mínimo *</label>
                     <input type="number" name="stock_minimo" id="medicina-stock_minimo" min="0" required value="10">
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Fecha de Vencimiento</label>
-                <input type="date" name="fecha_vencimiento" id="medicina-fecha_vencimiento">
+                <div class="form-group">
+                    <label>Fecha de Vencimiento</label>
+                    <input type="date" name="fecha_vencimiento" id="medicina-fecha_vencimiento">
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -217,7 +258,6 @@ async function verMedicamento(id) {
             <div class="detail-grid">
                 <div class="detail-item"><strong>Medicamento:</strong> ${m.nombre_medicamento}</div>
                 <div class="detail-item"><strong>Cantidad:</strong> ${m.cantidad} ${m.unidad}</div>
-                <div class="detail-item"><strong>Precio:</strong> $${parseFloat(m.precio).toFixed(2)}</div>
                 <div class="detail-item"><strong>Stock Mínimo:</strong> ${m.stock_minimo}</div>
                 <div class="detail-item"><strong>Vencimiento:</strong> ${m.fecha_vencimiento || '-'}</div>
                 <div class="detail-item"><strong>Proveedor:</strong> ${m.proveedor || '-'}</div>
@@ -238,7 +278,6 @@ async function editarMedicamento(id) {
         document.getElementById('medicina-descripcion').value     = m.descripcion || '';
         document.getElementById('medicina-cantidad').value        = m.cantidad;
         document.getElementById('medicina-unidad').value          = m.unidad;
-        document.getElementById('medicina-precio').value          = m.precio;
         document.getElementById('medicina-stock_minimo').value    = m.stock_minimo;
         document.getElementById('medicina-fecha_vencimiento').value = m.fecha_vencimiento || '';
         document.getElementById('modal-medicina-title').innerHTML = "<i class='bx bx-edit'></i> Editar Medicamento";

@@ -15,9 +15,12 @@ namespace App\Models;
  */
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Paciente extends Model
 {
+    use SoftDeletes;
+
     // Nombre de la tabla en la base de datos
     protected $table = 'pacientes';
 
@@ -52,6 +55,38 @@ class Paciente extends Model
     public function consultas()
     {
         return $this->hasMany(Consulta::class, 'paciente_id');
+    }
+
+    /**
+     * Citas programadas del paciente.
+     */
+    public function citas()
+    {
+        return $this->hasMany(Cita::class, 'paciente_id');
+    }
+
+    /**
+     * Signos vitales registrados del paciente.
+     */
+    public function signosVitales()
+    {
+        return $this->hasMany(SignoVital::class, 'paciente_id');
+    }
+
+    /**
+     * Recetas emitidas al paciente.
+     */
+    public function recetas()
+    {
+        return $this->hasMany(Receta::class, 'paciente_id');
+    }
+
+    /**
+     * Calcula la edad del paciente en años.
+     */
+    public function getEdadAttribute(): ?int
+    {
+        return $this->fecha_nacimiento ? $this->fecha_nacimiento->age : null;
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -99,6 +134,8 @@ class Paciente extends Model
         return $query->where(function ($q) use ($term) {
             $q->where('nombre',   'like', "%{$term}%")  // busca en nombre
               ->orWhere('apellido', 'like', "%{$term}%") // o en apellido
+              ->orWhereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$term}%"])
+              ->orWhere('telefono', 'like', "%{$term}%")
               ->orWhere('cedula',   'like', "%{$term}%"); // o en cédula
         });
     }

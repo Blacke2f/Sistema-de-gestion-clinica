@@ -1,0 +1,283 @@
+/* ================================================================
+   SISGECLIN — RESPONSIVE MÓVIL v4.0 (REFACTORIZADO)
+   Un solo archivo, sin conflictos, sin duplicados.
+   ================================================================ */
+
+/* ── Variables ── */
+:root {
+    --sidebar-mobile-width: 280px;
+    --navbar-mobile-height: 56px;
+}
+
+/* ================================================================
+   REGLAS GLOBALES (fuera de media query — aplican siempre)
+   ================================================================ */
+
+/* Sidebar: overflow-scrolling para iOS */
+#sidebar {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Todo elemento interactivo en el sidebar responde al toque */
+#sidebar a,
+#sidebar button,
+#sidebar .side-menu li {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(13,110,253,0.15);
+}
+
+/* Botón hamburguesa */
+#menu-toggle,
+.sidebar-toggle-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    background: none;
+    border: none;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-secondary);
+    padding: 0;
+}
+
+/* CRÍTICO: Nunca bloquear eventos en ningún contenedor principal */
+body, html, #content, #sidebar, main, nav, section {
+    /* Sin pointer-events: none en ningún contenedor */
+}
+
+/* ================================================================
+   MÓVIL: max-width 768px
+   ================================================================ */
+@media (max-width: 768px) {
+
+    /* ── Sidebar como drawer lateral ── */
+    #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: var(--sidebar-mobile-width) !important;
+        height: 100vh !important;
+        z-index: 1060 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.28s ease !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-shadow: none !important;
+        /* MUY IMPORTANTE: el sidebar siempre recibe eventos */
+        pointer-events: auto !important;
+    }
+
+    /* Sidebar abierto */
+    #sidebar.show {
+        transform: translateX(0) !important;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.4) !important;
+    }
+
+    /* Área scrollable del menú */
+    .sidebar-scroll {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        min-height: 0 !important;
+    }
+
+    /* Pie del sidebar */
+    #sidebar .side-menu.bottom {
+        flex-shrink: 0 !important;
+        position: relative !important;
+        bottom: auto !important;
+    }
+
+    /* Links del sidebar — área de toque grande */
+    #sidebar .side-menu li a,
+    #sidebar .side-menu li button {
+        padding: 14px 20px !important;
+        font-size: 15px !important;
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
+        cursor: pointer !important;
+        /* MUY IMPORTANTE */
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: auto !important;
+    }
+
+    /* ── Overlay ── */
+    /* El overlay cubre TODO — el sidebar (z-index 1060) absorbe
+       los toques naturalmente por estar encima del overlay (z-index 1030) */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1030;
+    }
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    /* Corrección sidebar colapsado en móvil */
+    body.sidebar-collapsed #sidebar {
+        transform: translateX(-100%) !important;
+        width: var(--sidebar-mobile-width) !important;
+    }
+    body.sidebar-collapsed #sidebar.show {
+        transform: translateX(0) !important;
+    }
+    body.sidebar-collapsed #sidebar .brand span,
+    body.sidebar-collapsed #sidebar .side-menu li a span,
+    body.sidebar-collapsed #sidebar .side-menu li button span {
+        display: inline !important;
+    }
+    body.sidebar-collapsed #sidebar .side-menu li a {
+        justify-content: flex-start !important;
+    }
+
+    /* ── Contenido ── */
+    #content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        /* NUNCA bloquear el contenido — sin pointer-events: none */
+    }
+
+    /* ── Navbar ── */
+    #content nav {
+        height: var(--navbar-mobile-height) !important;
+        padding: 0 12px !important;
+        gap: 8px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+    }
+
+    #menu-toggle,
+    .sidebar-toggle-btn {
+        font-size: 26px !important;
+    }
+
+    #content nav .nav-title {
+        display: none !important;
+    }
+
+    #content nav .search-form {
+        flex: 1 !important;
+        max-width: 180px !important;
+    }
+
+    /* ── Contenido principal ── */
+    #content main {
+        padding: 14px 12px !important;
+    }
+
+    .head-title {
+        flex-direction: column !important;
+        gap: 8px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .head-title h1 { font-size: 18px !important; }
+    .head-title .breadcrumb { display: none !important; }
+
+    .head-actions {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    /* KPI cards */
+    .box-info {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    /* Tablas */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+
+    /* Grids */
+    .dash-grid,
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Modales como bottom sheet */
+    .modal {
+        padding: 0 !important;
+        align-items: flex-end !important;
+    }
+
+    .modal-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: 90vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        animation: slideUp 0.3s ease !important;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-sm { max-width: 100% !important; }
+
+    /* Botones y elementos interactivos — área mínima 44px */
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-success,
+    .btn-warning {
+        min-height: 44px !important;
+        touch-action: manipulation !important;
+    }
+
+    .btn-icon {
+        width: 40px !important;
+        height: 40px !important;
+        touch-action: manipulation !important;
+    }
+
+    /* Notificaciones dropdown en móvil */
+    .notif-dropdown {
+        width: 300px !important;
+        right: -60px !important;
+    }
+}
+
+/* ================================================================
+   PANTALLAS MUY PEQUEÑAS (< 400px)
+   ================================================================ */
+@media (max-width: 400px) {
+    .box-info { grid-template-columns: 1fr !important; }
+    #content main { padding: 10px 8px !important; }
+    #content nav .search-form { display: none !important; }
+}
+
+/* ================================================================
+   TABLET (769px — 1024px)
+   ================================================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+    :root { --sidebar-width: 220px; }
+    #content main { padding: 20px 18px; }
+    .box-info { grid-template-columns: repeat(3, 1fr); }
+}

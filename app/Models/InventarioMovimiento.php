@@ -21,8 +21,20 @@ class InventarioMovimiento extends Model
     // Nombre de la tabla en la base de datos
     protected $table = 'inventario_movimientos';
 
-    // No usa updated_at — cada movimiento es inmutable una vez registrado
+    // Solo usa created_at — cada movimiento es inmutable una vez registrado (no tiene updated_at)
     public $timestamps = false;
+
+    /**
+     * Al crear, rellenar automáticamente created_at.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (self $model) {
+            if (empty($model->created_at)) {
+                $model->created_at = now();
+            }
+        });
+    }
 
     // Campos permitidos para asignación masiva
     protected $fillable = [
@@ -57,7 +69,7 @@ class InventarioMovimiento extends Model
      */
     public function medicamento()
     {
-        return $this->belongsTo(Medicamento::class, 'medicamento_id');
+        return $this->belongsTo(Medicamento::class, 'medicamento_id')->withTrashed();
     }
 
     /**
@@ -73,7 +85,7 @@ class InventarioMovimiento extends Model
      */
     public function consulta()
     {
-        return $this->belongsTo(Consulta::class, 'consulta_id');
+        return $this->belongsTo(Consulta::class, 'consulta_id')->withTrashed();
     }
 
     /**
@@ -81,7 +93,7 @@ class InventarioMovimiento extends Model
      */
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_id');
+        return $this->belongsTo(Paciente::class, 'paciente_id')->withTrashed();
     }
 
     // ══════════════════════════════════════════════════════════════════════════

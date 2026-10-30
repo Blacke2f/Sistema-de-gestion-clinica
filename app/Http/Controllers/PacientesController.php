@@ -66,7 +66,7 @@ class PacientesController extends Controller
         $data = $request->validate([
             'nombre'           => 'required|string|max:80',
             'apellido'         => 'required|string|max:80',
-            'cedula'           => 'required|string|max:20|unique:pacientes,cedula', // cédula única
+            'cedula'           => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('pacientes', 'cedula')->whereNull('deleted_at')], // cédula única activa
             'telefono'         => 'nullable|string|max:20',
             'email'            => 'nullable|email|max:100',
             'direccion'        => 'nullable|string',
@@ -83,7 +83,8 @@ class PacientesController extends Controller
 
         try {
             // Crear el paciente en la base de datos
-            $paciente = Paciente::create($data);
+            $trashed = Paciente::onlyTrashed()->where('cedula', $data['cedula'])->first();
+            if ($trashed) { $trashed->restore(); $trashed->update($data); $paciente = $trashed; } else { $paciente = Paciente::create($data); }
 
             // Notificar a todos los usuarios sobre el nuevo paciente
             // Si la notificación falla, el registro ya fue guardado — no es crítico
@@ -141,7 +142,7 @@ class PacientesController extends Controller
             'nombre'           => 'required|string|max:80',
             'apellido'         => 'required|string|max:80',
             // unique con excepción: permite la misma cédula del paciente actual
-            'cedula'           => "required|string|max:20|unique:pacientes,cedula,{$paciente->id}",
+            'cedula'           => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('pacientes', 'cedula')->ignore($paciente->id)->whereNull('deleted_at')],
             'telefono'         => 'nullable|string|max:20',
             'email'            => 'nullable|email|max:100',
             'direccion'        => 'nullable|string',

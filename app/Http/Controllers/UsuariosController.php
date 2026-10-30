@@ -15,6 +15,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bitacora;
 use App\Models\PermisoUsuario;
+use App\Models\PermisosPorRol;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,9 +48,9 @@ class UsuariosController extends Controller
         $data = $request->validate([
             'username'        => 'required|string|max:50|unique:usuarios,username',
             'email'           => 'required|email|max:100|unique:usuarios,email',
-            'password'        => 'required|string|min:6',
+            'password'        => 'required|string|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'nombre_completo' => 'required|string|max:150',
-            'rol'             => 'required|in:admin,medico,recepcionista',
+            'rol'             => 'required|in:admin,medico,recepcionista,enfermera,farmaceutico,contador,laboratorista',
             'activo'          => 'boolean',
         ], [
             'username.required'        => 'El usuario es requerido.',
@@ -57,7 +58,8 @@ class UsuariosController extends Controller
             'email.required'           => 'El email es requerido.',
             'email.unique'             => 'El email ya está registrado.',
             'password.required'        => 'La contraseña es requerida.',
-            'password.min'             => 'La contraseña debe tener al menos 6 caracteres.',
+            'password.min'             => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex'           => 'La contraseña debe tener mayúscula, minúscula y número.',
             'nombre_completo.required' => 'El nombre completo es requerido.',
             'rol.required'             => 'El rol es requerido.',
             'rol.in'                   => 'El rol seleccionado no es válido.',
@@ -69,13 +71,19 @@ class UsuariosController extends Controller
         try {
             $usuario = Usuario::create($data);
 
+            // Aplicar permisos por defecto según el rol
             try {
-                Bitacora::registrar(Auth::id(), 'CREAR USUARIO', 'usuarios', $usuario->id, "Creó el usuario '{$usuario->username}' con rol {$usuario->rol}");
-            } catch (\Throwable $e) { /* bitácora no crítica */ }
+                PermisosPorRol::aplicar($usuario->id, $usuario->rol);
+            } catch (\Throwable $e) { /* no crítico */ }
+
+            try {
+                Bitacora::registrar(Auth::id(), 'CREAR USUARIO', 'usuarios', $usuario->id,
+                    "Creó el usuario '{$usuario->username}' con rol {$usuario->rol_texto}");
+            } catch (\Throwable $e) { /* no crítico */ }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Usuario creado correctamente.',
+                'message' => "Usuario creado con permisos por defecto para el rol {$usuario->rol_texto}.",
                 'id'      => $usuario->id,
             ]);
         } catch (\Throwable $e) {
@@ -94,31 +102,40 @@ class UsuariosController extends Controller
             'username'        => "required|string|max:50|unique:usuarios,username,{$usuario->id}",
             'email'           => "required|email|max:100|unique:usuarios,email,{$usuario->id}",
             'nombre_completo' => 'required|string|max:150',
-            'rol'             => 'required|in:admin,medico,recepcionista',
+            'rol'             => 'required|in:admin,medico,recepcionista,enfermera,farmaceutico,contador,laboratorista',
             'activo'          => 'boolean',
         ]);
 
         if ($request->filled('password')) {
             $request->validate([
-                'password' => 'string|min:6',
+                'password' => 'string|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ], [
-                'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+                'password.min'   => 'La contraseña debe tener al menos 8 caracteres.',
+                'password.regex' => 'La contraseña debe tener mayúscula, minúscula y número.',
             ]);
             $data['password'] = Hash::make($request->password);
         }
 
         $data['activo'] = $request->boolean('activo', $usuario->activo);
+        $rolAnterior    = $usuario->rol;
 
         try {
             $usuario->update($data);
 
-            $detalles = "Editó el usuario '{$usuario->username}'";
-            if ($request->filled('password')) {
-                $detalles .= ' (contraseña cambiada)';
+            // Si cambió el rol, re-aplicar permisos por defecto del nuevo rol
+            if ($rolAnterior !== $usuario->fresh()->rol && !$usuario->fresh()->isAdmin()) {
+                try {
+                    PermisosPorRol::aplicar($usuario->id, $usuario->fresh()->rol);
+                } catch (\Throwable $e) { /* no crítico */ }
             }
+
+            $detalles = "Editó el usuario '{$usuario->username}'";
+            if ($request->filled('password')) $detalles .= ' (contraseña cambiada)';
+            if ($rolAnterior !== $data['rol']) $detalles .= " (rol: {$rolAnterior} → {$data['rol']})";
+
             try {
                 Bitacora::registrar(Auth::id(), 'EDITAR USUARIO', 'usuarios', $usuario->id, $detalles);
-            } catch (\Throwable $e) { /* bitácora no crítica */ }
+            } catch (\Throwable $e) { /* no crítico */ }
 
             return response()->json(['success' => true, 'message' => 'Usuario actualizado correctamente.']);
         } catch (\Throwable $e) {

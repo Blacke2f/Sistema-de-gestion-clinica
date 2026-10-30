@@ -37,12 +37,26 @@ class MensajesController extends Controller
         // Mensajes recibidos por este usuario, con datos del remitente
         $mensajesRecibidos = Mensaje::with('remitente')
             ->where('destinatario_id', $usuario->id)
+            ->when(request('search'), function ($q, $s) {
+                $q->where(function ($sub) use ($s) {
+                    $sub->where('asunto', 'like', "%{$s}%")
+                        ->orWhere('contenido', 'like', "%{$s}%")
+                        ->orWhereHas('remitente', fn ($u) => $u->where('nombre_completo', 'like', "%{$s}%"));
+                });
+            })
             ->latest()
             ->get();
 
         // Mensajes enviados por este usuario, con datos del destinatario
         $mensajesEnviados = Mensaje::with('destinatario')
             ->where('remitente_id', $usuario->id)
+            ->when(request('search'), function ($q, $s) {
+                $q->where(function ($sub) use ($s) {
+                    $sub->where('asunto', 'like', "%{$s}%")
+                        ->orWhere('contenido', 'like', "%{$s}%")
+                        ->orWhereHas('destinatario', fn ($u) => $u->where('nombre_completo', 'like', "%{$s}%"));
+                });
+            })
             ->latest()
             ->get();
 

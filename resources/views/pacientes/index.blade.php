@@ -38,6 +38,25 @@
 <div class="table-container">
     <div class="table-header">
         <h3><i class='bx bx-user-detail'></i> Listado de Pacientes</h3>
+        @php
+            $kpiPacTotal    = \App\Models\Paciente::count();
+            $kpiPacMes      = \App\Models\Paciente::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+            $kpiPacAlergias = \App\Models\Paciente::whereNotNull('alergias')->where('alergias', '!=', '')->whereNotIn('alergias', ['Ninguna', 'ninguna', 'No', 'no'])->count();
+        @endphp
+        <div style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:10px 0 4px;">
+            <div style="background:linear-gradient(135deg,#0d6efd,#3b82f6);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bxs-user-detail' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiPacTotal }}</div><small style="opacity:.9;font-size:11px;">Pacientes Registrados</small></div>
+            </div>
+            <div style="background:linear-gradient(135deg,#198754,#10b981);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bx-user-plus' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiPacMes }}</div><small style="opacity:.9;font-size:11px;">Nuevos este Mes</small></div>
+            </div>
+            <div style="background:linear-gradient(135deg,#dc3545,#f43f5e);color:#fff;padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;">
+                <i class='bx bx-error-alt' style="font-size:28px;opacity:.85;"></i>
+                <div><div style="font-size:20px;font-weight:800;line-height:1;">{{ $kpiPacAlergias }}</div><small style="opacity:.9;font-size:11px;">Con Alergias Reportadas</small></div>
+            </div>
+        </div>
         <span class="badge badge-info"><i class='bx bx-user'></i> {{ $pacientes->total() }} registros</span>
     </div>
     <div class="table-responsive">
@@ -60,8 +79,13 @@
                         <td><span class="cell-num">{{ $pacientes->firstItem() + $i }}</span></td>
                         <td>
                             <div class="cell-user">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($p->nombre_completo) }}&background=005a14&color=fff" alt="">
-                                <span>{{ $p->nombre_completo }}</span>
+                                <img src="" data-avatar="{{ $p->nombre_completo }}" data-bg="#005a14" data-size="32" alt="">
+                                <div>
+                                    <span>{{ $p->nombre_completo }}</span>
+                                    @if($p->alergias && !in_array(strtolower(trim($p->alergias)), ['ninguna', 'no', '-']))
+                                        <span title="Alergias: {{ $p->alergias }}" style="display:inline-block;margin-left:4px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(220,53,69,.12);color:#dc3545;">⚠️ Alergia</span>
+                                    @endif
+                                </div>
                             </div>
                         </td>
                         <td><code>{{ $p->cedula }}</code></td>
@@ -74,6 +98,9 @@
                         </td>
                         <td><span class="blood-type">{{ $p->tipo_sangre ?? '-' }}</span></td>
                         <td class="actions" onclick="event.stopPropagation()">
+                            <a href="{{ route('expediente.show', $p->id) }}" class="btn-icon btn-primary" title="Expediente Clínico">
+                                <i class='bx bx-folder-open'></i>
+                            </a>
                             <button class="btn-icon btn-edit" onclick="editarPaciente({{ $p->id }})" title="Editar">
                                 <i class='bx bx-edit'></i>
                             </button>

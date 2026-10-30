@@ -36,11 +36,11 @@
                          onclick="verMensaje({{ $m->id }})"
                          style="cursor:pointer;">
                         <div class="mensaje-card-avatar">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($m->remitente->nombre_completo) }}&background=0d6efd&color=fff&size=40" alt="">
+                            <img src="" data-avatar="{{ $m->remitente?->nombre_completo ?? 'Sistema' }}" data-bg="#0d6efd" data-size="40" alt="">
                         </div>
                         <div class="mensaje-card-body">
                             <div class="mensaje-card-top">
-                                <span class="mensaje-card-de">{{ $m->remitente->nombre_completo }}</span>
+                                <span class="mensaje-card-de">{{ $m->remitente?->nombre_completo ?? 'Sistema' }}</span>
                                 <span class="mensaje-card-fecha">{{ $m->created_at->format('d/m H:i') }}</span>
                             </div>
                             <div class="mensaje-card-asunto">
@@ -78,11 +78,11 @@
                          onclick="verMensajeEnviado({{ $m->id }})"
                          style="cursor:pointer;">
                         <div class="mensaje-card-avatar">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($m->destinatario->nombre_completo) }}&background=198754&color=fff&size=40" alt="">
+                            <img src="" data-avatar="{{ $m->destinatario?->nombre_completo ?? 'Todos' }}" data-bg="#198754" data-size="40" alt="">
                         </div>
                         <div class="mensaje-card-body">
                             <div class="mensaje-card-top">
-                                <span class="mensaje-card-de">Para: {{ $m->destinatario->nombre_completo }}</span>
+                                <span class="mensaje-card-de">Para: {{ $m->destinatario?->nombre_completo ?? ($m->es_masivo ? 'Mensaje Masivo' : 'Todos') }}</span>
                                 <span class="mensaje-card-fecha">{{ $m->created_at->format('d/m H:i') }}</span>
                             </div>
                             <div class="mensaje-card-asunto">{{ Str::limit($m->asunto, 40) }}</div>
@@ -197,6 +197,7 @@
 @endsection
 
 @push('scripts')
+@endpush
 @push('styles')
 <style>
 /* ── Tarjetas de mensajes ── */
@@ -423,7 +424,7 @@ async function verMensaje(id, esEnviado = false) {
             if (elRemitente) elRemitente.textContent = nombreMostrar;
             if (elFecha)     elFecha.textContent     = m.created_at || '';
             if (elContenido) elContenido.textContent = m.contenido || '';
-            if (elAvatar)    elAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreMostrar)}&background=${colorAvatar}&color=fff&size=40`;
+            if (elAvatar)    elAvatar.src = window.generarAvatar ? window.generarAvatar(nombreMostrar, '#' + colorAvatar, 80) : '';
 
             // Contenido visual
             const visual = document.getElementById('ver-mensaje-visual');
@@ -432,7 +433,7 @@ async function verMensaje(id, esEnviado = false) {
                 const asunto    = escHtml(m.asunto || '');
                 const contenido = escHtml(m.contenido || '');
                 const fecha     = m.created_at ? new Date(m.created_at).toLocaleString('es-DO') : '';
-                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreMostrar)}&background=${colorAvatar}&color=fff&size=40`;
+                const avatarUrl = window.generarAvatar ? window.generarAvatar(nombreMostrar, '#' + colorAvatar, 80) : '';
 
                 visual.innerHTML = `
                     <div class="msg-detail-header" style="border-left-color:${colorBorde};">
@@ -473,14 +474,18 @@ async function verMensajeEnviado(id) {
 }
 
 async function eliminarMensaje(id) {
-    if (!confirm('¿Eliminar este mensaje?')) return;
-    const res  = await fetch(`${MENSAJES_URL}/${id}`, {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': window.CSRF_TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: '_method=DELETE'
-    });
-    const data = await res.json();
-    if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 800); }
+    document.getElementById('delete-item-name').textContent = 'Este mensaje será eliminado permanentemente.';
+    document.getElementById('btn-confirm-delete').onclick = async () => {
+        const res  = await fetch(`${MENSAJES_URL}/${id}`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': window.CSRF_TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: '_method=DELETE'
+        });
+        const data = await res.json();
+        closeModal('modal-confirm-delete');
+        if (data.success) { showToast(data.message, 'success'); setTimeout(() => location.reload(), 800); }
+    };
+    openModal('modal-confirm-delete');
 }
 </script>
 @endpush

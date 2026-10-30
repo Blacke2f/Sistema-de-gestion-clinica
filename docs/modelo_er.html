@@ -1,964 +1,3390 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SISGECLIN — Diagramas del Sistema</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
-<link rel="stylesheet" href="/SISGECLIN/docs/modelo_er.css">
-<style>
-/* ── Diagramas ER y UML — tamaño grande y legible ── */
-.mermaid-wrap {
-    overflow: auto;
-    padding: 28px 20px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%);
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 8px;
-    min-height: 500px;
-    position: relative;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISGECLIN — Diagramas del Sistema</title>
+  
+  <link rel="icon" type="image/png" href="/SISGECLIN/public/img/image-Photoroom.png">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/SISGECLIN/docs/docs.css?v=6.0">
 
-.mermaid-wrap .mermaid svg {
-    min-width: 700px;
-    min-height: 400px;
-    width: 100% !important;
-    height: auto !important;
-    display: block;
-}
-
-/* Tabs */
-.diagram-tabs {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 0;
-}
-.diagram-tab {
-    padding: 10px 20px;
-    border: none;
-    background: none;
-    font-size: 13px;
-    font-weight: 600;
-    color: #64748b;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    transition: all .2s;
-    border-radius: 6px 6px 0 0;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-.diagram-tab:hover  { color: #0d6efd; background: #f0f4ff; }
-.diagram-tab.active { color: #0d6efd; border-bottom-color: #0d6efd; background: #f0f4ff; font-weight: 700; }
-
-/*
- * IMPORTANTE: usar visibility+height en lugar de display:none
- * para que Mermaid pueda renderizar TODOS los diagramas al cargar,
- * incluso los que están en pestañas inactivas.
- */
-.diagram-panel {
-    visibility: hidden;
-    height: 0;
-    overflow: hidden;
-    position: absolute;
-    pointer-events: none;
-}
-.diagram-panel.active {
-    visibility: visible;
-    height: auto;
-    overflow: visible;
-    position: static;
-    pointer-events: auto;
-}
-
-/* Leyenda */
-.er-legend {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    padding: 12px 16px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-}
-.er-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #475569; font-weight: 500; }
-.er-legend-dot  { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-
-.zoom-hint {
-    font-size: 11px;
-    color: #94a3b8;
-    text-align: right;
-    margin-top: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 4px;
-}
-</style>
+  <!-- Mermaid.js -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
 
-<!-- HEADER con navegación igual al manual -->
-<header class="doc-header">
-  <div class="doc-header-inner">
-    <div class="doc-header-brand">
-      <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
-      <div>
-        <h1>Diagramas del Sistema</h1>
-        <p>SISGECLIN v2.5 &mdash; Modelo ER + Casos de Uso UML</p>
-      </div>
-    </div>
-    <nav class="doc-header-nav">
-      <a href="/SISGECLIN/docs/manual_usuario.html"><i class='bx bxs-book-open'></i> Manual</a>
-      <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class='bx bx-code-alt'></i> Técnica</a>
-      <a href="/SISGECLIN/docs/modelo_er.html" class="active"><i class='bx bx-data'></i> Modelo ER</a>
-      <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Codigo</a>
-    </nav>
+<!-- ════════════════ TOPBAR ════════════════ -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
+    <span>SISGECLIN Docs</span> <span class="ver">v3.0</span>
   </div>
+  <div class="topbar-search">
+    <i class='bx bx-search'></i>
+    <input type="text" id="searchInput" placeholder="Buscar..." onkeyup="filterDocs()">
+  </div>
+  <nav class="topbar-nav">
+    <a href="/SISGECLIN/docs/manual_usuario.html"><i class='bx bxs-book-open'></i> Manual</a>
+    <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class='bx bx-code-alt'></i> Técnica</a>
+    <a href="/SISGECLIN/docs/modelo_er.html" class="active"><i class='bx bx-data'></i> Modelo ER</a>
+    <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Código</a>
+  </nav>
 </header>
 
-<!-- LAYOUT con sidebar -->
-<div class="doc-layout">
-  <aside class="doc-sidebar">
-    <div class="doc-sidebar-inner">
-      <div class="doc-sidebar-title">Contenido</div>
-      <nav class="doc-sidebar-menu">
-        <a href="#diagrama"><i class='bx bx-sitemap'></i> Diagrama ER</a>
-        <a href="#uml-casos"><i class='bx bx-user-check'></i> Casos de Uso</a>
-        <a href="#tablas"><i class='bx bx-table'></i> Tablas</a>
-        <a href="#relaciones"><i class='bx bx-git-branch'></i> Relaciones</a>
-      </nav>
-    </div>
+<div class="app-body">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-group">Modelos</div>
+    <a class="sb-link" href="#diagrama-er"><i class='bx bx-share-alt'></i> Diagrama ER General</a>
+    <a class="sb-link" href="#uml-casos"><i class='bx bx-user-circle'></i> Casos de Uso (UML)</a>
+    <a class="sb-link" href="#tablas"><i class='bx bx-table'></i> Diccionario de Tablas</a>
   </aside>
-  <main class="doc-content">
 
-    <!-- Diagrama ER -->
-    <div class="doc-section" id="diagrama">
-      <div class="doc-section-header">
-        <div class="doc-section-icon icon-blue"><i class='bx bx-sitemap'></i></div>
-        <div><h2>Diagrama Entidad-Relación</h2><p>Tablas, campos y relaciones de la base de datos sisgeclin_laravel</p></div>
+  <main class="content">
+    <section class="section" id="diagrama-er">
+      <div class="section-header">
+        <h2><i class='bx bx-share-alt'></i> Modelo Entidad-Relación</h2>
+        <p>Estructura de la base de datos de SISGECLIN</p>
       </div>
-      <div class="doc-section-body">
-
-        <!-- Leyenda -->
-        <div class="er-legend">
-          <div class="er-legend-item"><div class="er-legend-dot" style="background:#0d6efd;"></div> Entidades principales</div>
-          <div class="er-legend-item"><div class="er-legend-dot" style="background:#198754;"></div> Inventario y movimientos</div>
-          <div class="er-legend-item"><div class="er-legend-dot" style="background:#6f42c1;"></div> Seguridad y permisos</div>
-          <div class="er-legend-item"><div class="er-legend-dot" style="background:#fd7e14;"></div> Comunicación</div>
-          <div class="er-legend-item"><div class="er-legend-dot" style="background:#dc3545;"></div> Auditoría</div>
+      <div class="section-body">
+        <div class="doc-alert info">
+          <i class='bx bx-zoom-in'></i>
+          <div>Haz clic en cualquier diagrama para verlo en <strong>Pantalla Completa</strong>, y usa la <strong>rueda del ratón (scroll)</strong> para acercar o alejar la vista libremente. Selecciona un submódulo para ver un área específica de la base de datos.</div>
         </div>
 
-        <!-- Tabs para dividir el diagrama en partes legibles -->
-        <div class="diagram-tabs">
-          <button class="diagram-tab active" onclick="mostrarDiagrama('er-core')">
-            <i class='bx bx-user-detail'></i> Núcleo (Pacientes, Consultas)
-          </button>
-          <button class="diagram-tab" onclick="mostrarDiagrama('er-inventario')">
-            <i class='bx bxs-capsule'></i> Inventario y Solicitudes
-          </button>
-          <button class="diagram-tab" onclick="mostrarDiagrama('er-sistema')">
-            <i class='bx bx-shield'></i> Sistema (Usuarios, Permisos, Mensajes)
-          </button>
-          <button class="diagram-tab" onclick="mostrarDiagrama('er-completo')">
-            <i class='bx bx-expand'></i> Diagrama Completo
-          </button>
+        <div class="diagram-tabs" style="overflow-x: auto; white-space: nowrap;">
+          <div class="diagram-tab active" id="btn-general" onclick="showErDiagram('general')"><i class='bx bx-share-alt'></i> Diagrama General</div>
+          <div class="diagram-tab " id="btn-consultas" onclick="showErDiagram('consultas')"><i class='bx bx-plus-medical'></i> Módulo Médico y Pacientes</div>
+          <div class="diagram-tab " id="btn-inventario" onclick="showErDiagram('inventario')"><i class='bx bx-capsule'></i> Inventario y Farmacia</div>
+          <div class="diagram-tab " id="btn-rrhh" onclick="showErDiagram('rrhh')"><i class='bx bx-building'></i> Administración y RRHH</div>
+          <div class="diagram-tab " id="btn-auditoria" onclick="showErDiagram('auditoria')"><i class='bx bx-shield'></i> Sistema y Auditoría</div>
         </div>
 
-        <!-- Panel: Núcleo -->
-        <div class="diagram-panel active" id="er-core">
+        <div class="er-diagram-pane-container">
+<div class="er-diagram-pane" id="pane-general" class="er-diagram-pane active">
           <div class="mermaid-wrap">
-            <div class="mermaid" id="mermaid-core">
+            <div class="mermaid">
 erDiagram
-    USUARIOS {
-        bigint id PK
-        varchar username UK
-        varchar email UK
-        varchar password
-        varchar nombre_completo
-        enum rol
-        boolean activo
-        datetime ultimo_acceso
+    bitacora {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
+        varchar accion
+        varchar tabla
+        bigint_unsigned registro_id
+        text detalles
+        varchar ip
+        timestamp created_at
     }
-    PACIENTES {
-        bigint id PK
-        varchar nombre
-        varchar apellido
-        varchar cedula UK
-        varchar telefono
-        varchar email
-        date fecha_nacimiento
-        enum genero
-        varchar tipo_sangre
-        text alergias
-    }
-    NOMINA {
-        bigint id PK
-        varchar nombre
-        varchar apellido
-        varchar cedula UK
-        varchar cargo
-        varchar departamento
-        decimal salario
-        date fecha_ingreso
+
+    citas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned servicio_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        bigint_unsigned consulta_id
+        bigint_unsigned creado_por
+        datetime fecha_hora
+        int duracion_minutos
+        varchar motivo
+        text notas
         enum estado
+        varchar color
+        tinyint recordatorio_enviado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
-    CONSULTAS {
-        bigint id PK
-        bigint paciente_id FK
-        bigint medico_id FK
-        bigint empleado_id FK
+
+    consultas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
         datetime fecha_hora
         text motivo
         text diagnostico
         text tratamiento
         enum estado
+        enum tipo_consulta
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
-    CONSULTAS_MEDICAMENTOS {
-        bigint id PK
-        bigint consulta_id FK
-        bigint medicamento_id FK
+
+    consultas_medicamentos {
+        bigint_unsigned id
+        bigint_unsigned consulta_id
+        bigint_unsigned medicamento_id
         int cantidad
         text indicaciones
-    }
-    INVENTARIO {
-        bigint id PK
-        varchar nombre_medicamento
-        int cantidad
-        varchar unidad
-        decimal precio
-        date fecha_vencimiento
-        varchar proveedor
-        int stock_minimo
+        timestamp created_at
     }
 
-    PACIENTES        ||--o{ CONSULTAS              : "tiene"
-    USUARIOS         ||--o{ CONSULTAS              : "atiende"
-    NOMINA           ||--o{ CONSULTAS              : "atiende"
-    CONSULTAS        ||--o{ CONSULTAS_MEDICAMENTOS : "incluye"
-    INVENTARIO       ||--o{ CONSULTAS_MEDICAMENTOS : "se usa en"
-            </div>
-          </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
-        </div>
+    examenes_laboratorio {
+        bigint_unsigned id
+        varchar numero_solicitud
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        tinyint hematologia_completa
+        tinyint glicemia_ayunas
+        tinyint urea
+        tinyint creatinina
+        tinyint colesterol_total
+        tinyint trigliceridos
+        tinyint examen_orina
+        tinyint examen_heces
+        text otros
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
 
-        <!-- Panel: Inventario -->
-        <div class="diagram-panel" id="er-inventario">
-          <div class="mermaid-wrap">
-            <div class="mermaid" id="mermaid-inventario">
-erDiagram
-    INVENTARIO {
-        bigint id PK
+    gasto_medico_items {
+        bigint_unsigned id
+        bigint_unsigned gasto_medico_id
+        varchar concepto
+        decimal monto
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    gastos_medicos {
+        bigint_unsigned id
+        varchar numero_gasto
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        varchar nombre_empresa
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        text descripcion
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    informes_medicos {
+        bigint_unsigned id
+        varchar numero_informe
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        varchar nombre_empresa
+        int edad
+        varchar cargo
+        varchar antiguedad_cargo
+        enum tipo_consulta
+        varchar tipo_consulta_otros
+        enum aptitud
+        text diagnostico
+        text estudios_paraclinicos
+        text referencia
+        text recomendaciones
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    inventario {
+        bigint_unsigned id
         varchar nombre_medicamento
+        text descripcion
         int cantidad
         varchar unidad
-        decimal precio
         date fecha_vencimiento
         varchar proveedor
         varchar telefono_proveedor
         int stock_minimo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
-    INVENTARIO_MOVIMIENTOS {
-        bigint id PK
-        bigint medicamento_id FK
+
+    inventario_movimientos {
+        bigint_unsigned id
+        bigint_unsigned medicamento_id
         enum tipo_movimiento
         int cantidad
         int cantidad_anterior
         int cantidad_nueva
         varchar motivo
-        bigint consulta_id FK
-        bigint paciente_id FK
-        bigint usuario_id FK
+        varchar telefono_proveedor
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
         varchar entregado_por_nombre
         varchar recibido_por_nombre
         varchar recibido_por_cedula
         text observaciones_entrega
-    }
-    SOLICITUDES_INVENTARIO {
-        bigint id PK
-        varchar numero_orden UK
-        bigint medicamento_id FK
-        bigint solicitado_por FK
-        int cantidad_solicitada
-        varchar proveedor_sugerido
-        varchar telefono_proveedor
-        enum estado
-        varchar numero_factura
-        bigint atendida_por FK
-        datetime atendida_at
-        text notas
-    }
-    SOLICITUD_ITEMS {
-        bigint id PK
-        bigint solicitud_id FK
-        bigint medicamento_id FK
-        int cantidad
-        varchar proveedor_sugerido
-        varchar telefono_proveedor
-    }
-    USUARIOS {
-        bigint id PK
-        varchar username UK
-        varchar nombre_completo
-        enum rol
-    }
-    PACIENTES {
-        bigint id PK
-        varchar nombre
-        varchar apellido
-        varchar cedula UK
+        bigint_unsigned usuario_id
+        timestamp created_at
     }
 
-    INVENTARIO       ||--o{ INVENTARIO_MOVIMIENTOS  : "registra"
-    USUARIOS         ||--o{ INVENTARIO_MOVIMIENTOS  : "realiza"
-    PACIENTES        ||--o{ INVENTARIO_MOVIMIENTOS  : "recibe"
-    INVENTARIO       ||--o{ SOLICITUDES_INVENTARIO  : "se solicita"
-    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "solicita"
-    USUARIOS         ||--o{ SOLICITUDES_INVENTARIO  : "atiende"
-    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS   : "contiene"
-    INVENTARIO       ||--o{ SOLICITUD_ITEMS         : "incluye"
-            </div>
-          </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
-        </div>
-
-        <!-- Panel: Sistema -->
-        <div class="diagram-panel" id="er-sistema">
-          <div class="mermaid-wrap">
-            <div class="mermaid" id="mermaid-sistema">
-erDiagram
-    USUARIOS {
-        bigint id PK
-        varchar username UK
-        varchar email UK
-        varchar password
-        varchar nombre_completo
-        enum rol
-        boolean activo
-        datetime ultimo_acceso
-    }
-    PERMISOS_USUARIO {
-        bigint id PK
-        bigint usuario_id FK
-        varchar modulo
-        boolean puede_ver
-        boolean puede_crear
-        boolean puede_editar
-        boolean puede_eliminar
-    }
-    MENSAJES {
-        bigint id PK
-        bigint remitente_id FK
-        bigint destinatario_id FK
+    mensajes {
+        bigint_unsigned id
+        bigint_unsigned remitente_id
+        bigint_unsigned destinatario_id
         varchar asunto
         text contenido
-        boolean leido
-        boolean es_masivo
+        tinyint leido
+        tinyint es_masivo
+        timestamp created_at
     }
-    NOTIFICACIONES {
-        bigint id PK
-        bigint usuario_id FK
+
+    nomina {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar cargo
+        varchar departamento
+        decimal salario
+        date fecha_ingreso
+        varchar telefono
+        varchar email
+        enum estado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    notificaciones {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
         varchar tipo
         varchar titulo
         text mensaje
         varchar icono
         varchar color
         varchar url
-        boolean leida
+        tinyint leida
+        timestamp created_at
     }
-    BITACORA {
-        bigint id PK
-        bigint usuario_id FK
+
+    pacientes {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar telefono
+        varchar email
+        text direccion
+        date fecha_nacimiento
+        enum genero
+        varchar tipo_sangre
+        text alergias
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    permisos_usuario {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
+        varchar modulo
+        tinyint puede_ver
+        tinyint puede_crear
+        tinyint puede_editar
+        tinyint puede_eliminar
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    receta_items {
+        bigint_unsigned id
+        bigint_unsigned receta_id
+        bigint_unsigned medicamento_id
+        varchar nombre_medicamento
+        varchar presentacion
+        varchar dosis
+        varchar frecuencia
+        varchar duracion
+        int cantidad
+        text indicaciones
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    recetas {
+        bigint_unsigned id
+        varchar numero_receta
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        text diagnostico
+        text indicaciones_generales
+        varchar imagen_receta
+        varchar tipo_receta
+        date fecha_emision
+        date fecha_vencimiento
+        enum estado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    servicio_medicos {
+        bigint_unsigned id
+        varchar nombre
+        text descripcion
+        int duracion_minutos
+        decimal precio
+        tinyint activo
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    signos_vitales {
+        bigint_unsigned id
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
+        bigint_unsigned registrado_por
+        decimal presion_sistolica
+        decimal presion_diastolica
+        decimal frecuencia_cardiaca
+        decimal frecuencia_respiratoria
+        decimal temperatura
+        decimal saturacion_oxigeno
+        decimal peso
+        decimal talla
+        decimal imc
+        decimal glucosa
+        text observaciones
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    solicitud_items {
+        bigint_unsigned id
+        bigint_unsigned solicitud_id
+        bigint_unsigned medicamento_id
+        int cantidad_solicitada
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    solicitudes_inventario {
+        bigint_unsigned id
+        varchar numero_orden
+        bigint_unsigned medicamento_id
+        bigint_unsigned solicitado_por
+        int cantidad_solicitada
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+        varchar numero_factura
+        date fecha_entrega_esperada
+        text notas
+        enum estado
+        bigint_unsigned atendida_por
+        timestamp atendida_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    usuarios {
+        bigint_unsigned id
+        varchar username
+        varchar email
+        varchar password
+        varchar nombre_completo
+        enum rol
+        tinyint activo
+        datetime ultimo_acceso
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    usuarios ||--o{ mensajes : "destinatario_id"
+    usuarios ||--o{ mensajes : "remitente_id"
+    usuarios ||--o{ bitacora : "usuario_id"
+    consultas ||--o{ consultas_medicamentos : "consulta_id"
+    inventario ||--o{ consultas_medicamentos : "medicamento_id"
+    usuarios ||--o{ notificaciones : "usuario_id"
+    inventario ||--o{ solicitud_items : "medicamento_id"
+    solicitudes_inventario ||--o{ solicitud_items : "solicitud_id"
+    usuarios ||--o{ solicitudes_inventario : "atendida_por"
+    inventario ||--o{ solicitudes_inventario : "medicamento_id"
+    usuarios ||--o{ solicitudes_inventario : "solicitado_por"
+    consultas ||--o{ inventario_movimientos : "consulta_id"
+    inventario ||--o{ inventario_movimientos : "medicamento_id"
+    pacientes ||--o{ inventario_movimientos : "paciente_id"
+    usuarios ||--o{ inventario_movimientos : "usuario_id"
+    usuarios ||--o{ permisos_usuario : "usuario_id"
+    consultas ||--o{ signos_vitales : "consulta_id"
+    pacientes ||--o{ signos_vitales : "paciente_id"
+    usuarios ||--o{ signos_vitales : "registrado_por"
+    inventario ||--o{ receta_items : "medicamento_id"
+    recetas ||--o{ receta_items : "receta_id"
+    consultas ||--o{ recetas : "consulta_id"
+    nomina ||--o{ recetas : "empleado_id"
+    usuarios ||--o{ recetas : "medico_id"
+    pacientes ||--o{ recetas : "paciente_id"
+    nomina ||--o{ consultas : "empleado_id"
+    usuarios ||--o{ consultas : "medico_id"
+    pacientes ||--o{ consultas : "paciente_id"
+    gastos_medicos ||--o{ gasto_medico_items : "gasto_medico_id"
+    consultas ||--o{ informes_medicos : "consulta_id"
+    nomina ||--o{ informes_medicos : "empleado_id"
+    usuarios ||--o{ informes_medicos : "medico_id"
+    pacientes ||--o{ informes_medicos : "paciente_id"
+    consultas ||--o{ gastos_medicos : "consulta_id"
+    nomina ||--o{ gastos_medicos : "empleado_id"
+    usuarios ||--o{ gastos_medicos : "medico_id"
+    pacientes ||--o{ gastos_medicos : "paciente_id"
+    consultas ||--o{ examenes_laboratorio : "consulta_id"
+    nomina ||--o{ examenes_laboratorio : "empleado_id"
+    usuarios ||--o{ examenes_laboratorio : "medico_id"
+    pacientes ||--o{ examenes_laboratorio : "paciente_id"
+    consultas ||--o{ citas : "consulta_id"
+    usuarios ||--o{ citas : "creado_por"
+    nomina ||--o{ citas : "empleado_id"
+    usuarios ||--o{ citas : "medico_id"
+    pacientes ||--o{ citas : "paciente_id"
+    servicio_medicos ||--o{ citas : "servicio_id"
+            </div>
+          </div>
+        </div>
+
+        <div class="er-diagram-pane" id="pane-consultas" class="er-diagram-pane">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+erDiagram
+    pacientes {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar telefono
+        varchar email
+        text direccion
+        date fecha_nacimiento
+        enum genero
+        varchar tipo_sangre
+        text alergias
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    consultas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        datetime fecha_hora
+        text motivo
+        text diagnostico
+        text tratamiento
+        enum estado
+        enum tipo_consulta
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    citas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned servicio_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        bigint_unsigned consulta_id
+        bigint_unsigned creado_por
+        datetime fecha_hora
+        int duracion_minutos
+        varchar motivo
+        text notas
+        enum estado
+        varchar color
+        tinyint recordatorio_enviado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    signos_vitales {
+        bigint_unsigned id
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
+        bigint_unsigned registrado_por
+        decimal presion_sistolica
+        decimal presion_diastolica
+        decimal frecuencia_cardiaca
+        decimal frecuencia_respiratoria
+        decimal temperatura
+        decimal saturacion_oxigeno
+        decimal peso
+        decimal talla
+        decimal imc
+        decimal glucosa
+        text observaciones
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    informes_medicos {
+        bigint_unsigned id
+        varchar numero_informe
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        varchar nombre_empresa
+        int edad
+        varchar cargo
+        varchar antiguedad_cargo
+        enum tipo_consulta
+        varchar tipo_consulta_otros
+        enum aptitud
+        text diagnostico
+        text estudios_paraclinicos
+        text referencia
+        text recomendaciones
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    examenes_laboratorio {
+        bigint_unsigned id
+        varchar numero_solicitud
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        tinyint hematologia_completa
+        tinyint glicemia_ayunas
+        tinyint urea
+        tinyint creatinina
+        tinyint colesterol_total
+        tinyint trigliceridos
+        tinyint examen_orina
+        tinyint examen_heces
+        text otros
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    recetas {
+        bigint_unsigned id
+        varchar numero_receta
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        text diagnostico
+        text indicaciones_generales
+        varchar imagen_receta
+        varchar tipo_receta
+        date fecha_emision
+        date fecha_vencimiento
+        enum estado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    receta_items {
+        bigint_unsigned id
+        bigint_unsigned receta_id
+        bigint_unsigned medicamento_id
+        varchar nombre_medicamento
+        varchar presentacion
+        varchar dosis
+        varchar frecuencia
+        varchar duracion
+        int cantidad
+        text indicaciones
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    consultas_medicamentos {
+        bigint_unsigned id
+        bigint_unsigned consulta_id
+        bigint_unsigned medicamento_id
+        int cantidad
+        text indicaciones
+        timestamp created_at
+    }
+
+    servicio_medicos {
+        bigint_unsigned id
+        varchar nombre
+        text descripcion
+        int duracion_minutos
+        decimal precio
+        tinyint activo
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    usuarios {
+        bigint_unsigned id
+        varchar username
+        varchar email
+        varchar password
+        varchar nombre_completo
+        enum rol
+        tinyint activo
+        datetime ultimo_acceso
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    consultas ||--o{ consultas_medicamentos : "consulta_id"
+    consultas ||--o{ signos_vitales : "consulta_id"
+    pacientes ||--o{ signos_vitales : "paciente_id"
+    usuarios ||--o{ signos_vitales : "registrado_por"
+    recetas ||--o{ receta_items : "receta_id"
+    consultas ||--o{ recetas : "consulta_id"
+    usuarios ||--o{ recetas : "medico_id"
+    pacientes ||--o{ recetas : "paciente_id"
+    usuarios ||--o{ consultas : "medico_id"
+    pacientes ||--o{ consultas : "paciente_id"
+    consultas ||--o{ informes_medicos : "consulta_id"
+    usuarios ||--o{ informes_medicos : "medico_id"
+    pacientes ||--o{ informes_medicos : "paciente_id"
+    consultas ||--o{ examenes_laboratorio : "consulta_id"
+    usuarios ||--o{ examenes_laboratorio : "medico_id"
+    pacientes ||--o{ examenes_laboratorio : "paciente_id"
+    consultas ||--o{ citas : "consulta_id"
+    usuarios ||--o{ citas : "creado_por"
+    usuarios ||--o{ citas : "medico_id"
+    pacientes ||--o{ citas : "paciente_id"
+    servicio_medicos ||--o{ citas : "servicio_id"
+            </div>
+          </div>
+        </div>
+
+        <div class="er-diagram-pane" id="pane-inventario" class="er-diagram-pane">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+erDiagram
+    inventario {
+        bigint_unsigned id
+        varchar nombre_medicamento
+        text descripcion
+        int cantidad
+        varchar unidad
+        date fecha_vencimiento
+        varchar proveedor
+        varchar telefono_proveedor
+        int stock_minimo
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    inventario_movimientos {
+        bigint_unsigned id
+        bigint_unsigned medicamento_id
+        enum tipo_movimiento
+        int cantidad
+        int cantidad_anterior
+        int cantidad_nueva
+        varchar motivo
+        varchar telefono_proveedor
+        bigint_unsigned consulta_id
+        bigint_unsigned paciente_id
+        varchar entregado_por_nombre
+        varchar recibido_por_nombre
+        varchar recibido_por_cedula
+        text observaciones_entrega
+        bigint_unsigned usuario_id
+        timestamp created_at
+    }
+
+    solicitudes_inventario {
+        bigint_unsigned id
+        varchar numero_orden
+        bigint_unsigned medicamento_id
+        bigint_unsigned solicitado_por
+        int cantidad_solicitada
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+        varchar numero_factura
+        date fecha_entrega_esperada
+        text notas
+        enum estado
+        bigint_unsigned atendida_por
+        timestamp atendida_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    solicitud_items {
+        bigint_unsigned id
+        bigint_unsigned solicitud_id
+        bigint_unsigned medicamento_id
+        int cantidad_solicitada
+        varchar proveedor_sugerido
+        varchar telefono_proveedor
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    consultas_medicamentos {
+        bigint_unsigned id
+        bigint_unsigned consulta_id
+        bigint_unsigned medicamento_id
+        int cantidad
+        text indicaciones
+        timestamp created_at
+    }
+
+    receta_items {
+        bigint_unsigned id
+        bigint_unsigned receta_id
+        bigint_unsigned medicamento_id
+        varchar nombre_medicamento
+        varchar presentacion
+        varchar dosis
+        varchar frecuencia
+        varchar duracion
+        int cantidad
+        text indicaciones
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    usuarios {
+        bigint_unsigned id
+        varchar username
+        varchar email
+        varchar password
+        varchar nombre_completo
+        enum rol
+        tinyint activo
+        datetime ultimo_acceso
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    pacientes {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar telefono
+        varchar email
+        text direccion
+        date fecha_nacimiento
+        enum genero
+        varchar tipo_sangre
+        text alergias
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    consultas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        datetime fecha_hora
+        text motivo
+        text diagnostico
+        text tratamiento
+        enum estado
+        enum tipo_consulta
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    consultas ||--o{ consultas_medicamentos : "consulta_id"
+    inventario ||--o{ consultas_medicamentos : "medicamento_id"
+    inventario ||--o{ solicitud_items : "medicamento_id"
+    solicitudes_inventario ||--o{ solicitud_items : "solicitud_id"
+    usuarios ||--o{ solicitudes_inventario : "atendida_por"
+    inventario ||--o{ solicitudes_inventario : "medicamento_id"
+    usuarios ||--o{ solicitudes_inventario : "solicitado_por"
+    consultas ||--o{ inventario_movimientos : "consulta_id"
+    inventario ||--o{ inventario_movimientos : "medicamento_id"
+    pacientes ||--o{ inventario_movimientos : "paciente_id"
+    usuarios ||--o{ inventario_movimientos : "usuario_id"
+    inventario ||--o{ receta_items : "medicamento_id"
+    usuarios ||--o{ consultas : "medico_id"
+    pacientes ||--o{ consultas : "paciente_id"
+            </div>
+          </div>
+        </div>
+
+        <div class="er-diagram-pane" id="pane-rrhh" class="er-diagram-pane">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+erDiagram
+    usuarios {
+        bigint_unsigned id
+        varchar username
+        varchar email
+        varchar password
+        varchar nombre_completo
+        enum rol
+        tinyint activo
+        datetime ultimo_acceso
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    nomina {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar cargo
+        varchar departamento
+        decimal salario
+        date fecha_ingreso
+        varchar telefono
+        varchar email
+        enum estado
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    permisos_usuario {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
+        varchar modulo
+        tinyint puede_ver
+        tinyint puede_crear
+        tinyint puede_editar
+        tinyint puede_eliminar
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    gastos_medicos {
+        bigint_unsigned id
+        varchar numero_gasto
+        bigint_unsigned paciente_id
+        bigint_unsigned consulta_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        varchar nombre_empresa
+        date fecha
+        enum tipo_documento
+        varchar imagen_escaneo
+        text descripcion
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    gasto_medico_items {
+        bigint_unsigned id
+        bigint_unsigned gasto_medico_id
+        varchar concepto
+        decimal monto
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    pacientes {
+        bigint_unsigned id
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar telefono
+        varchar email
+        text direccion
+        date fecha_nacimiento
+        enum genero
+        varchar tipo_sangre
+        text alergias
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    consultas {
+        bigint_unsigned id
+        bigint_unsigned paciente_id
+        bigint_unsigned medico_id
+        bigint_unsigned empleado_id
+        datetime fecha_hora
+        text motivo
+        text diagnostico
+        text tratamiento
+        enum estado
+        enum tipo_consulta
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    usuarios ||--o{ permisos_usuario : "usuario_id"
+    nomina ||--o{ consultas : "empleado_id"
+    usuarios ||--o{ consultas : "medico_id"
+    pacientes ||--o{ consultas : "paciente_id"
+    gastos_medicos ||--o{ gasto_medico_items : "gasto_medico_id"
+    consultas ||--o{ gastos_medicos : "consulta_id"
+    nomina ||--o{ gastos_medicos : "empleado_id"
+    usuarios ||--o{ gastos_medicos : "medico_id"
+    pacientes ||--o{ gastos_medicos : "paciente_id"
+            </div>
+          </div>
+        </div>
+
+        <div class="er-diagram-pane" id="pane-auditoria" class="er-diagram-pane">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+erDiagram
+    usuarios {
+        bigint_unsigned id
+        varchar username
+        varchar email
+        varchar password
+        varchar nombre_completo
+        enum rol
+        tinyint activo
+        datetime ultimo_acceso
+        varchar remember_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    bitacora {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
         varchar accion
         varchar tabla
-        bigint registro_id
+        bigint_unsigned registro_id
         text detalles
         varchar ip
-        datetime created_at
+        timestamp created_at
     }
 
-    USUARIOS         ||--o{ PERMISOS_USUARIO : "tiene"
-    USUARIOS         ||--o{ MENSAJES         : "envia"
-    USUARIOS         ||--o{ MENSAJES         : "recibe"
-    USUARIOS         ||--o{ NOTIFICACIONES   : "recibe"
-    USUARIOS         ||--o{ BITACORA         : "genera"
+    mensajes {
+        bigint_unsigned id
+        bigint_unsigned remitente_id
+        bigint_unsigned destinatario_id
+        varchar asunto
+        text contenido
+        tinyint leido
+        tinyint es_masivo
+        timestamp created_at
+    }
+
+    notificaciones {
+        bigint_unsigned id
+        bigint_unsigned usuario_id
+        varchar tipo
+        varchar titulo
+        text mensaje
+        varchar icono
+        varchar color
+        varchar url
+        tinyint leida
+        timestamp created_at
+    }
+
+    usuarios ||--o{ mensajes : "destinatario_id"
+    usuarios ||--o{ mensajes : "remitente_id"
+    usuarios ||--o{ bitacora : "usuario_id"
+    usuarios ||--o{ notificaciones : "usuario_id"
             </div>
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Desplaza horizontalmente si el diagrama es muy ancho</p>
         </div>
 
-        <!-- Panel: Completo -->
-        <div class="diagram-panel" id="er-completo">
-          <div class="mermaid-wrap" style="overflow-x:scroll;">
-            <div class="mermaid" id="mermaid-completo">
-erDiagram
-    USUARIOS ||--o{ CONSULTAS              : "atiende"
-    USUARIOS ||--o{ INVENTARIO_MOVIMIENTOS : "realiza"
-    USUARIOS ||--o{ MENSAJES               : "envia/recibe"
-    USUARIOS ||--o{ NOTIFICACIONES         : "recibe"
-    USUARIOS ||--o{ BITACORA               : "genera"
-    USUARIOS ||--o{ PERMISOS_USUARIO       : "tiene"
-    USUARIOS ||--o{ SOLICITUDES_INVENTARIO : "solicita/atiende"
-    PACIENTES ||--o{ CONSULTAS             : "tiene"
-    NOMINA    ||--o{ CONSULTAS             : "atiende"
-    CONSULTAS ||--o{ CONSULTAS_MEDICAMENTOS: "incluye"
-    INVENTARIO ||--o{ CONSULTAS_MEDICAMENTOS: "se usa en"
-    INVENTARIO ||--o{ INVENTARIO_MOVIMIENTOS: "registra"
-    INVENTARIO ||--o{ SOLICITUDES_INVENTARIO: "se solicita"
-    SOLICITUDES_INVENTARIO ||--o{ SOLICITUD_ITEMS: "contiene"
-    INVENTARIO ||--o{ SOLICITUD_ITEMS      : "incluye"
-            </div>
-          </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> Diagrama simplificado — ver pestañas anteriores para detalle completo de cada entidad</p>
-        </div>
 
+</div>
+<script>
+function showErDiagram(id) {
+    document.querySelectorAll('.diagram-tab').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.er-diagram-pane').forEach(pane => pane.classList.remove('active'));
+    document.getElementById('btn-' + id).classList.add('active');
+    document.getElementById('pane-' + id).classList.add('active');
+}
+</script>
       </div>
-    </div>
+    </section>
 
-    <!-- Diagramas UML de Casos de Uso -->
-    <div class="doc-section" id="uml-casos">
-      <div class="doc-section-header">
-        <div class="doc-section-icon icon-purple"><i class='bx bx-user-check'></i></div>
-        <div><h2>Diagramas de Casos de Uso UML</h2><p>Interacciones de los actores con el sistema por rol</p></div>
+    <section class="section" id="uml-casos">
+      <div class="section-header">
+        <h2><i class='bx bx-user-circle'></i> Diagramas UML de Casos de Uso</h2>
+        <p>Interacción de los actores con las funcionalidades principales del sistema</p>
       </div>
-      <div class="doc-section-body">
-
-        <div class="diagram-tabs">
-          <button class="diagram-tab active" onclick="mostrarUML('uml-admin')">
-            <i class='bx bxs-user-badge'></i> Administrador
-          </button>
-          <button class="diagram-tab" onclick="mostrarUML('uml-medico')">
-            <i class='bx bx-plus-medical'></i> Médico
-          </button>
-          <button class="diagram-tab" onclick="mostrarUML('uml-recep')">
-            <i class='bx bx-headphone'></i> Recepcionista
-          </button>
-        </div>
-
-        <!-- UML Admin -->
-        <div class="diagram-panel active" id="uml-admin">
-          <div class="mermaid-wrap">
-            <div class="mermaid">
+      <div class="section-body">
+        
+        <h3 class="doc-subtitle"><i class='bx bx-sitemap'></i> Casos de Uso General</h3>
+        <div class="mermaid-wrap" style="min-height: 350px;">
+          <div class="mermaid">
 flowchart LR
-    A([👤 Administrador])
+    %% Actores
+    A1((Administrador))
+    A2((Médico))
+    A3((Recepcionista))
+    A4((Farmaceuta))
 
-    A --> B([Iniciar Sesión])
-    A --> C([Gestionar Usuarios])
-    A --> D([Configurar Permisos])
-    A --> E([Ver Bitácora])
-    A --> F([Gestionar Nómina])
-    A --> G([Aprobar Solicitudes])
-    A --> H([Ver Dashboard])
-    A --> I([Gestionar Pacientes])
-    A --> J([Gestionar Consultas])
-    A --> K([Gestionar Inventario])
-    A --> L([Enviar Mensajes])
-    A --> M([Exportar Reportes])
-    A --> N([Reporte Auditoría])
+    %% Casos de Uso
+    C1([Iniciar Sesión])
+    C2([Gestionar Usuarios y Roles])
+    C3([Registrar Paciente])
+    C4([Agendar Cita])
+    C5([Realizar Consulta Médica])
+    C6([Generar Receta / Exámenes])
+    C7([Dispensar Medicamento])
+    C8([Gestionar Inventario])
+    C9([Ver Bitácora de Auditoría])
 
-    C --> C1[Crear Usuario]
-    C --> C2[Editar Usuario]
-    C --> C3[Activar / Desactivar]
-    C --> C4[Eliminar Usuario]
+    %% Relaciones Admin
+    A1 --> C1
+    A1 --> C2
+    A1 --> C8
+    A1 --> C9
 
-    D --> D1[Asignar permisos por módulo]
-    D --> D2[Ver / Crear / Editar / Eliminar]
+    %% Relaciones Médico
+    A2 --> C1
+    A2 --> C5
+    A2 --> C6
 
-    G --> G1[Aprobar → Entrada automática]
-    G --> G2[Rechazar Solicitud]
-    G --> G3[Marcar Completada]
+    %% Relaciones Recepcionista
+    A3 --> C1
+    A3 --> C3
+    A3 --> C4
 
-    M --> M1[PDF / Excel / CSV]
-    M --> M2[Por período o rango]
-
-    style A fill:#1e293b,color:#fff,stroke:#0d6efd,stroke-width:3px,font-size:16px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style D fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style E fill:#fee2e2,color:#b91c1c,stroke:#dc3545
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#fef9c3,color:#a16207,stroke:#d97706
-    style H fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style I fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style J fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style K fill:#dcfce7,color:#15803d,stroke:#198754
-    style L fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style M fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style N fill:#fee2e2,color:#b91c1c,stroke:#dc3545
-            </div>
+    %% Relaciones Farmaceuta
+    A4 --> C1
+    A4 --> C7
+    A4 --> C8
           </div>
-          <p class="zoom-hint"><i class='bx bx-mouse'></i> El Administrador tiene acceso total — desplaza para ver el diagrama completo</p>
         </div>
 
-        <!-- UML Médico -->
-        <div class="diagram-panel" id="uml-medico">
-          <div class="mermaid-wrap">
-            <div class="mermaid">
+        <h3 class="doc-subtitle"><i class='bx bx-plus-medical'></i> Médico</h3>
+        <div class="mermaid-wrap" style="min-height: 250px;">
+          <div class="mermaid">
 flowchart LR
-    A([👨‍⚕️ Médico])
-
-    A --> B([Iniciar Sesión])
-    A --> C([Ver Dashboard])
-    A --> D([Gestionar Pacientes])
-    A --> E([Gestionar Consultas])
-    A --> F([Ver Medicamentos])
-    A --> G([Registrar Movimientos])
-    A --> H([Crear Solicitudes])
-    A --> I([Enviar Mensajes])
-    A --> J([Ver Notificaciones])
-    A --> K([Actualizar Perfil])
-
-    D --> D1[Ver lista de pacientes]
-    D --> D2[Registrar nuevo paciente]
-    D --> D3[Editar datos del paciente]
-
-    E --> E1[Programar consulta]
-    E --> E2[Registrar diagnóstico]
-    E --> E3[Indicar tratamiento]
-    E --> E4[Cambiar estado]
-
-    G --> G1[Registrar Entrada]
-    G --> G2[Registrar Salida con firma]
-    G --> G3[Ver historial de movimientos]
-
-    H --> H1[Solicitar medicamentos]
-    H --> H2[Ver estado de solicitud]
-
-    style A fill:#1e293b,color:#fff,stroke:#0dcaf0,stroke-width:3px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#dcfce7,color:#15803d,stroke:#198754
-    style H fill:#fef9c3,color:#a16207,stroke:#d97706
-    style I fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style J fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style K fill:#f1f5f9,color:#475569,stroke:#94a3b8
-            </div>
+    A2((Médico))
+    
+    C1([Realizar Consulta])
+    C2([Registrar Signos Vitales])
+    C3([Emitir Receta Médica])
+    C4([Solicitar Exámenes de Lab])
+    C5([Generar Informe Médico])
+    
+    A2 --> C1
+    A2 --> C2
+    A2 --> C3
+    A2 --> C4
+    A2 --> C5
           </div>
-          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos del Médico son configurados por el Administrador</p>
         </div>
 
-        <!-- UML Recepcionista -->
-        <div class="diagram-panel" id="uml-recep">
-          <div class="mermaid-wrap">
-            <div class="mermaid">
+        <h3 class="doc-subtitle"><i class='bx bx-capsule'></i> Farmacéutico</h3>
+        <div class="mermaid-wrap" style="min-height: 250px;">
+          <div class="mermaid">
 flowchart LR
-    A([👩‍💼 Recepcionista])
-
-    A --> B([Iniciar Sesión])
-    A --> C([Ver Dashboard])
-    A --> D([Gestionar Pacientes])
-    A --> E([Programar Consultas])
-    A --> F([Ver Medicamentos])
-    A --> G([Crear Solicitudes])
-    A --> H([Enviar Mensajes])
-    A --> I([Ver Notificaciones])
-    A --> J([Actualizar Perfil])
-
-    D --> D1[Registrar nuevo paciente]
-    D --> D2[Buscar paciente por cédula]
-    D --> D3[Ver historial del paciente]
-    D --> D4[Editar datos de contacto]
-
-    E --> E1[Crear cita médica]
-    E --> E2[Asignar médico disponible]
-    E --> E3[Confirmar fecha y hora]
-    E --> E4[Cancelar consulta]
-
-    G --> G1[Solicitar reposición de stock]
-    G --> G2[Agregar múltiples medicamentos]
-    G --> G3[Indicar proveedor y teléfono]
-    G --> G4[Ver estado de solicitud]
-
-    style A fill:#1e293b,color:#fff,stroke:#94a3b8,stroke-width:3px
-    style B fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style C fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style D fill:#dbeafe,color:#1d4ed8,stroke:#0d6efd
-    style E fill:#cffafe,color:#0e7490,stroke:#0dcaf0
-    style F fill:#dcfce7,color:#15803d,stroke:#198754
-    style G fill:#fef9c3,color:#a16207,stroke:#d97706
-    style H fill:#ffedd5,color:#c2410c,stroke:#f97316
-    style I fill:#ede9fe,color:#7c3aed,stroke:#7c3aed
-    style J fill:#f1f5f9,color:#475569,stroke:#94a3b8
-            </div>
+    A4((Farmacéutico))
+    
+    C1([Revisar Receta Médica])
+    C2([Dispensar Medicamento])
+    C3([Registrar Movimiento de Inventario])
+    C4([Revisar Alerta Stock Mínimo])
+    
+    A4 --> C1
+    A4 --> C2
+    A4 --> C3
+    A4 --> C4
           </div>
-          <p class="zoom-hint"><i class='bx bx-info-circle'></i> Los permisos de la Recepcionista son configurados por el Administrador</p>
         </div>
 
-      </div>
-    </div>
-
-    <!-- Tablas detalladas -->
-    <div class="doc-section" id="tablas">
-      <div class="doc-section-header">
-        <div class="doc-section-icon icon-purple"><i class='bx bx-table'></i></div>
-        <div><h2>Descripción de Tablas</h2><p>Columnas, tipos de datos y restricciones de cada tabla</p></div>
-      </div>
-      <div class="doc-section-body">
-        <div class="legend">
-            <div class="legend-item"><span class="badge badge-pk">PK</span> Clave primaria</div>
-            <div class="legend-item"><span class="badge badge-fk">FK</span> Clave foránea</div>
-            <div class="legend-item"><span class="badge badge-uk">UK</span> Valor único</div>
-            <div class="legend-item"><span class="badge badge-null">NULL</span> Opcional</div>
-        </div>
-
-        <div class="tables-grid">
-
-            <!-- USUARIOS -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    USUARIOS <span>Usuarios del sistema</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>username</code></td><td>VARCHAR(50)</td><td><span class="badge badge-uk">UK</span></td></tr>
-                        <tr><td><code>email</code></td><td>VARCHAR(100)</td><td><span class="badge badge-uk">UK</span></td></tr>
-                        <tr><td><code>password</code></td><td>VARCHAR(255)</td><td>bcrypt</td></tr>
-                        <tr><td><code>nombre_completo</code></td><td>VARCHAR(150)</td><td>—</td></tr>
-                        <tr><td><code>rol</code></td><td>ENUM</td><td>admin|medico|recepcionista</td></tr>
-                        <tr><td><code>activo</code></td><td>BOOLEAN</td><td>default: true</td></tr>
-                        <tr><td><code>ultimo_acceso</code></td><td>DATETIME</td><td><span class="badge badge-null">NULL</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PACIENTES -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    PACIENTES <span>Pacientes registrados</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>nombre</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>apellido</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>cedula</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
-                        <tr><td><code>telefono</code></td><td>VARCHAR(20)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>email</code></td><td>VARCHAR(100)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>fecha_nacimiento</code></td><td>DATE</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>genero</code></td><td>ENUM</td><td>M|F|Otro</td></tr>
-                        <tr><td><code>tipo_sangre</code></td><td>VARCHAR(5)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>alergias</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- NOMINA -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    NOMINA <span>Personal médico y administrativo</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>nombre</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>apellido</code></td><td>VARCHAR(80)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>cedula</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
-                        <tr><td><code>cargo</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>departamento</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>salario</code></td><td>DECIMAL(10,2)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>fecha_ingreso</code></td><td>DATE</td><td>NOT NULL</td></tr>
-                        <tr><td><code>estado</code></td><td>ENUM</td><td>activo|inactivo</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- CONSULTAS -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    CONSULTAS <span>Consultas médicas</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>paciente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → PACIENTES</td></tr>
-                        <tr><td><code>medico_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>empleado_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → NOMINA <span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>fecha_hora</code></td><td>DATETIME</td><td>NOT NULL</td></tr>
-                        <tr><td><code>motivo</code></td><td>TEXT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>diagnostico</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>tratamiento</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>estado</code></td><td>ENUM</td><td>pendiente|en_proceso|completada|cancelada</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- INVENTARIO -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    INVENTARIO <span>Medicamentos en stock</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>nombre_medicamento</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>descripcion</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>cantidad</code></td><td>INT</td><td>default: 0</td></tr>
-                        <tr><td><code>unidad</code></td><td>VARCHAR(30)</td><td>default: unidades</td></tr>
-                        <tr><td><code>precio</code></td><td>DECIMAL(10,2)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>fecha_vencimiento</code></td><td>DATE</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>proveedor</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>stock_minimo</code></td><td>INT</td><td>default: 10</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- INVENTARIO_MOVIMIENTOS -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    INVENTARIO_MOVIMIENTOS <span>Entradas y salidas</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
-                        <tr><td><code>tipo_movimiento</code></td><td>ENUM</td><td>entrada|salida</td></tr>
-                        <tr><td><code>cantidad</code></td><td>INT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>cantidad_anterior</code></td><td>INT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>cantidad_nueva</code></td><td>INT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>motivo</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>consulta_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → CONSULTAS <span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- MENSAJES -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    MENSAJES <span>Mensajería interna</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>remitente_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>destinatario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>asunto</code></td><td>VARCHAR(200)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>contenido</code></td><td>TEXT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>leido</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                        <tr><td><code>es_masivo</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- NOTIFICACIONES -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    NOTIFICACIONES <span>Notificaciones en tiempo real</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>tipo</code></td><td>VARCHAR(50)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>titulo</code></td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>mensaje</code></td><td>TEXT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>icono</code></td><td>VARCHAR(50)</td><td>default: bx-bell</td></tr>
-                        <tr><td><code>color</code></td><td>VARCHAR(20)</td><td>primary|success|danger|warning|info</td></tr>
-                        <tr><td><code>url</code></td><td>VARCHAR(255)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>leida</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- BITACORA -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    BITACORA <span>Auditoría del sistema</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restricción</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>accion</code></td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
-                        <tr><td><code>tabla</code></td><td>VARCHAR(50)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>registro_id</code></td><td>BIGINT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>detalles</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>ip</code></td><td>VARCHAR(45)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- SOLICITUDES_INVENTARIO -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    SOLICITUDES_INVENTARIO <span>Solicitudes de reposicion</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>numero_orden</code></td><td>VARCHAR(20)</td><td><span class="badge badge-uk">UK</span></td></tr>
-                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
-                        <tr><td><code>solicitado_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>cantidad_solicitada</code></td><td>INT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>proveedor_sugerido</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>telefono_proveedor</code></td><td>VARCHAR(30)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>estado</code></td><td>ENUM</td><td>pendiente|aprobada|rechazada|completada</td></tr>
-                        <tr><td><code>numero_factura</code></td><td>VARCHAR(50)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>atendida_por</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS <span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>atendida_at</code></td><td>DATETIME</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>notas</code></td><td>TEXT</td><td><span class="badge badge-null">NULL</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PERMISOS_USUARIO -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    PERMISOS_USUARIO <span>Permisos granulares por usuario</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>usuario_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → USUARIOS</td></tr>
-                        <tr><td><code>modulo</code></td><td>VARCHAR(50)</td><td>pacientes|consultas|medicina|inventario|mensajes|nomina|usuarios|solicitudes|bitacora</td></tr>
-                        <tr><td><code>puede_ver</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                        <tr><td><code>puede_crear</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                        <tr><td><code>puede_editar</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                        <tr><td><code>puede_eliminar</code></td><td>BOOLEAN</td><td>default: false</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- SOLICITUD_ITEMS -->
-            <div class="table-card">
-                <div class="table-card-header">
-                    SOLICITUD_ITEMS <span>Items de solicitud</span>
-                </div>
-                <table>
-                    <thead><tr><th>Columna</th><th>Tipo</th><th>Restriccion</th></tr></thead>
-                    <tbody>
-                        <tr><td><code>id</code></td><td>BIGINT</td><td><span class="badge badge-pk">PK</span></td></tr>
-                        <tr><td><code>solicitud_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → SOLICITUDES_INVENTARIO</td></tr>
-                        <tr><td><code>medicamento_id</code></td><td>BIGINT</td><td><span class="badge badge-fk">FK</span> → INVENTARIO</td></tr>
-                        <tr><td><code>cantidad</code></td><td>INT</td><td>NOT NULL</td></tr>
-                        <tr><td><code>proveedor_sugerido</code></td><td>VARCHAR(150)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                        <tr><td><code>telefono_proveedor</code></td><td>VARCHAR(30)</td><td><span class="badge badge-null">NULL</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
+        <h3 class="doc-subtitle"><i class='bx bx-calendar'></i> Recepcionista</h3>
+        <div class="mermaid-wrap" style="min-height: 250px;">
+          <div class="mermaid">
+flowchart LR
+    A3((Recepcionista))
+    
+    C1([Registrar Nuevo Paciente])
+    C2([Buscar Historia Clínica])
+    C3([Agendar Cita en Calendario])
+    C4([Confirmar Asistencia])
+    
+    A3 --> C1
+    A3 --> C2
+    A3 --> C3
+    A3 --> C4
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Relaciones -->
-    <div class="doc-section" id="relaciones">
-      <div class="doc-section-header">
-        <div class="doc-section-icon icon-green"><i class='bx bx-git-branch'></i></div>
-        <div><h2>Relaciones entre Entidades</h2><p>Cardinalidad y comportamiento ON DELETE de cada relación</p></div>
+    <section class="section" id="tablas">
+      <div class="section-header">
+        <h2><i class='bx bx-table'></i> Diccionario de Tablas</h2>
+        <p>Estructura detallada de las tablas de la base de datos (Generado Automáticamente)</p>
       </div>
-      <div class="doc-section-body">
-        <ul class="rel-list">
-            <li><code>PACIENTES</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un paciente puede tener muchas consultas. ON DELETE CASCADE.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un usuario médico puede atender muchas consultas. ON DELETE SET NULL.</li>
-            <li><code>NOMINA</code> <span class="rel-arrow">→</span> <code>CONSULTAS</code> <span class="rel-type">1 a N</span> Un empleado médico puede atender muchas consultas.</li>
-            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>CONSULTAS_MEDICAMENTOS</code> <span class="rel-type">1 a N</span> Una consulta puede incluir varios medicamentos. ON DELETE CASCADE.</li>
-            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>CONSULTAS_MEDICAMENTOS</code> <span class="rel-type">1 a N</span> Un medicamento puede estar en varias consultas.</li>
-            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Un medicamento tiene muchos movimientos. ON DELETE CASCADE.</li>
-            <li><code>CONSULTAS</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Una consulta puede generar salidas de inventario. ON DELETE SET NULL.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>INVENTARIO_MOVIMIENTOS</code> <span class="rel-type">1 a N</span> Un usuario registra los movimientos.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>MENSAJES</code> <span class="rel-type">1 a N</span> Un usuario puede enviar y recibir muchos mensajes. ON DELETE CASCADE.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>BITACORA</code> <span class="rel-type">1 a N</span> Cada acción del usuario queda registrada. ON DELETE CASCADE.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>NOTIFICACIONES</code> <span class="rel-type">1 a N</span> Un usuario puede recibir muchas notificaciones. ON DELETE CASCADE.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>SOLICITUDES_INVENTARIO</code> <span class="rel-type">1 a N</span> Un usuario puede crear muchas solicitudes. ON DELETE CASCADE.</li>
-            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUDES_INVENTARIO</code> <span class="rel-type">1 a N</span> Un medicamento puede tener muchas solicitudes.</li>
-            <li><code>SOLICITUDES_INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Una solicitud contiene uno o varios items. ON DELETE CASCADE.</li>
-            <li><code>USUARIOS</code> <span class="rel-arrow">→</span> <code>PERMISOS_USUARIO</code> <span class="rel-type">1 a N</span> Un usuario puede tener permisos configurados para múltiples módulos. ON DELETE CASCADE.</li>
-            <li><code>INVENTARIO</code> <span class="rel-arrow">→</span> <code>SOLICITUD_ITEMS</code> <span class="rel-type">1 a N</span> Un medicamento puede aparecer en varios items de solicitud.</li>
-        </ul>
-      </div>
-    </div>
+      <div class="section-body">
 
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">bitacora</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">usuario_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">accion</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tabla</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">registro_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">detalles</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">ip</td>
+                <td class="col-type">varchar(45)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> <span style='font-size:10px; color:var(--text-muted);'>DEFAULT_GENERATED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">citas</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">servicio_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">creado_por</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_hora</td>
+                <td class="col-type">datetime</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">duracion_minutos</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">motivo</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">notas</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estado</td>
+                <td class="col-type">enum('programada','confirmada','en_curso','completada','cancelada','no_asistio')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">color</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">recordatorio_enviado</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">consultas</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_hora</td>
+                <td class="col-type">datetime</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">motivo</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">diagnostico</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tratamiento</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estado</td>
+                <td class="col-type">enum('pendiente','en_proceso','completada','cancelada')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_consulta</td>
+                <td class="col-type">enum('preempleo','prevacacional','postvacacional','egreso','reubicacion','otros')</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">consultas_medicamentos</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medicamento_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">indicaciones</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> <span style='font-size:10px; color:var(--text-muted);'>DEFAULT_GENERATED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">examenes_laboratorio</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_solicitud</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">hematologia_completa</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">glicemia_ayunas</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">urea</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">creatinina</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">colesterol_total</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">trigliceridos</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">examen_orina</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">examen_heces</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">otros</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_documento</td>
+                <td class="col-type">enum('digital','manuscrita')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">imagen_escaneo</td>
+                <td class="col-type">varchar(500)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">gasto_medico_items</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">gasto_medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">concepto</td>
+                <td class="col-type">varchar(200)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">monto</td>
+                <td class="col-type">decimal(12,2)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">gastos_medicos</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_gasto</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre_empresa</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_documento</td>
+                <td class="col-type">enum('digital','manuscrita')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">imagen_escaneo</td>
+                <td class="col-type">varchar(500)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">descripcion</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">informes_medicos</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_informe</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre_empresa</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">edad</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cargo</td>
+                <td class="col-type">varchar(120)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">antiguedad_cargo</td>
+                <td class="col-type">varchar(80)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_consulta</td>
+                <td class="col-type">enum('preempleo','prevacacional','postvacacional','egreso','reubicacion','otros')</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_consulta_otros</td>
+                <td class="col-type">varchar(120)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">aptitud</td>
+                <td class="col-type">enum('apto','no_apto','apto_condicionado')</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">diagnostico</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estudios_paraclinicos</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">referencia</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">recomendaciones</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_documento</td>
+                <td class="col-type">enum('digital','manuscrita')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">imagen_escaneo</td>
+                <td class="col-type">varchar(500)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">inventario</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre_medicamento</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">descripcion</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">unidad</td>
+                <td class="col-type">varchar(30)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_vencimiento</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">proveedor</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono_proveedor</td>
+                <td class="col-type">varchar(30)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">stock_minimo</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">inventario_movimientos</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">medicamento_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_movimiento</td>
+                <td class="col-type">enum('entrada','salida')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad_anterior</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad_nueva</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">motivo</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono_proveedor</td>
+                <td class="col-type">varchar(30)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">entregado_por_nombre</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">recibido_por_nombre</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">recibido_por_cedula</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">observaciones_entrega</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">usuario_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> <span style='font-size:10px; color:var(--text-muted);'>DEFAULT_GENERATED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">mensajes</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">remitente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">destinatario_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">asunto</td>
+                <td class="col-type">varchar(200)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">contenido</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">leido</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">es_masivo</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> <span style='font-size:10px; color:var(--text-muted);'>DEFAULT_GENERATED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">nomina</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre</td>
+                <td class="col-type">varchar(80)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">apellido</td>
+                <td class="col-type">varchar(80)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cedula</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cargo</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">departamento</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">salario</td>
+                <td class="col-type">decimal(10,2)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_ingreso</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">email</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estado</td>
+                <td class="col-type">enum('activo','inactivo')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">notificaciones</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">usuario_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">titulo</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">mensaje</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">icono</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">color</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">url</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">leida</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> <span style='font-size:10px; color:var(--text-muted);'>DEFAULT_GENERATED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">pacientes</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre</td>
+                <td class="col-type">varchar(80)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">apellido</td>
+                <td class="col-type">varchar(80)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cedula</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">email</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">direccion</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_nacimiento</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">genero</td>
+                <td class="col-type">enum('M','F','Otro')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_sangre</td>
+                <td class="col-type">varchar(5)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">alergias</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">permisos_usuario</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">usuario_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">modulo</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">puede_ver</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">puede_crear</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">puede_editar</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">puede_eliminar</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">receta_items</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">receta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medicamento_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre_medicamento</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">presentacion</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">dosis</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">frecuencia</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">duracion</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">indicaciones</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">recetas</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_receta</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medico_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">empleado_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">diagnostico</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">indicaciones_generales</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">imagen_receta</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">tipo_receta</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_emision</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_vencimiento</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estado</td>
+                <td class="col-type">enum('activa','dispensada','vencida','anulada')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">deleted_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">servicio_medicos</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">descripcion</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">duracion_minutos</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">precio</td>
+                <td class="col-type">decimal(10,2)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">activo</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">signos_vitales</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">consulta_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">paciente_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">registrado_por</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">presion_sistolica</td>
+                <td class="col-type">decimal(5,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">presion_diastolica</td>
+                <td class="col-type">decimal(5,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">frecuencia_cardiaca</td>
+                <td class="col-type">decimal(5,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">frecuencia_respiratoria</td>
+                <td class="col-type">decimal(5,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">temperatura</td>
+                <td class="col-type">decimal(4,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">saturacion_oxigeno</td>
+                <td class="col-type">decimal(4,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">peso</td>
+                <td class="col-type">decimal(5,2)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">talla</td>
+                <td class="col-type">decimal(5,2)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">imc</td>
+                <td class="col-type">decimal(5,2)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">glucosa</td>
+                <td class="col-type">decimal(6,1)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">observaciones</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">solicitud_items</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">solicitud_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medicamento_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad_solicitada</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">proveedor_sugerido</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono_proveedor</td>
+                <td class="col-type">varchar(30)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">solicitudes_inventario</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_orden</td>
+                <td class="col-type">varchar(20)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">medicamento_id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">solicitado_por</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">cantidad_solicitada</td>
+                <td class="col-type">int</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">proveedor_sugerido</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">telefono_proveedor</td>
+                <td class="col-type">varchar(30)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">numero_factura</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">fecha_entrega_esperada</td>
+                <td class="col-type">date</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">notas</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">estado</td>
+                <td class="col-type">enum('pendiente','aprobada','rechazada','completada')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">atendida_por</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NULL</td>
+                <td><span class='chip chip-blue'>INDEX/FK</span> </td>
+              </tr>
+              <tr>
+                <td class="col-name">atendida_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="class-block" style="margin-bottom: 24px;">
+          <div class="class-head">
+            <span class="tag tag-class">TABLA</span>
+            <span class="class-name">usuarios</span>
+          </div>
+          <table class="prop-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Nulabilidad</th>
+                <th>Clave / Extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">bigint unsigned</td>
+                <td class="col-desc">NOT NULL</td>
+                <td><span class='chip chip-orange'>PRIMARY</span> <span style='font-size:10px; color:var(--text-muted);'>auto_increment</span></td>
+              </tr>
+              <tr>
+                <td class="col-name">username</td>
+                <td class="col-type">varchar(50)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">email</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">password</td>
+                <td class="col-type">varchar(255)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">nombre_completo</td>
+                <td class="col-type">varchar(150)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">rol</td>
+                <td class="col-type">enum('admin','medico','recepcionista','enfermera','farmaceutico','contador','laboratorista')</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">activo</td>
+                <td class="col-type">tinyint(1)</td>
+                <td class="col-desc">NOT NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">ultimo_acceso</td>
+                <td class="col-type">datetime</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">remember_token</td>
+                <td class="col-type">varchar(100)</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamp</td>
+                <td class="col-desc">NULL</td>
+                <td> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
-<footer class="doc-footer">
-  <strong>SISGECLIN v2.5</strong> &mdash; Diagramas del Sistema (ER + UML) &mdash; Base de datos: sisgeclin_laravel &mdash; &copy; 2026
-</footer>
+
+
+
+<!-- Modal Zoom -->
+<div class="diagram-modal" id="diagramModal">
+  <div class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></div>
+  <div class="modal-content" id="modalContent">
+    <div class="modal-svg-wrapper" id="modalSvgWrapper"></div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomIn()"><i class='bx bx-zoom-in'></i></button>
+    <button class="zoom-btn" onclick="zoomOut()"><i class='bx bx-zoom-out'></i></button>
+    <button class="zoom-btn" onclick="resetZoom()"><i class='bx bx-reset'></i></button>
+  </div>
+</div>
+
+
+<!-- Modal Zoom -->
+<div class="diagram-modal" id="diagramModal">
+  <div class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></div>
+  <div class="modal-content" id="modalContent">
+    <div class="modal-svg-wrapper" id="modalSvgWrapper"></div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomIn()"><i class='bx bx-zoom-in'></i></button>
+    <button class="zoom-btn" onclick="zoomOut()"><i class='bx bx-zoom-out'></i></button>
+    <button class="zoom-btn" onclick="resetZoom()"><i class='bx bx-reset'></i></button>
+  </div>
+</div>
 
 <script>
-// Inicializar Mermaid — todos los diagramas se renderizan al cargar
-// (los paneles usan visibility:hidden en lugar de display:none para que Mermaid los procese)
-mermaid.initialize({
-    startOnLoad: true,
-    theme: 'default',
-    er: {
-        diagramPadding: 30,
-        layoutDirection: 'TB',
-        minEntityWidth: 150,
-        minEntityHeight: 90,
-        entityPadding: 20,
-        useMaxWidth: false,
-    },
-    flowchart: {
-        useMaxWidth: false,
-        htmlLabels: true,
-        curve: 'basis',
-        padding: 30,
-        nodeSpacing: 60,
-        rankSpacing: 80,
-    },
-    themeVariables: {
-        primaryColor: '#dbeafe',
-        primaryTextColor: '#1e293b',
-        primaryBorderColor: '#0d6efd',
-        lineColor: '#475569',
-        secondaryColor: '#f0fdf4',
-        tertiaryColor: '#fef9c3',
-        fontSize: '15px',
-        fontFamily: 'Inter, Segoe UI, sans-serif',
+  // ==================== SEARCH / FILTER ====================
+  function filterDocs() {
+    let inputEl = document.getElementById('searchInput');
+    if(!inputEl) return;
+    let input = inputEl.value.toLowerCase();
+    
+    // 1. Filtrar Sidebar
+    let links = document.querySelectorAll('.sidebar .sb-link, .sidebar .sb-sub');
+    links.forEach(link => {
+      let text = link.textContent.toLowerCase();
+      link.style.display = text.includes(input) ? '' : 'none';
+    });
+
+    // 2. Filtrar Contenido Principal (Búsqueda en texto)
+    let contentBlocks = document.querySelectorAll('.info-card, .feature-item, .step, .class-block, .mod-accordion, .sec-item, .endpoint');
+    if (contentBlocks.length > 0) {
+        contentBlocks.forEach(block => {
+            let text = block.textContent.toLowerCase();
+            if (input === '') {
+                block.style.display = '';
+            } else {
+                block.style.display = text.includes(input) ? '' : 'none';
+            }
+        });
     }
-});
+  }
 
-// Cambiar pestaña ER
-function mostrarDiagrama(id) {
-    document.querySelectorAll('#diagrama .diagram-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('#diagrama .diagram-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    event.currentTarget.classList.add('active');
-}
+  // ==================== SCROLLSPY ====================
+  const sections = document.querySelectorAll('.section');
+  const navLinks  = document.querySelectorAll('.sidebar .sb-link');
+  if (sections.length > 0) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const link = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    sections.forEach(s => observer.observe(s));
+  }
 
-// Cambiar pestaña UML
-function mostrarUML(id) {
-    document.querySelectorAll('#uml-casos .diagram-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('#uml-casos .diagram-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    event.currentTarget.classList.add('active');
-}
+  // ==================== ZOOM MODAL PARA DIAGRAMAS ====================
+  let currentZoom = 1;
+  let isDragging = false;
+  let startX = 0, startY = 0, translateX = 0, translateY = 0;
 
-// Scroll activo en sidebar
-const sections = document.querySelectorAll('.doc-section, [id]');
-const links    = document.querySelectorAll('.doc-sidebar-menu a');
-window.addEventListener('scroll', () => {
-    let current = '';
-    document.querySelectorAll('[id]').forEach(s => {
-        if (window.scrollY >= s.offsetTop - 120) current = s.id;
-    });
-    links.forEach(l => {
-        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
-    });
-});
+  document.body.addEventListener('click', (e) => {
+      const wrap = e.target.closest('.mermaid-wrap');
+      if(wrap) {
+          const svg = wrap.querySelector('svg') || wrap.querySelector('img'); // Support for both Mermaid and standard images
+          if (svg) openModal(svg.outerHTML);
+      }
+  });
+
+  function getModalElements() {
+      return {
+          modal: document.getElementById('diagramModal'),
+          wrapper: document.getElementById('modalSvgWrapper'),
+          content: document.getElementById('modalContent')
+      };
+  }
+
+  function openModal(contentHtml) {
+      const { modal, wrapper } = getModalElements();
+      if(!modal || !wrapper) return;
+      
+      wrapper.innerHTML = contentHtml;
+      const svg = wrapper.querySelector('svg') || wrapper.querySelector('img');
+      if(svg) {
+          svg.style.maxWidth = 'none';
+          svg.style.height = 'auto';
+          svg.style.width = '100%';
+      }
+      modal.classList.add('active');
+      resetZoom();
+  }
+
+  function closeModal() {
+      const { modal, wrapper } = getModalElements();
+      if(!modal) return;
+      modal.classList.remove('active');
+      setTimeout(() => { if(wrapper) wrapper.innerHTML = ''; }, 200);
+  }
+
+  function updateTransform() {
+      const { wrapper } = getModalElements();
+      if(wrapper) {
+          wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+      }
+  }
+
+  function zoomIn() { currentZoom += 0.2; updateTransform(); }
+  function zoomOut() { currentZoom = Math.max(0.2, currentZoom - 0.2); updateTransform(); }
+  function resetZoom() {
+      currentZoom = 1; translateX = 0; translateY = 0;
+      updateTransform();
+  }
+
+  // Setup wheel and drag events after DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+      const { content } = getModalElements();
+      if(content) {
+          content.addEventListener('wheel', (e) => {
+              e.preventDefault();
+              if (e.deltaY < 0) zoomIn();
+              else zoomOut();
+          });
+          content.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              startX = e.clientX - translateX;
+              startY = e.clientY - translateY;
+          });
+          window.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              translateX = e.clientX - startX;
+              translateY = e.clientY - startY;
+              updateTransform();
+          });
+          window.addEventListener('mouseup', () => { isDragging = false; });
+      }
+  });
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#16171a',
+      primaryBorderColor: '#4f8ef7',
+      primaryTextColor: '#d4d6db',
+      lineColor: '#6b7280',
+      secondaryColor: '#2a2b30',
+      tertiaryColor: '#212226'
+    },
+    securityLevel: 'loose'
+  });
+
 </script>
 </body>
 </html>

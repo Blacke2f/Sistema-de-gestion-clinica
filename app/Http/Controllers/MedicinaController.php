@@ -57,16 +57,14 @@ class MedicinaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar todos los campos del formulario
         $data = $request->validate([
             'nombre_medicamento' => 'required|string|max:150',
             'descripcion'        => 'nullable|string',
-            'cantidad'           => 'required|integer|min:0',   // stock actual
-            'unidad'             => 'required|string|max:30',   // tabletas, frascos, etc.
-            'precio'             => 'required|numeric|min:0',   // precio unitario en RD$
+            'cantidad'           => 'required|integer|min:0',
+            'unidad'             => 'required|string|max:30',
             'fecha_vencimiento'  => 'nullable|date',
             'proveedor'          => 'nullable|string|max:150',
-            'stock_minimo'       => 'required|integer|min:0',   // umbral de alerta
+            'stock_minimo'       => 'required|integer|min:0',
         ], [
             'nombre_medicamento.required' => 'El nombre del medicamento es requerido.',
         ]);
@@ -115,7 +113,6 @@ class MedicinaController extends Controller
             'descripcion'        => 'nullable|string',
             'cantidad'           => 'required|integer|min:0',
             'unidad'             => 'required|string|max:30',
-            'precio'             => 'required|numeric|min:0',
             'fecha_vencimiento'  => 'nullable|date',
             'proveedor'          => 'nullable|string|max:150',
             'stock_minimo'       => 'required|integer|min:0',

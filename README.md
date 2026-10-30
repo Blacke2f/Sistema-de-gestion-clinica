@@ -1,84 +1,79 @@
-# SISGECLIN — Sistema de Gestión Clínica
-**Laravel 13 | PHP 8.2+ | MySQL | v2.5**
+# SISGECLIN v3.0 — Sistema de Gestión Clínica Institucional
+**Laravel 13 | PHP 8.3+ | MariaDB/MySQL | Sin facturación**
 
-Sistema web para la gestión integral de una clínica médica. Desarrollado con Laravel 13 sobre PHP 8.2+, permite administrar pacientes, consultas médicas, inventario de medicamentos, nómina del personal, mensajería interna y exportación de reportes en múltiples formatos.
+Sistema web para la gestión integral de una clínica institucional. Administra pacientes, expediente clínico, agenda de citas, consultas médicas, signos vitales, recetas médicas (digitales y manuscritas), inventario de medicamentos, nómina del personal y reportes estadísticos.
 
 ---
 
-## Acceso rápido
-
-| Entorno | URL |
-|---|---|
-| Local | `http://localhost/SISGECLIN/public` |
-| Red local | `http://<IP-DEL-SERVIDOR>/SISGECLIN/public` |
-
-## Credenciales por defecto
+## Credenciales
 
 | Usuario | Contraseña | Rol |
 |---|---|---|
 | `admin` | `admin123` | Administrador |
 | `medico` | `admin123` | Médico |
 | `recepcion` | `admin123` | Recepcionista |
+| `enfermera` | `Admin123` | Enfermera |
+| `farmacia` | `Admin123` | Farmacéutico |
+| `contador` | `Admin123` | Contador |
+| `laboratorio` | `Admin123` | Laboratorista |
 
 > ⚠️ Cambiar contraseñas antes de usar en producción.
 
 ---
 
-## Instalación
+## Instalación rápida (Laragon)
 
 ```bash
-# 1. Instalar dependencias PHP
+# 1. Colocar la carpeta en C:\laragon\www\SISGECLIN
+
+# 2. Instalar dependencias
 composer install
 
-# 2. Configurar entorno
-copy .env.example .env
-# Editar .env: DB_DATABASE, DB_USERNAME, DB_PASSWORD
+# 3. Importar la base de datos en phpMyAdmin
+# Importar: database/sisgeclin_laravel.sql
 
-# 3. Crear la base de datos en MySQL
-# CREATE DATABASE sisgeclin_laravel CHARACTER SET utf8mb4;
-
-# 4. Importar el SQL con datos iniciales
-# phpMyAdmin → importar database/sisgeclin_laravel.sql
+# 4. Ejecutar migraciones pendientes
+php artisan migrate --force
 
 # 5. Limpiar cachés
-php artisan config:clear
-php artisan view:clear
+php artisan sisgeclin:clear
+
+# 6. (Opcional) Cargar datos de prueba
+php artisan db:seed --class=DatosPruebaSeeder
 ```
 
 ---
 
-## Stack tecnológico
+## Acceso en red local (WiFi/LAN)
 
-| Componente | Tecnología |
-|---|---|
-| Framework | Laravel 13 |
-| Lenguaje | PHP 8.2+ |
-| Base de datos | MySQL / MariaDB |
-| ORM | Eloquent |
-| PDF | mPDF 8.3 |
-| Excel | PhpSpreadsheet 5.7 |
-| Frontend | CSS/JS personalizado + Boxicons |
+Ejecutar **`ABRIR_FIREWALL.bat`** como Administrador. Detecta Apache automáticamente y abre los puertos necesarios.
+
+## Migración de base de datos
+
+Ejecutar **`MIGRAR_BD.bat`** para migrar a SQL Server o PostgreSQL.
 
 ---
 
-## Módulos del sistema
+## Módulos del sistema (v3.0)
 
 | Módulo | Descripción |
 |---|---|
-| Autenticación | Login, logout, registro con activación por admin |
-| Dashboard | Estadísticas en tiempo real |
-| Pacientes | CRUD completo con búsqueda y exportación |
-| Consultas | Gestión de consultas médicas con estados |
-| Medicamentos | Catálogo con alertas de stock bajo |
-| Movimientos | Entradas y salidas de inventario con firma |
-| Solicitudes | Solicitudes de reposición con número de orden |
+| Dashboard | KPIs, gráficas Chart.js, citas del día |
+| Pacientes | CRUD + Registro rápido desde consulta |
+| Expediente Clínico | Historial unificado del paciente |
+| Agenda de Citas | Calendario FullCalendar, 6 estados |
+| Consultas | Diagnóstico, tratamiento, signos vitales |
+| Signos Vitales | Registro por consulta, IMC automático |
+| Recetas | Digital (PDF A5) + Manuscrita (foto/scan) |
+| Medicamentos | Sin precios — control de stock e inventario |
+| Movimientos | Entradas/salidas con auditoría y firma |
+| Solicitudes | Reposición de medicamentos |
+| Reportes | 4 gráficas estadísticas (consultas, movimientos, medicamentos, géneros) |
 | Nómina | Personal médico y administrativo |
-| Usuarios | Gestión de cuentas con permisos granulares |
+| Usuarios | 7 roles con permisos granulares |
 | Mensajes | Mensajería interna individual y masiva |
-| Notificaciones | Alertas en tiempo real con polling |
 | Bitácora | Auditoría completa de acciones |
-| Exportaciones | PDF, Excel y CSV en todos los módulos |
-| Búsqueda AJAX | Búsqueda global en tiempo real |
+| Exportaciones | PDF, Excel y CSV |
 
 ---
 
@@ -86,14 +81,24 @@ php artisan view:clear
 
 | Documento | Descripción |
 |---|---|
-| [`docs/manual_usuario.html`](docs/manual_usuario.html) | Guía completa de uso para usuarios finales |
-| [`docs/documentacion_tecnica.html`](docs/documentacion_tecnica.html) | Arquitectura, instalación, API de rutas |
-| [`docs/documentacion_codigo.html`](docs/documentacion_codigo.html) | Cómo funciona el código, módulo por módulo |
-| [`docs/modelo_er.html`](docs/modelo_er.html) | Diagramas ER y UML interactivos |
-| [`database/sisgeclin_laravel.sql`](database/sisgeclin_laravel.sql) | Dump completo de la base de datos |
+| `docs/manual_usuario.html` | Guía completa para usuarios finales |
+| `docs/documentacion_tecnica.html` | Arquitectura, instalación, API de rutas |
+| `docs/documentacion_codigo.html` | Código fuente, módulo por módulo |
+| `docs/modelo_er.html` | Diagramas ER y UML interactivos |
+| `database/sisgeclin_laravel.sql` | Dump completo de la base de datos |
 
 ---
 
-## Acceso en red local
+## Stack tecnológico
 
-Ejecutar `ABRIR_FIREWALL.bat` como Administrador para habilitar el puerto 80 en el firewall de Windows. El sistema detecta automáticamente el host y funciona desde cualquier IP sin modificar el `.env`.
+| Componente | Versión |
+|---|---|
+| Laravel | 13 |
+| PHP | 8.3+ |
+| MariaDB/MySQL | 10.4+ / 8.0+ |
+| mPDF | 8.3 |
+| PhpSpreadsheet | 5.7 |
+| Chart.js (local) | 4.4.3 |
+| FullCalendar (local) | 6.1.11 |
+| Boxicons (local) | 2.1.4 |
+| Mermaid.js (CDN+fallback) | 10.x |

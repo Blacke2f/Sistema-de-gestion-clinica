@@ -6,99 +6,138 @@
 <title>SISGECLIN - Manual de Usuario</title>
 <link rel="icon" type="image/png" href="/SISGECLIN/public/img/image-Photoroom.png">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/SISGECLIN/docs/docs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/SISGECLIN/docs/docs.css?v=5.0">
 </head>
-<body><!-- HEADER -->
-<header class="doc-header">
-  <div class="doc-header-inner">
-    <div class="doc-header-brand">
-      <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
-      <div>
-        <h1>Manual de Usuario</h1>
-        <p>SISGECLIN v2.5 &mdash; Sistema de Gestion Clinica</p>
-      </div>
-    </div>
-    <nav class="doc-header-nav">
-      <a href="/SISGECLIN/docs/manual_usuario.html" class="active"><i class='bx bxs-book-open'></i> Manual</a>
-      <a href="/SISGECLIN/docs/documentacion_tecnica.html"><i class='bx bx-code-alt'></i> Tecnica</a>
-      <a href="/SISGECLIN/docs/modelo_er.html"><i class='bx bx-data'></i> Modelo ER</a>
-      <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Codigo</a>
-    </nav>
+<body>
+
+<!-- ════════════════ TOPBAR ════════════════ -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="/SISGECLIN/public/img/image-Photoroom.png" alt="Logo">
+    <span>SISGECLIN Docs</span> <span class="ver">v3.0</span>
   </div>
-</header><!-- LAYOUT -->
-<div class="doc-layout">
-  <!-- SIDEBAR -->
-  <aside class="doc-sidebar">
-    <div class="doc-sidebar-inner">
-      <div class="doc-sidebar-title">Contenido</div>
-      <nav class="doc-sidebar-menu">
-        <a href="#intro"><i class='bx bxs-book-open'></i> Introduccion</a>
-        <a href="#acceso"><i class='bx bx-log-in'></i> Acceso al Sistema</a>
-        <a href="#dashboard"><i class='bx bxs-dashboard'></i> Panel de Control</a>
-        <a href="#pacientes"><i class='bx bxs-user-detail'></i> Pacientes</a>
-        <a href="#consultas"><i class='bx bx-clipboard'></i> Consultas</a>
-        <a href="#medicamentos"><i class='bx bxs-capsule'></i> Medicamentos</a>
-        <a href="#movimientos"><i class='bx bx-transfer'></i> Movimientos</a>
-        <a href="#mensajes"><i class='bx bxs-envelope'></i> Mensajes</a>
-        <a href="#nomina"><i class='bx bxs-group'></i> Nomina</a>
-        <a href="#usuarios"><i class='bx bxs-user-account'></i> Usuarios</a>
-        <a href="#exportaciones"><i class='bx bxs-file-pdf'></i> Exportaciones</a>
-        <a href="#notificaciones"><i class='bx bxs-bell'></i> Notificaciones</a>
-        <a href="#solicitudes"><i class='bx bx-send'></i> Solicitudes</a>
-        <a href="#bitacora"><i class='bx bx-history'></i> Bitacora</a>
-        <a href="#permisos"><i class='bx bx-shield'></i> Permisos</a>
-        <a href="#faq"><i class='bx bx-help-circle'></i> Preguntas Frecuentes</a>
+  <div class="topbar-search">
+    <i class='bx bx-search'></i>
+    <input type="text" id="searchInput" placeholder="Buscar..." onkeyup="filterDocs()">
+  </div>
+  <nav class="topbar-nav">
+    <a href="/SISGECLIN/docs/manual_usuario.html" class="active"><i class='bx bxs-book-open'></i> Manual</a>
+    <a href="/SISGECLIN/docs/documentacion_tecnica.html" class=""><i class='bx bx-code-alt'></i> Técnica</a>
+    <a href="/SISGECLIN/docs/modelo_er.html" class=""><i class='bx bx-data'></i> Modelo ER</a>
+    <a href="/SISGECLIN/docs/documentacion_codigo.html"><i class='bx bx-code-curly'></i> Código</a>
+  </nav>
+</header>
+
+<div class="app-body">
+  <aside class="sidebar" id="sidebar">
+    <div>
+      
+      <nav>
+        <a class="sb-link" href="#intro"><i class='bx bxs-book-open'></i> Introduccion</a>
+        <a class="sb-link" href="#acceso"><i class='bx bx-log-in'></i> Acceso al Sistema</a>
+        <a class="sb-link" href="#dashboard"><i class='bx bxs-dashboard'></i> Panel de Control</a>
+        
+        <div class="sb-group">Clinico</div>
+        <a class="sb-link" href="#pacientes"><i class='bx bxs-user-detail'></i> Pacientes</a>
+        <a class="sb-link" href="#expediente"><i class='bx bx-folder-open'></i> Expediente Clinico</a>
+        <a class="sb-link" href="#citas"><i class='bx bx-calendar-event'></i> Agenda de Citas</a>
+        <a class="sb-link" href="#consultas"><i class='bx bx-clipboard'></i> Consultas</a>
+        <a class="sb-link" href="#signos"><i class='bx bx-heart-circle'></i> Signos Vitales</a>
+        <a class="sb-link" href="#recetas"><i class='bx bx-file-blank'></i> Recetas Medicas</a>
+        <a class="sb-link" href="#informes"><i class='bx bx-id-card'></i> Informes Medicos</a>
+        <a class="sb-link" href="#gastos"><i class='bx bx-receipt'></i> Gastos Medicos</a>
+        <a class="sb-link" href="#examenes-lab"><i class='bx bx-test-tube'></i> Examenes de Lab.</a>
+        
+        <div class="sb-group">Inventario</div>
+        <a class="sb-link" href="#medicamentos"><i class='bx bxs-capsule'></i> Medicamentos</a>
+        <a class="sb-link" href="#movimientos"><i class='bx bx-transfer'></i> Movimientos</a>
+        <a class="sb-link" href="#solicitudes"><i class='bx bx-send'></i> Solicitudes</a>
+        
+        <div class="sb-group">Comunicacion</div>
+        <a class="sb-link" href="#mensajes"><i class='bx bxs-envelope'></i> Mensajes</a>
+        <a class="sb-link" href="#notificaciones"><i class='bx bxs-bell'></i> Notificaciones</a>
+        
+        <div class="sb-group">Administracion</div>
+        <a class="sb-link" href="#nomina"><i class='bx bxs-group'></i> Nomina</a>
+        <a class="sb-link" href="#usuarios"><i class='bx bxs-user-account'></i> Usuarios</a>
+        <a class="sb-link" href="#reportes"><i class='bx bx-bar-chart-alt-2'></i> Reportes</a>
+        <a class="sb-link" href="#exportaciones"><i class='bx bxs-file-pdf'></i> Exportaciones</a>
+        <a class="sb-link" href="#bitacora"><i class='bx bx-history'></i> Bitacora</a>
+        <a class="sb-link" href="#permisos"><i class='bx bx-shield'></i> Permisos</a>
+        
+        <div class="sb-group">Referencia</div>
+        <a class="sb-link" href="#interfaz"><i class='bx bx-palette'></i> Interfaz y Temas</a>
+        <a class="sb-link" href="#red-local"><i class='bx bx-wifi'></i> Acceso en Red</a>
+        <a class="sb-link" href="#datos-prueba"><i class='bx bx-test-tube'></i> Datos de Prueba</a>
+        <a class="sb-link" href="#seguridad"><i class='bx bx-lock'></i> Seguridad</a>
+        <a class="sb-link" href="#faq"><i class='bx bx-help-circle'></i> Preguntas Frecuentes</a>
       </nav>
     </div>
   </aside>
-  <!-- CONTENT -->
-  <main class="doc-content"><!-- SECCION 1: INTRODUCCION -->
-<section class="doc-section" id="intro">
-  <div class="doc-section-header">
+  <main class="content">
+
+<!-- INTRODUCCION -->
+<section class="section" id="intro">
+  <div class="section-header">
     <div class="doc-section-icon icon-blue"><i class='bx bxs-book-open'></i></div>
-    <div><h2>Introduccion</h2><p>Bienvenido al Sistema de Gestion Clinica SISGECLIN</p></div>
+    <div><h2>Introduccion</h2><p>Bienvenido al Sistema de Gestion Clinica SISGECLIN v3.0</p></div>
   </div>
-  <div class="doc-section-body">
-    <p class="doc-text">SISGECLIN es el sistema de gestion clinica de su institucion. Permite registrar y administrar pacientes, consultas medicas, inventario de medicamentos, nomina del personal y comunicacion interna entre el equipo.</p>
+  <div class="section-body">
+    <p class="doc-text">SISGECLIN es el sistema de gestion clinica institucional. Permite registrar y administrar pacientes, expedientes clinicos, agenda de citas, consultas medicas, signos vitales, recetas medicas (digitales y manuscritas), inventario de medicamentos, nomina del personal y comunicacion interna. Disenado para clinicas que reciben medicamentos por asignacion institucional — sin modulo de facturacion ni precios.</p>
     <div class="info-grid" style="margin-top:20px;">
-      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-badge'></i></div><div><h3>3</h3><p>Roles de usuario</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-grid-alt'></i></div><div><h3>13</h3><p>Modulos del sistema</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-badge'></i></div><div><h3>7</h3><p>Roles de usuario</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-grid-alt'></i></div><div><h3>20</h3><p>Modulos del sistema</p></div></div>
       <div class="info-card"><div class="info-card-icon icon-purple"><i class='bx bx-devices'></i></div><div><h3>LAN</h3><p>Acceso multi-dispositivo</p></div></div>
       <div class="info-card"><div class="info-card-icon icon-orange"><i class='bx bxs-file-pdf'></i></div><div><h3>PDF</h3><p>Exportacion profesional</p></div></div>
     </div>
     <h3 class="doc-subtitle" style="margin-top:24px;">Funcionalidades principales</h3>
     <div class="feature-grid">
-      <div class="feature-item"><i class='bx bxs-user-detail' style="color:#0d6efd;"></i><div><h4>Gestion de Pacientes</h4><p>Registro completo con historial clinico, alergias y tipo de sangre.</p></div></div>
-      <div class="feature-item"><i class='bx bx-clipboard' style="color:#0dcaf0;"></i><div><h4>Consultas Medicas</h4><p>Programacion, diagnostico, tratamiento y seguimiento de estados.</p></div></div>
-      <div class="feature-item"><i class='bx bxs-capsule' style="color:#fd7e14;"></i><div><h4>Inventario de Medicamentos</h4><p>Control de stock con alertas automaticas de nivel minimo.</p></div></div>
-      <div class="feature-item"><i class='bx bxs-group' style="color:#6f42c1;"></i><div><h4>Nomina del Personal</h4><p>Registro de empleados, cargos, departamentos y salarios.</p></div></div>
-      <div class="feature-item"><i class='bx bxs-envelope' style="color:#198754;"></i><div><h4>Mensajeria Interna</h4><p>Mensajes individuales y masivos entre usuarios del sistema.</p></div></div>
-      <div class="feature-item"><i class='bx bxs-file-pdf' style="color:#dc3545;"></i><div><h4>Exportacion PDF / Excel / CSV</h4><p>Reportes profesionales en multiples formatos para todos los modulos.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-user-detail' style="color:#0d6efd;"></i><div><h4>Gestion de Pacientes</h4><p>Registro completo con expediente clinico, historial, alergias y tipo de sangre. Registro rapido desde consulta.</p></div></div>
+      <div class="feature-item"><i class='bx bx-calendar-event' style="color:#0d6efd;"></i><div><h4>Agenda de Citas</h4><p>Calendario visual FullCalendar. Programa, confirma y convierte citas en consultas con un clic.</p></div></div>
+      <div class="feature-item"><i class='bx bx-clipboard' style="color:#0dcaf0;"></i><div><h4>Consultas Medicas</h4><p>Programacion, diagnostico, tratamiento, signos vitales embebidos y seguimiento de estados.</p></div></div>
+      <div class="feature-item"><i class='bx bx-heart-circle' style="color:#dc3545;"></i><div><h4>Signos Vitales</h4><p>Presion, temperatura, peso, talla, IMC automatico, glucosa y SpO2 por consulta.</p></div></div>
+      <div class="feature-item"><i class='bx bx-file-blank' style="color:#198754;"></i><div><h4>Recetas Medicas</h4><p>Recetas digitales con PDF A5 imprimible. Soporte para recetas manuscritas escaneadas.</p></div></div>
+      <div class="feature-item"><i class='bx bx-id-card' style="color:#0dcaf0;"></i><div><h4>Informes Medicos</h4><p>Informes medico-ocupacionales Maxical con tipo de consulta (pre-empleo, egreso...), aptitud laboral y PDF A5.</p></div></div>
+      <div class="feature-item"><i class='bx bx-receipt' style="color:#fd7e14;"></i><div><h4>Gastos Medicos</h4><p>Registro de gastos por concepto con totalizacion automatica. Digital o manuscrita escaneada.</p></div></div>
+      <div class="feature-item"><i class='bx bx-test-tube' style="color:#0d6efd;"></i><div><h4>Examenes de Laboratorio</h4><p>Solicitudes de examenes con checkboxes por categoria (hematologia, lipidos...). PDF profesional Maxical.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#fd7e14;"></i><div><h4>Inventario de Medicamentos</h4><p>Control de stock sin precios (clinica institucional). Alertas automaticas de nivel minimo y vencimiento.</p></div></div>
+      <div class="feature-item"><i class='bx bx-transfer' style="color:#198754;"></i><div><h4>Movimientos de Inventario</h4><p>Entradas y salidas con auditoria completa. Reporte de auditoria en PDF.</p></div></div>
+      <div class="feature-item"><i class='bx bx-bar-chart-alt-2' style="color:#6f42c1;"></i><div><h4>Reportes Estadisticos</h4><p>Graficas de consultas, movimientos de inventario, medicamentos y distribucion por genero.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Roles disponibles</h3>
+    <h3 class="doc-subtitle">Roles disponibles</h3>
     <table class="doc-table">
-      <thead><tr><th>Rol</th><th>Modulos accesibles</th></tr></thead>
+      <thead><tr><th>Rol</th><th>Modulos accesibles por defecto</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge badge-red">Administrador</span></td><td>Acceso total: todos los modulos incluyendo Nomina y Usuarios</td></tr>
-        <tr><td><span class="badge badge-blue">Medico</span></td><td>Acceso según permisos configurados por el administrador. Por defecto: Pacientes, Consultas, Medicamentos, Movimientos, Mensajes, Solicitudes, Perfil</td></tr>
-        <tr><td><span class="badge badge-gray">Recepcionista</span></td><td>Acceso según permisos configurados por el administrador. Por defecto: Pacientes, Consultas, Medicamentos, Movimientos, Mensajes, Solicitudes, Perfil</td></tr>
+        <tr><td><span class="badge badge-red">Administrador</span></td><td>Acceso total a todos los modulos incluyendo Nomina, Usuarios, Bitacora y Reportes</td></tr>
+        <tr><td><span class="badge badge-blue">Medico</span></td><td>Pacientes, Expediente, Citas, Consultas, Recetas, Informes Medicos, Gastos Medicos, Examenes de Lab., Medicamentos (ver), Mensajes, Solicitudes, Reportes</td></tr>
+        <tr><td><span class="badge badge-gray">Recepcionista</span></td><td>Pacientes, Citas, Consultas, Recetas (ver), Informes (ver), Gastos (ver), Examenes (ver), Medicamentos (ver), Mensajes, Solicitudes</td></tr>
+        <tr><td><span class="badge badge-cyan">Enfermera</span></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Recetas (ver), Informes (ver), Gastos (ver), Examenes (ver), Medicamentos (ver), Mensajes</td></tr>
+        <tr><td><span class="badge badge-green">Farmaceutico</span></td><td>Recetas (ver), Medicamentos (completo), Movimientos (completo), Solicitudes (completo), Mensajes</td></tr>
+        <tr><td><span class="badge badge-yellow">Contador</span></td><td>Pacientes (ver), Informes (ver), Gastos (ver), Movimientos (ver), Solicitudes (ver), Reportes, Mensajes</td></tr>
+        <tr><td><span class="badge badge-purple">Laboratorista</span></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Informes (ver), Examenes de Lab. (ver/crear), Mensajes</td></tr>
       </tbody>
     </table>
+    <div class="doc-alert info" style="margin-top:12px;"><i class='bx bx-info-circle'></i><div>Los permisos por defecto se asignan automaticamente al crear el usuario. El administrador puede modificarlos individualmente desde el modulo <strong>Usuarios &rarr; Permisos</strong>.</div></div>
   </div>
-</section><!-- SECCION 2: ACCESO -->
-<section class="doc-section" id="acceso">
-  <div class="doc-section-header">
+</section>
+
+<!-- ACCESO -->
+<section class="section" id="acceso">
+  <div class="section-header">
     <div class="doc-section-icon icon-green"><i class='bx bx-log-in'></i></div>
     <div><h2>Acceso al Sistema</h2><p>Como iniciar sesion y solicitar acceso</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <h3 class="doc-subtitle">Iniciar Sesion</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Abrir el navegador</h4><p>Desde esta computadora: <code>http://localhost/SISGECLIN/public</code> &mdash; Desde la red: <code>http://192.168.1.3/SISGECLIN/public</code></p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ingresar credenciales</h4><p>Escribe tu nombre de usuario y contrasena en los campos correspondientes.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ingresar credenciales</h4><p>Escribe tu nombre de usuario y contrasena. La contrasena debe tener al menos 8 caracteres, una mayuscula, una minuscula y un numero.</p></div></div>
       <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Recordarme (opcional)</h4><p>Marca la casilla para mantener la sesion activa en este dispositivo.</p></div></div>
       <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Clic en Iniciar Sesion</h4><p>Seras redirigido al Panel de Control automaticamente.</p></div></div>
     </div>
+    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div><strong>Proteccion contra ataques:</strong> Despues de 5 intentos fallidos consecutivos, el sistema bloqueara el acceso por 60 segundos para proteger tu cuenta.</div></div>
     <h3 class="doc-subtitle" style="margin-top:24px;">Credenciales por defecto</h3>
     <table class="doc-table">
       <thead><tr><th>Usuario</th><th>Contrasena</th><th>Rol</th></tr></thead>
@@ -106,88 +145,150 @@
         <tr><td><code>admin</code></td><td><code>admin123</code></td><td><span class="badge badge-red">Administrador</span></td></tr>
         <tr><td><code>medico</code></td><td><code>admin123</code></td><td><span class="badge badge-blue">Medico</span></td></tr>
         <tr><td><code>recepcion</code></td><td><code>admin123</code></td><td><span class="badge badge-gray">Recepcionista</span></td></tr>
+        <tr><td><code>enfermera</code></td><td><code>Admin123</code></td><td><span class="badge badge-cyan">Enfermera</span></td></tr>
+        <tr><td><code>farmacia</code></td><td><code>Admin123</code></td><td><span class="badge badge-green">Farmaceutico</span></td></tr>
+        <tr><td><code>contador</code></td><td><code>Admin123</code></td><td><span class="badge badge-yellow">Contador</span></td></tr>
+        <tr><td><code>laboratorio</code></td><td><code>Admin123</code></td><td><span class="badge badge-purple">Laboratorista</span></td></tr>
       </tbody>
     </table>
-    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Si tu cuenta esta desactivada veras el mensaje: <strong>"Su cuenta esta desactivada. Contacte al administrador."</strong> Comunicate con el administrador del sistema para que la active.</div></div>
+    <div class="doc-alert warning" style="margin-top:12px;"><i class='bx bx-error'></i><div><strong>Importante:</strong> Cambia todas las contrasenas por defecto inmediatamente despues de la instalacion. Las contrasenas deben tener al menos 8 caracteres, una mayuscula, una minuscula y un numero.</div></div>
     <h3 class="doc-subtitle" style="margin-top:24px;">Solicitar Acceso (Nuevo Usuario)</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en "Solicitar acceso"</h4><p>En la pantalla de login, haz clic en el enlace <strong>Solicitar acceso</strong>.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Completar el formulario</h4><p>Nombre completo, nombre de usuario, correo electronico, rol solicitado (Recepcionista o Medico) y contrasena.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Enviar solicitud</h4><p>Haz clic en <strong>Enviar Solicitud</strong>. Tu cuenta se crea automaticamente.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Cuenta deshabilitada</h4><p>Tu cuenta queda con estado <span class="badge badge-yellow">Pendiente</span> hasta que el administrador la active.</p></div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Activacion por el admin</h4><p>El administrador recibe una notificacion automatica y puede activar tu cuenta desde el modulo <strong>Usuarios</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Completar el formulario</h4><p>Nombre completo, usuario, correo, rol (Recepcionista o Medico) y contrasena segura (min. 8 caracteres, mayuscula, minuscula y numero).</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cuenta pendiente</h4><p>Tu cuenta queda con estado <span class="badge badge-yellow">Pendiente</span>. El administrador recibe una notificacion automatica.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Activacion por el admin</h4><p>El administrador activa tu cuenta desde el modulo <strong>Usuarios</strong> y podras iniciar sesion.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Cerrar Sesion</h3>
-    <p class="doc-text">Haz clic en el boton <strong>Cerrar Sesion</strong> en la parte inferior del menu lateral, o desde el menu de perfil en la esquina superior derecha.</p>
-  </div>
-</section><!-- SECCION 3: DASHBOARD -->
-<section class="doc-section" id="dashboard">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-purple"><i class='bx bxs-dashboard'></i></div>
-    <div><h2>Panel de Control</h2><p>Vista general del sistema al iniciar sesion</p></div>
-  </div>
-  <div class="doc-section-body">
-    <div class="info-grid">
-      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-detail'></i></div><div><h3>Total</h3><p>Pacientes registrados</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-calendar-check'></i></div><div><h3>Hoy</h3><p>Consultas del dia</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-orange"><i class='bx bxs-capsule'></i></div><div><h3>Alertas</h3><p>Medicamentos con stock bajo</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-cyan"><i class='bx bxs-envelope'></i></div><div><h3>Nuevos</h3><p>Mensajes no leidos</p></div></div>
-    </div>
-    <div class="feature-grid" style="margin-top:20px;">
-      <div class="feature-item"><i class='bx bx-list-ul' style="color:#0d6efd;"></i><div><h4>Consultas Recientes</h4><p>Muestra las ultimas 4 consultas con paciente, fecha y estado actual.</p></div></div>
-      <div class="feature-item"><i class='bx bx-zap' style="color:#198754;"></i><div><h4>Acciones Rapidas</h4><p>Accesos directos para registrar paciente, nueva consulta, ver inventario y mensajes.</p></div></div>
-      <div class="feature-item"><i class='bx bx-history' style="color:#6f42c1;"></i><div><h4>Bitacora del Sistema</h4><p>Solo visible para Administradores. Muestra las ultimas 15 acciones realizadas en el sistema.</p></div></div>
-    </div>
-    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Haz clic en cualquier tarjeta de estadistica para ir directamente al modulo correspondiente.</div></div>
   </div>
 </section>
 
-<!-- SECCION 4: PACIENTES -->
-<section class="doc-section" id="pacientes">
-  <div class="doc-section-header">
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+  <div class="section-header">
+    <div class="doc-section-icon icon-purple"><i class='bx bxs-dashboard'></i></div>
+    <div><h2>Panel de Control</h2><p>Vista general del sistema al iniciar sesion</p></div>
+  </div>
+  <div class="section-body">
+    <div class="info-grid">
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bx bxs-user-detail'></i></div><div><h3>Total</h3><p>Pacientes registrados</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bxs-calendar-check'></i></div><div><h3>Hoy</h3><p>Consultas del dia</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-cyan"><i class='bx bx-calendar-event'></i></div><div><h3>Citas</h3><p>Citas programadas hoy</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-orange"><i class='bx bxs-capsule'></i></div><div><h3>Alertas</h3><p>Medicamentos con stock bajo</p></div></div>
+      <div class="info-card"><div class="info-card-icon icon-blue"><i class='bxs-envelope'></i></div><div><h3>Mensajes</h3><p>Mensajes no leidos</p></div></div>
+    </div>
+    <div class="feature-grid" style="margin-top:20px;">
+      <div class="feature-item"><i class='bx bx-line-chart' style="color:#0d6efd;"></i><div><h4>Grafica de Consultas</h4><p>Muestra las consultas de los ultimos 7 dias en una grafica de barras interactiva.</p></div></div>
+      <div class="feature-item"><i class='bx bx-calendar-event' style="color:#0d6efd;"></i><div><h4>Citas de Hoy</h4><p>Lista las proximas citas del dia con hora, paciente y estado en tiempo real.</p></div></div>
+      <div class="feature-item"><i class='bx bx-list-ul' style="color:#0dcaf0;"></i><div><h4>Consultas Recientes</h4><p>Ultimas 4 consultas. Clic en una fila para ir al expediente del paciente.</p></div></div>
+      <div class="feature-item"><i class='bx bx-zap' style="color:#198754;"></i><div><h4>Acciones Rapidas</h4><p>Accesos directos: Nuevo Paciente, Nueva Cita, Nueva Consulta, Nueva Receta, Nuevo Movimiento y Reportes.</p></div></div>
+      <div class="feature-item"><i class='bx bx-history' style="color:#6f42c1;"></i><div><h4>Bitacora del Sistema</h4><p>Solo visible para Administradores. Muestra las ultimas 15 acciones del sistema.</p></div></div>
+    </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Haz clic en cualquier tarjeta de estadistica para ir directamente al modulo correspondiente. Las tarjetas con alertas de stock bajo se resaltan en naranja/rojo.</div></div>
+  </div>
+</section>
+
+<!-- PACIENTES -->
+<section class="section" id="pacientes">
+  <div class="section-header">
     <div class="doc-section-icon icon-blue"><i class='bx bxs-user-detail'></i></div>
     <div><h2>Gestion de Pacientes</h2><p>Registro y administracion de pacientes</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <h3 class="doc-subtitle">Registrar nuevo paciente</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir al modulo</h4><p>Haz clic en <strong>Pacientes</strong> en el menu lateral izquierdo.</p></div></div>
       <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Nuevo Paciente</h4><p>Haz clic en el boton <strong>+ Nuevo Paciente</strong> en la esquina superior derecha.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Completar el formulario</h4><p>Rellena los campos requeridos (marcados con *) y los opcionales que tengas disponibles.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Completar el formulario</h4><p>Rellena los campos requeridos (marcados con *) y los opcionales disponibles.</p></div></div>
       <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>Haz clic en <strong>Guardar</strong>. Todos los usuarios recibiran una notificacion automatica.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Campos del formulario</h3>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Acciones disponibles en la tabla</h3>
     <table class="doc-table">
-      <thead><tr><th>Campo</th><th>Requerido</th><th>Descripcion</th></tr></thead>
+      <thead><tr><th>Icono</th><th>Accion</th><th>Descripcion</th></tr></thead>
       <tbody>
-        <tr><td>Nombre</td><td><span class="badge badge-red">Si</span></td><td>Primer nombre del paciente</td></tr>
-        <tr><td>Apellido</td><td><span class="badge badge-red">Si</span></td><td>Apellido del paciente</td></tr>
-        <tr><td>Cedula</td><td><span class="badge badge-red">Si</span></td><td>Numero de cedula (unico en el sistema)</td></tr>
-        <tr><td>Telefono</td><td><span class="badge badge-gray">No</span></td><td>Numero de contacto</td></tr>
-        <tr><td>Email</td><td><span class="badge badge-gray">No</span></td><td>Correo electronico</td></tr>
-        <tr><td>Fecha de Nacimiento</td><td><span class="badge badge-gray">No</span></td><td>Formato: DD/MM/AAAA</td></tr>
-        <tr><td>Genero</td><td><span class="badge badge-red">Si</span></td><td>Masculino / Femenino / Otro</td></tr>
-        <tr><td>Tipo de Sangre</td><td><span class="badge badge-gray">No</span></td><td>O+, O-, A+, A-, B+, B-, AB+, AB-</td></tr>
-        <tr><td>Direccion</td><td><span class="badge badge-gray">No</span></td><td>Direccion de residencia</td></tr>
-        <tr><td>Alergias</td><td><span class="badge badge-gray">No</span></td><td>Alergias conocidas del paciente</td></tr>
+        <tr><td><span class="badge badge-blue"><i class='bx bx-folder-open'></i></span></td><td>Expediente</td><td>Abre el expediente clinico completo del paciente</td></tr>
+        <tr><td><span class="badge badge-yellow"><i class='bx bx-edit'></i></span></td><td>Editar</td><td>Modifica los datos del paciente</td></tr>
+        <tr><td><span class="badge badge-red"><i class='bx bx-trash'></i></span></td><td>Eliminar</td><td>Borrado logico (el registro se conserva en la base de datos)</td></tr>
       </tbody>
     </table>
-    <div class="doc-alert danger" style="margin-top:16px;"><i class='bx bx-error-circle'></i><div><strong>Atencion:</strong> Eliminar un paciente tambien eliminara todas sus consultas asociadas. Esta accion no se puede deshacer.</div></div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div><strong>Borrado logico:</strong> Los pacientes eliminados no se borran permanentemente. Quedan marcados como eliminados para mantener la trazabilidad clinica y cumplir con regulaciones de datos de salud.</div></div>
   </div>
-</section><!-- SECCION 5: CONSULTAS -->
-<section class="doc-section" id="consultas">
-  <div class="doc-section-header">
+</section>
+
+<!-- EXPEDIENTE CLINICO -->
+<section class="section" id="expediente">
+  <div class="section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bx-folder-open'></i></div>
+    <div><h2>Expediente Clinico</h2><p>Historial medico completo del paciente en una sola vista</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El expediente clinico es la vista mas completa del sistema. Muestra todo el historial medico de un paciente en una sola pantalla: consultas, signos vitales, recetas y medicamentos frecuentes.</p>
+    <h3 class="doc-subtitle">Como acceder</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Desde Pacientes</h4><p>En la tabla de pacientes, haz clic en el icono de carpeta <strong><i class='bx bx-folder-open'></i></strong> de la fila del paciente.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Desde Consultas</h4><p>En la tabla de consultas, haz clic en el icono de carpeta de la fila correspondiente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Desde el Dashboard</h4><p>Haz clic en cualquier fila de la tabla de consultas recientes.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Informacion que muestra el expediente</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-user' style="color:#0d6efd;"></i><div><h4>Datos del Paciente</h4><p>Nombre, cedula, edad, genero, tipo de sangre, alergias y contacto. Resaltado en banner superior.</p></div></div>
+      <div class="feature-item"><i class='bx bx-stats' style="color:#198754;"></i><div><h4>Estadisticas</h4><p>Total de consultas, consultas del año, recetas emitidas y ultima visita del paciente.</p></div></div>
+      <div class="feature-item"><i class='bx bx-history' style="color:#0dcaf0;"></i><div><h4>Timeline de Consultas</h4><p>Historial cronologico con diagnostico, tratamiento, signos vitales y medicamentos de cada consulta.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#fd7e14;"></i><div><h4>Top Medicamentos</h4><p>Los 5 medicamentos mas recetados al paciente con frecuencia de uso.</p></div></div>
+      <div class="feature-item"><i class='bx bx-file-blank' style="color:#198754;"></i><div><h4>Recetas</h4><p>Lista de recetas con acceso directo al PDF imprimible de cada una.</p></div></div>
+      <div class="feature-item"><i class='bx bx-heart-circle' style="color:#dc3545;"></i><div><h4>Signos Vitales</h4><p>Historial de signos vitales del paciente para seguimiento de tendencias clinicas.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA DE CITAS -->
+<section class="section" id="citas">
+  <div class="section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bx-calendar-event'></i></div>
+    <div><h2>Agenda de Citas</h2><p>Calendario visual para programar y gestionar citas medicas</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El modulo de Agenda permite programar citas antes de que se conviertan en consultas. Incluye un calendario interactivo con vistas de mes, semana y dia.</p>
+    <h3 class="doc-subtitle">Programar una cita</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Agenda</h4><p>Haz clic en <strong>Agenda</strong> en el menu lateral.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Nueva Cita</h4><p>Haz clic en el boton <strong>+ Nueva Cita</strong>.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Completar datos</h4><p>Selecciona paciente, medico, fecha/hora, duracion y motivo de la cita.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>La cita aparece en el calendario y el medico recibe una notificacion automatica.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una cita</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Programada</span></td><td>Cita registrada, pendiente de confirmacion</td></tr>
+        <tr><td><span class="badge badge-cyan">Confirmada</span></td><td>Paciente confirmo su asistencia</td></tr>
+        <tr><td><span class="badge badge-yellow">En Curso</span></td><td>El paciente esta siendo atendido</td></tr>
+        <tr><td><span class="badge badge-green">Completada</span></td><td>Cita finalizada correctamente</td></tr>
+        <tr><td><span class="badge badge-red">Cancelada</span></td><td>Cita cancelada por cualquier motivo</td></tr>
+        <tr><td><span class="badge badge-gray">No Asistio</span></td><td>El paciente no se presento</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Convertir cita en consulta</h3>
+    <p class="doc-text">Cuando el paciente llega, haz clic en el icono <strong><i class='bx bx-transfer'></i></strong> de la fila de la cita. El sistema creara automaticamente una consulta medica con los datos de la cita y cambiara el estado a <span class="badge badge-yellow">En Curso</span>.</p>
+    <div class="doc-alert info" style="margin-top:12px;"><i class='bx bx-info-circle'></i><div>El calendario muestra las citas en colores. Puedes cambiar entre vista de <strong>Mes</strong>, <strong>Semana</strong> y <strong>Dia</strong> usando los botones en la esquina superior derecha del calendario.</div></div>
+  </div>
+</section>
+
+<!-- CONSULTAS -->
+<section class="section" id="consultas">
+  <div class="section-header">
     <div class="doc-section-icon icon-cyan"><i class='bx bx-clipboard'></i></div>
     <div><h2>Gestion de Consultas</h2><p>Programacion y seguimiento de consultas medicas</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Consulta</h4><p>Haz clic en <strong>+ Nueva Consulta</strong> en el modulo Consultas.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar Paciente y Medico</h4><p>Elige el paciente de la lista y el medico de la nomina que atendara la consulta.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Fecha, Hora y Motivo</h4><p>Establece la fecha y hora de la consulta y describe el motivo de la visita.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar Paciente y Medico</h4><p>Elige el paciente y el medico de la nomina que atendera la consulta.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Fecha, Hora y Motivo</h4><p>Establece la fecha/hora y describe el motivo de la visita.</p></div></div>
       <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>El sistema notificara automaticamente a todos los usuarios del nuevo registro.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Estados de una consulta</h3>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Signos Vitales en la Consulta</h3>
+    <p class="doc-text">Al editar una consulta, aparece automaticamente la seccion de <strong>Signos Vitales</strong> en el mismo formulario. Puedes registrar presion arterial, frecuencia cardiaca, temperatura, peso, talla (el IMC se calcula automaticamente) y glucosa sin salir del modal.</p>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una consulta</h3>
     <table class="doc-table">
       <thead><tr><th>Estado</th><th>Color</th><th>Significado</th></tr></thead>
       <tbody>
@@ -197,384 +298,863 @@
         <tr><td><span class="badge badge-red">Cancelada</span></td><td>Rojo</td><td>Consulta cancelada o no realizada</td></tr>
       </tbody>
     </table>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Opciones de exportacion</h3>
+  </div>
+</section>
+
+<!-- SIGNOS VITALES -->
+<section class="section" id="signos">
+  <div class="section-header">
+    <div class="doc-section-icon icon-red"><i class='bx bx-heart-circle'></i></div>
+    <div><h2>Signos Vitales</h2><p>Registro clinico por consulta con calculo automatico de IMC</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">Los signos vitales se registran directamente desde el modal de edicion de una consulta. El sistema calcula el IMC automaticamente al ingresar peso y talla.</p>
+    <h3 class="doc-subtitle">Campos disponibles</h3>
     <table class="doc-table">
-      <thead><tr><th>Formato</th><th>Periodos disponibles</th></tr></thead>
+      <thead><tr><th>Campo</th><th>Unidad</th><th>Descripcion</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge badge-red">PDF</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
-        <tr><td><span class="badge badge-green">Excel</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
-        <tr><td><span class="badge badge-blue">CSV</span></td><td>Semana, Mes, Rango de fechas, Todos</td></tr>
+        <tr><td>Presion Sistolica / Diastolica</td><td>mmHg</td><td>Presion arterial (ej: 120/80)</td></tr>
+        <tr><td>Frecuencia Cardiaca</td><td>lpm</td><td>Latidos por minuto</td></tr>
+        <tr><td>Frecuencia Respiratoria</td><td>rpm</td><td>Respiraciones por minuto</td></tr>
+        <tr><td>Temperatura</td><td>&deg;C</td><td>Temperatura corporal</td></tr>
+        <tr><td>Saturacion de Oxigeno (SpO2)</td><td>%</td><td>Nivel de oxigeno en sangre</td></tr>
+        <tr><td>Peso</td><td>kg</td><td>Peso corporal</td></tr>
+        <tr><td>Talla</td><td>cm</td><td>Estatura del paciente</td></tr>
+        <tr><td>IMC</td><td>calculado</td><td>Se calcula automaticamente: Peso / (Talla en m)&sup2;</td></tr>
+        <tr><td>Glucosa</td><td>mg/dL</td><td>Nivel de glucosa en sangre</td></tr>
       </tbody>
     </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Clasificacion del IMC (OMS)</h3>
+    <table class="doc-table">
+      <thead><tr><th>IMC</th><th>Clasificacion</th></tr></thead>
+      <tbody>
+        <tr><td>Menor de 18.5</td><td>Bajo peso</td></tr>
+        <tr><td>18.5 &mdash; 24.9</td><td><span class="badge badge-green">Normal</span></td></tr>
+        <tr><td>25.0 &mdash; 29.9</td><td><span class="badge badge-yellow">Sobrepeso</span></td></tr>
+        <tr><td>30.0 &mdash; 34.9</td><td><span class="badge badge-orange">Obesidad I</span></td></tr>
+        <tr><td>35.0 &mdash; 39.9</td><td><span class="badge badge-red">Obesidad II</span></td></tr>
+        <tr><td>40.0 o mas</td><td><span class="badge badge-red">Obesidad III</span></td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>El historial de signos vitales del paciente es visible en el <strong>Expediente Clinico</strong>, donde puedes ver la evolucion de cada parametro a lo largo del tiempo.</div></div>
   </div>
 </section>
 
-<!-- SECCION 6: MEDICAMENTOS -->
-<section class="doc-section" id="medicamentos">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-orange"><i class='bx bxs-capsule'></i></div>
-    <div><h2>Medicamentos e Inventario</h2><p>Control de stock y alertas de nivel minimo</p></div>
+<!-- RECETAS -->
+<section class="section" id="recetas">
+  <div class="section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-file-blank'></i></div>
+    <div><h2>Recetas Medicas</h2><p>Recetas digitales y escaneo de recetas manuscritas</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
+    <p class="doc-text">El modulo de recetas soporta dos tipos: <strong>recetas digitales</strong> generadas en el sistema con lista de medicamentos, y <strong>recetas manuscritas</strong> donde se sube la foto o escaneo de la receta que escribio el medico a mano.</p>
+    <h3 class="doc-subtitle">Crear una receta digital</h3>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Medicamentos</h4><p>Haz clic en <strong>Medicamentos</strong> en el menu lateral.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Nuevo Medicamento</h4><p>Haz clic en <strong>+ Nuevo Medicamento</strong> e ingresa nombre, cantidad, unidad, precio y stock minimo.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Stock Minimo</h4><p>Define la cantidad minima. Cuando el stock llegue a ese nivel, el sistema generara una alerta automatica.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Receta</h4><p>Haz clic en <strong>+ Nueva Receta</strong>. Selecciona el tipo <strong>Receta Digital</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar paciente</h4><p>Elige el paciente y opcionalmente la consulta asociada.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Agregar medicamentos</h4><p>Haz clic en <strong>+ Agregar</strong> para cada medicamento. El sistema autocompleta desde el inventario. Completa dosis, frecuencia y duracion.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar e Imprimir</h4><p>Haz clic en <strong>Guardar Receta</strong>. Luego usa el icono de impresora para generar el PDF A5.</p></div></div>
     </div>
-    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Los medicamentos con <strong>stock bajo</strong> aparecen marcados en rojo en la tabla. Tambien se muestra el contador en el Dashboard y se envia una notificacion a todos los usuarios.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Exportaciones disponibles</h3>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Registrar una receta manuscrita</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Receta</h4><p>Haz clic en <strong>+ Nueva Receta</strong>. Selecciona el tipo <strong>Receta Manuscrita</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Subir imagen</h4><p>Haz clic en el area de carga y selecciona la foto o escaneo de la receta. Formatos: JPG, PNG, PDF. Maximo 5MB.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Guardar</h4><p>El sistema guarda la imagen y la vincula al paciente. Desde el expediente clinico podras ver la imagen directamente.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Sincronizacion automatica con el inventario</h3>
+    <p class="doc-text">Cuando se genera una receta digital con medicamentos que existen en el inventario, el sistema <strong>descuenta automaticamente el stock</strong> al guardar. No es necesario registrar la salida por separado.</p>
     <div class="feature-grid">
-      <div class="feature-item"><i class='bx bxs-file-pdf' style="color:#dc3545;"></i><div><h4>PDF</h4><p>Incluye columna de estado (Normal / Stock Bajo) y resumen de alertas.</p></div></div>
-      <div class="feature-item"><i class='bx bxs-file' style="color:#198754;"></i><div><h4>Excel</h4><p>Resalta en rojo las cantidades con stock bajo para facil identificacion.</p></div></div>
-      <div class="feature-item"><i class='bx bx-export' style="color:#0d6efd;"></i><div><h4>CSV</h4><p>Exportacion rapida con todos los campos del inventario.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#198754;"></i><div><h4>Stock Suficiente</h4><p>Se descuenta la cantidad exacta recetada. Se registra un movimiento de salida automatico con la referencia de la receta.</p></div></div>
+      <div class="feature-item"><i class='bx bx-error' style="color:#fd7e14;"></i><div><h4>Stock Insuficiente</h4><p>El sistema descuenta solo lo disponible y registra el movimiento parcial. El medico es notificado del faltante.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-bell' style="color:#dc3545;"></i><div><h4>Alerta de Stock Bajo</h4><p>Si despues del despacho el stock queda bajo del minimo, se genera una notificacion automatica para todos los usuarios.</p></div></div>
+      <div class="feature-item"><i class='bx bx-history' style="color:#6f42c1;"></i><div><h4>Trazabilidad Completa</h4><p>Cada salida queda en el historial de Movimientos con el numero de receta, paciente y medico que la autorizo.</p></div></div>
     </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Si el medicamento recetado <strong>no esta en el inventario</strong> (solo en el nombre libre), no se descuenta stock — el paciente debe adquirirlo por su cuenta. Solo los medicamentos vinculados al inventario afectan el stock.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una receta</h3>
+    <table class="doc-table">
+      <thead><tr><th>Estado</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">Activa</span></td><td>Receta vigente, pendiente de ser dispensada o completar su tratamiento</td></tr>
+        <tr><td><span class="badge badge-blue">Dispensada</span></td><td>Medicamentos entregados al paciente desde el inventario</td></tr>
+        <tr><td><span class="badge badge-gray">Vencida</span></td><td>Supero la fecha de vencimiento (el sistema la marca automaticamente cada noche)</td></tr>
+        <tr><td><span class="badge badge-red">Anulada</span></td><td>Cancelada manualmente por el medico o administrador</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert warning" style="margin-top:12px;"><i class='bx bx-error'></i><div>Para ver el detalle de las salidas generadas por recetas, ve al modulo <strong>Movimientos</strong> y filtra por el motivo que contiene el numero de receta (ej: <em>REC-2026-0001</em>). La auditoria PDF esta disponible en Movimientos &rarr; Auditoria PDF.</div></div>
   </div>
 </section>
 
-<!-- SECCION 7: MOVIMIENTOS -->
-<section class="doc-section" id="movimientos">
-  <div class="doc-section-header">
+<!-- INFORMES MEDICOS -->
+<section class="section" id="informes">
+  <div class="section-header">
+    <div class="doc-section-icon icon-cyan"><i class='bx bx-id-card'></i></div>
+    <div><h2>Informes Medicos Ocupacionales</h2><p>Evaluacion de aptitud laboral — documentos medico-ocupacionales</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">Los informes medicos ocupacionales son documentos que registran la evaluacion de un trabajador. Incluyen el tipo de consulta (pre-empleo, egreso, etc.) y el resultado de aptitud laboral. Soportan modo digital y modo manuscrito (escaneo).</p>
+    <h3 class="doc-subtitle">Crear un informe digital</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Abrir el formulario</h4><p>Desde <strong>Informes Medicos</strong> en el menu lateral, clic en <strong>+ Nuevo Informe</strong>. O desde el Expediente del paciente, clic en <strong>Nuevo Informe Medico</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar tipo Digital</h4><p>Elige la pestana <strong>Digital</strong> (activa por defecto) en el selector de tipo.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Completar datos</h4><p>Paciente, medico, empresa, cargo, tipo de consulta (Pre-empleo, Pre-vacacional, Post-vacacional, Egreso, Reubicacion, Otros) y resultado de aptitud.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar y ver PDF</h4><p>Al guardar se abre automaticamente el PDF A5 institucional con logo, datos del trabajador, tipo de consulta con checkbox marcado y firmas.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Registrar informe manuscrito</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Seleccionar tipo Manuscrita</h4><p>En el formulario, haz clic en la pestana <strong>Manuscrita</strong>.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Subir el escaneo</h4><p>Haz clic en el area de carga o arrastra el archivo. Formatos: JPG, PNG, WEBP o PDF. Maximo 5MB.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Guardar</h4><p>El archivo queda vinculado al paciente. Al hacer clic en el icono de imprimir se mostrara directamente el archivo escaneado.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Tipos de consulta disponibles</h3>
+    <table class="doc-table">
+      <thead><tr><th>Tipo</th><th>Cuando se usa</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">Pre-empleo</span></td><td>Evaluacion medica antes de incorporarse a un puesto de trabajo</td></tr>
+        <tr><td><span class="badge badge-cyan">Pre-vacacional</span></td><td>Evaluacion antes del periodo de vacaciones del trabajador</td></tr>
+        <tr><td><span class="badge badge-green">Post-vacacional</span></td><td>Evaluacion al regreso del periodo vacacional</td></tr>
+        <tr><td><span class="badge badge-yellow">Egreso</span></td><td>Evaluacion al finalizar la relacion laboral</td></tr>
+        <tr><td><span class="badge badge-orange">Reubicacion</span></td><td>Evaluacion para cambio de puesto o area de trabajo</td></tr>
+        <tr><td><span class="badge badge-gray">Otros</span></td><td>Cualquier otra evaluacion — se puede especificar el motivo</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Resultados de aptitud</h3>
+    <table class="doc-table">
+      <thead><tr><th>Resultado</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">Apto</span></td><td>El trabajador esta en condiciones de ejercer el puesto</td></tr>
+        <tr><td><span class="badge badge-red">No Apto</span></td><td>El trabajador no puede ejercer el puesto por razones medicas</td></tr>
+        <tr><td><span class="badge badge-yellow">Apto Condicionado</span></td><td>Puede trabajar bajo condiciones o restricciones especificas</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>El historial completo de informes de un trabajador esta disponible en su <strong>Expediente Clinico</strong>, panel lateral derecho, con acceso directo al PDF de cada informe.</div></div>
+  </div>
+</section>
+
+<!-- GASTOS MEDICOS -->
+<section class="section" id="gastos">
+  <div class="section-header">
+    <div class="doc-section-icon icon-orange"><i class='bx bx-receipt'></i></div>
+    <div><h2>Gastos Medicos</h2><p>Registro de gastos de atencion medica con totalizacion</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El modulo de Gastos Medicos permite registrar los conceptos y montos de atencion medica de un trabajador. Genera un documento PDF profesional con la lista de conceptos, montos y el total final.</p>
+    <h3 class="doc-subtitle">Registrar un gasto digital</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Gasto</h4><p>Desde <strong>Gastos Medicos</strong> en el menu lateral o desde el Expediente del paciente.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar tipo Digital</h4><p>Modo Digital activo por defecto. Completa paciente, medico, empresa y fecha.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Agregar items</h4><p>Haz clic en <strong>+ Agregar item</strong> para cada concepto del gasto. El total se calcula automaticamente en tiempo real.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar y PDF</h4><p>Al guardar se abre el PDF institucional con tabla de conceptos, subtotales y firma del medico.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Registrar gasto manuscrito</h3>
+    <p class="doc-text">Igual que los informes: selecciona <strong>Manuscrita</strong> en el selector de tipo, sube el escaneo del documento fisico y guarda. El boton imprimir mostrara el archivo original.</p>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>El numero de documento se genera automaticamente en formato <code>GAS-YYYY-NNNN</code>. El historial de gastos aparece en el Expediente del paciente con acceso directo al PDF.</div></div>
+  </div>
+</section>
+
+<!-- EXAMENES DE LABORATORIO -->
+<section class="section" id="examenes-lab">
+  <div class="section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bx-test-tube'></i></div>
+    <div><h2>Examenes de Laboratorio</h2><p>Solicitudes de examenes con categorias y generacion de PDF imprimible</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El modulo genera solicitudes de examenes de laboratorio. Los examenes se organizan por categoria con casillas de verificacion. El PDF generado es el documento que el trabajador lleva al laboratorio.</p>
+    <h3 class="doc-subtitle">Crear una solicitud digital</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Solicitud</h4><p>Desde <strong>Examenes de Laboratorio</strong> en el menu lateral o desde el Expediente del paciente.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Marcar examenes</h4><p>Marca las casillas de los examenes a solicitar. Estan organizados en: Hematologia, Quimica Sanguinea, Lipidos y Uroanalisis.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Otros examenes</h4><p>En el campo <strong>Otros examenes</strong> puedes especificar examenes que no esten en la lista.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar y PDF</h4><p>Se genera automaticamente el PDF A5 institucional con los datos del trabajador, los examenes marcados (con palomita) y las firmas del trabajador y el medico.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Examenes disponibles</h3>
+    <table class="doc-table">
+      <thead><tr><th>Categoria</th><th>Examenes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hematologia</strong></td><td>Hematologia Completa</td></tr>
+        <tr><td><strong>Quimica Sanguinea</strong></td><td>Glicemia en Ayunas, Urea, Creatinina</td></tr>
+        <tr><td><strong>Lipidos</strong></td><td>Colesterol Total, Trigliceridos</td></tr>
+        <tr><td><strong>Uroanalisis / Coproanalisis</strong></td><td>Examen de Orina, Examen de Heces</td></tr>
+        <tr><td><strong>Otros</strong></td><td>Campo de texto libre para examenes adicionales</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>El PDF de la solicitud muestra los examenes marcados con fondo azul y palomita. Los no seleccionados aparecen en gris. En la parte inferior hay un resumen de los examenes a realizar y los espacios de firma del trabajador y medico.</div></div>
+  </div>
+</section>
+
+<!-- MEDICAMENTOS -->
+<section class="section" id="medicamentos">  <div class="section-header">
+    <div class="doc-section-icon icon-orange"><i class='bx bxs-capsule'></i></div>
+    <div><h2>Medicamentos e Inventario</h2><p>Control de stock con alertas de nivel minimo — sin precios</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">Esta es una clinica institucional. Los medicamentos se reciben por asignacion o donacion, no se cobran. El sistema lleva el control de <strong>entradas, salidas y auditoria</strong> de cada medicamento.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Medicamento</h4><p>Haz clic en <strong>+ Nuevo Medicamento</strong> e ingresa nombre, cantidad, unidad y stock minimo.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Stock Minimo</h4><p>Define la cantidad minima. Cuando el stock llegue a ese nivel, el sistema generara una alerta automatica en el Dashboard y notificara a todos los usuarios.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Fecha de Vencimiento</h4><p>Registra la fecha de vencimiento del lote actual para control de caducidad.</p></div></div>
+    </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Los medicamentos con <strong>stock bajo</strong> aparecen marcados en rojo. El contador de alertas en el Dashboard se actualiza en tiempo real. Usa el modulo de <strong>Solicitudes</strong> para pedir reposicion al administrador.</div></div>
+  </div>
+</section>
+
+<!-- MOVIMIENTOS -->
+<section class="section" id="movimientos">
+  <div class="section-header">
     <div class="doc-section-icon icon-green"><i class='bx bx-transfer'></i></div>
     <div><h2>Movimientos de Inventario</h2><p>Registro de entradas y salidas de medicamentos</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="info-grid">
-      <div class="info-card"><div class="info-card-icon icon-green"><i class='bx bx-trending-up'></i></div><div><h3>Entradas</h3><p>Total del periodo</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-red"><i class='bx bx-trending-down'></i></div><div><h3>Salidas</h3><p>Total del periodo</p></div></div>
-      <div class="info-card"><div class="info-card-icon icon-cyan"><i class='bx bx-transfer'></i></div><div><h3>Recientes</h3><p>Movimientos totales</p></div></div>
-    </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Registrar Entrada</h3>
+  <div class="section-body">
+    <h3 class="doc-subtitle">Registrar Entrada</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Registrar Entrada</h4><p>Boton verde en la parte superior del modulo Movimientos.</p></div></div>
       <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamento y cantidad</h4><p>Elige el medicamento y la cantidad que ingresa al inventario.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Motivo y Registrar</h4><p>Escribe el motivo (ej: Compra a proveedor) y haz clic en Registrar. El stock se actualiza automaticamente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Motivo y Registrar</h4><p>Escribe el motivo (ej: Compra a proveedor) y confirma. El stock se actualiza automaticamente.</p></div></div>
     </div>
     <h3 class="doc-subtitle" style="margin-top:20px;">Registrar Salida</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Registrar Salida</h4><p>Boton rojo en la parte superior del modulo Movimientos.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamento y cantidad</h4><p>Elige el medicamento y la cantidad que sale del inventario.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Motivo y Registrar</h4><p>Escribe el motivo (ej: Dispensado en consulta) y confirma.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamento y cantidad</h4><p>Elige el medicamento y la cantidad que sale. El sistema verifica que haya stock suficiente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Datos de entrega</h4><p>Puedes registrar quien entrega, quien recibe (con cedula) y observaciones para auditoria.</p></div></div>
     </div>
-    <div class="doc-alert danger" style="margin-top:16px;"><i class='bx bx-error-circle'></i><div>Si la cantidad solicitada supera el stock disponible, el sistema mostrara un error y <strong>no permitira la operacion</strong>. Registra primero una entrada para reponer el inventario.</div></div>
+    <div class="doc-alert danger" style="margin-top:16px;"><i class='bx bx-error-circle'></i><div>Si la cantidad solicitada supera el stock disponible, el sistema mostrara un error y <strong>no permitira la operacion</strong>.</div></div>
   </div>
-</section><!-- SECCION 8: MENSAJES -->
-<section class="doc-section" id="mensajes">
-  <div class="doc-section-header">
+</section>
+
+<!-- MENSAJES -->
+<section class="section" id="mensajes">
+  <div class="section-header">
     <div class="doc-section-icon icon-cyan"><i class='bx bxs-envelope'></i></div>
     <div><h2>Mensajes</h2><p>Mensajeria interna entre usuarios del sistema</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <div class="feature-grid">
       <div class="feature-item"><i class='bx bx-inbox' style="color:#0d6efd;"></i><div><h4>Bandeja de Entrada</h4><p>Mensajes recibidos. Los no leidos aparecen resaltados con etiqueta Nuevo.</p></div></div>
       <div class="feature-item"><i class='bx bx-send' style="color:#198754;"></i><div><h4>Enviados</h4><p>Historial de todos los mensajes que has enviado.</p></div></div>
       <div class="feature-item"><i class='bx bx-broadcast' style="color:#856404;"></i><div><h4>Mensaje Masivo</h4><p>Solo Administradores. Envia el mismo mensaje a todos, medicos o recepcionistas.</p></div></div>
       <div class="feature-item"><i class='bx bxs-bell' style="color:#dc3545;"></i><div><h4>Badge en Tiempo Real</h4><p>El icono de sobre muestra cuantos mensajes no has leido. Se actualiza cada 30 segundos.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Enviar un mensaje</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Mensaje</h4><p>Haz clic en el boton <strong>+ Nuevo Mensaje</strong> en el modulo Mensajes.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar destinatario</h4><p>Elige el usuario de la lista desplegable.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Asunto y contenido</h4><p>Escribe el asunto y el cuerpo del mensaje.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Enviar</h4><p>El destinatario recibira una notificacion automatica en su campana.</p></div></div>
-    </div>
   </div>
 </section>
 
-<!-- SECCION 9: NOMINA -->
-<section class="doc-section" id="nomina">
-  <div class="doc-section-header">
+<!-- NOMINA -->
+<section class="section" id="nomina">
+  <div class="section-header">
     <div class="doc-section-icon icon-purple"><i class='bx bxs-group'></i></div>
     <div><h2>Nomina</h2><p>Gestion del personal medico y administrativo</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>. No aparece en el menu de otros roles.</div></div>
+  <div class="section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>.</div></div>
     <h3 class="doc-subtitle" style="margin-top:16px;">Registrar empleado</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nuevo Empleado</h4><p>Haz clic en <strong>+ Nuevo Empleado</strong> en el modulo Nomina.</p></div></div>
       <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Completar datos</h4><p>Nombre, apellido, cedula, cargo, departamento, salario y fecha de ingreso son obligatorios.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cargo medico</h4><p>Si el cargo es medico (Medico General, Pediatra, Cardiologo, etc.) aparecera en el selector de consultas.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cargo medico</h4><p>Si el cargo es medico (Medico General, Pediatra, Cardiologo, etc.) aparecera automaticamente en el selector de consultas y citas.</p></div></div>
     </div>
-    <table class="doc-table" style="margin-top:16px;">
-      <thead><tr><th>Campo</th><th>Requerido</th><th>Descripcion</th></tr></thead>
-      <tbody>
-        <tr><td>Nombre y Apellido</td><td><span class="badge badge-red">Si</span></td><td>Nombre completo del empleado</td></tr>
-        <tr><td>Cedula</td><td><span class="badge badge-red">Si</span></td><td>Numero de cedula unico</td></tr>
-        <tr><td>Cargo</td><td><span class="badge badge-red">Si</span></td><td>Ej: Medico General, Enfermera, Recepcionista</td></tr>
-        <tr><td>Departamento</td><td><span class="badge badge-red">Si</span></td><td>Ej: Consultas, Enfermeria, Administracion</td></tr>
-        <tr><td>Salario</td><td><span class="badge badge-red">Si</span></td><td>Salario mensual en RD$</td></tr>
-        <tr><td>Fecha de Ingreso</td><td><span class="badge badge-red">Si</span></td><td>Fecha de inicio en la institucion</td></tr>
-        <tr><td>Estado</td><td><span class="badge badge-red">Si</span></td><td>Activo o Inactivo</td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 
-<!-- SECCION 10: USUARIOS -->
-<section class="doc-section" id="usuarios">
-  <div class="doc-section-header">
+<!-- USUARIOS -->
+<section class="section" id="usuarios">
+  <div class="section-header">
     <div class="doc-section-icon icon-dark"><i class='bx bxs-user-account'></i></div>
     <div><h2>Usuarios del Sistema</h2><p>Administracion de cuentas y accesos</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>.</div></div>
     <h3 class="doc-subtitle" style="margin-top:16px;">Activar usuario pendiente</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Usuarios</h4><p>Haz clic en <strong>Usuarios</strong> en el menu lateral.</p></div></div>
       <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Localizar el usuario</h4><p>Busca el usuario con estado <span class="badge badge-gray">Inactivo</span> que solicito acceso.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Activar</h4><p>Haz clic en el icono de activar (check verde). El usuario podra iniciar sesion inmediatamente.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Activar</h4><p>Haz clic en el icono de activar. El usuario podra iniciar sesion inmediatamente.</p></div></div>
     </div>
     <table class="doc-table" style="margin-top:16px;">
-      <thead><tr><th>Accion</th><th>Icono</th><th>Descripcion</th></tr></thead>
+      <thead><tr><th>Accion</th><th>Descripcion</th></tr></thead>
       <tbody>
-        <tr><td>Editar</td><td><span class="badge badge-yellow">Lapiz</span></td><td>Modificar datos, rol o contrasena del usuario</td></tr>
-        <tr><td>Activar / Desactivar</td><td><span class="badge badge-green">Toggle</span></td><td>Habilitar o bloquear el acceso al sistema</td></tr>
-        <tr><td>Eliminar</td><td><span class="badge badge-red">Papelera</span></td><td>Eliminar permanentemente (no puede eliminarse a si mismo)</td></tr>
+        <tr><td>Editar</td><td>Modificar datos, rol o contrasena del usuario</td></tr>
+        <tr><td>Activar / Desactivar</td><td>Habilitar o bloquear el acceso al sistema</td></tr>
+        <tr><td>Permisos</td><td>Configurar que modulos y acciones puede realizar el usuario</td></tr>
+        <tr><td>Eliminar</td><td>Eliminar la cuenta (no puede eliminarse a si mismo)</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<!-- SECCION 11: EXPORTACIONES -->
-<section class="doc-section" id="exportaciones">
-  <div class="doc-section-header">
+<!-- REPORTES -->
+<section class="section" id="reportes">
+  <div class="section-header">
+    <div class="doc-section-icon icon-purple"><i class='bx bx-bar-chart-alt-2'></i></div>
+    <div><h2>Reportes Estadisticos</h2><p>Graficas y KPIs para la toma de decisiones</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El modulo de Reportes ofrece una vision completa del desempeno de la clinica con graficas interactivas. Puedes filtrar por ano y mes.</p>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-bar-chart-alt-2' style="color:#0d6efd;"></i><div><h4>Consultas por Mes</h4><p>Grafica de barras con el total de consultas de los ultimos 12 meses.</p></div></div>
+      <div class="feature-item"><i class='bx bx-transfer' style="color:#198754;"></i><div><h4>Movimientos de Inventario</h4><p>Grafica de barras comparando entradas y salidas de medicamentos por mes.</p></div></div>
+      <div class="feature-item"><i class='bx bx-pie-chart-alt' style="color:#0dcaf0;"></i><div><h4>Estados de Consultas</h4><p>Grafica circular con la distribucion de consultas por estado (pendiente, completada, etc.).</p></div></div>
+      <div class="feature-item"><i class='bx bx-male-female' style="color:#e91e8c;"></i><div><h4>Distribucion por Genero</h4><p>Proporcion de pacientes masculinos, femeninos y otros.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#fd7e14;"></i><div><h4>Top 5 Medicamentos</h4><p>Los medicamentos mas despachados (salidas) con mayor movimiento en el periodo.</p></div></div>
+      <div class="feature-item"><i class='bx bx-user-plus' style="color:#6f42c1;"></i><div><h4>Pacientes Nuevos</h4><p>Grafica de linea con el registro de nuevos pacientes por mes.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">KPIs del mes seleccionado</h3>
+    <table class="doc-table">
+      <thead><tr><th>Indicador</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Pacientes Totales</td><td>Total acumulado de pacientes en el sistema</td></tr>
+        <tr><td>Nuevos este mes</td><td>Pacientes registrados en el mes seleccionado</td></tr>
+        <tr><td>Consultas este mes</td><td>Total de consultas del mes</td></tr>
+        <tr><td>Recetas este mes</td><td>Recetas generadas en el mes</td></tr>
+        <tr><td>Medicamentos despachados</td><td>Total de unidades con movimiento de salida en el mes</td></tr>
+        <tr><td>Alertas de stock</td><td>Medicamentos con stock por debajo del minimo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EXPORTACIONES -->
+<section class="section" id="exportaciones">
+  <div class="section-header">
     <div class="doc-section-icon icon-red"><i class='bx bxs-file-pdf'></i></div>
     <div><h2>Exportaciones</h2><p>Reportes en PDF, Excel y CSV</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
     <table class="doc-table">
       <thead><tr><th>Modulo</th><th>CSV</th><th>PDF</th><th>Excel</th></tr></thead>
       <tbody>
         <tr><td>Pacientes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
         <tr><td>Consultas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
         <tr><td>Medicamentos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
-        <tr><td>Movimientos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td></tr>
-        <tr><td>Nomina</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>Movimientos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Nomina</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Recetas</td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-green">Si (individual)</span></td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>Auditoria Inventario</td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-green">Si (reporte PDF)</span></td><td><span class="badge badge-gray">No</span></td></tr>
       </tbody>
     </table>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Exportar por rango de fechas</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Clic en Por Fechas</h4><p>En Consultas o Movimientos, haz clic en el boton <strong>Por Fechas</strong>.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar rango</h4><p>Elige la fecha de inicio y la fecha de fin del periodo que deseas exportar.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Descargar</h4><p>Haz clic en Exportar CSV. El archivo se descargara automaticamente.</p></div></div>
-    </div>
   </div>
 </section>
 
-<!-- SECCION: SOLICITUDES -->
-<section class="doc-section" id="solicitudes">
-  <div class="doc-section-header">
+<!-- NOTIFICACIONES -->
+<section class="section" id="notificaciones">
+  <div class="section-header">
+    <div class="doc-section-icon icon-orange"><i class='bx bxs-bell'></i></div>
+    <div><h2>Notificaciones</h2><p>Alertas automaticas del sistema en tiempo real</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">El sistema genera notificaciones automaticas para los eventos mas importantes. Aparecen en la campana de la barra superior y se actualizan cada 30 segundos.</p>
+    <table class="doc-table">
+      <thead><tr><th>Evento</th><th>Quien recibe</th></tr></thead>
+      <tbody>
+        <tr><td>Nuevo paciente registrado</td><td>Todos los usuarios (excepto quien lo registro)</td></tr>
+        <tr><td>Nueva consulta programada</td><td>Todos los usuarios</td></tr>
+        <tr><td>Nueva cita programada</td><td>El medico asignado</td></tr>
+        <tr><td>Stock bajo de medicamento</td><td>Todos los usuarios</td></tr>
+        <tr><td>Entrada / Salida de inventario</td><td>Todos los usuarios</td></tr>
+        <tr><td>Nueva solicitud de reposicion</td><td>Solo Administradores</td></tr>
+        <tr><td>Solicitud atendida</td><td>El usuario que la creo</td></tr>
+        <tr><td>Nuevo usuario pendiente de activacion</td><td>Solo Administradores</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Haz clic en <strong>Marcar todas como leidas</strong> en el dropdown de notificaciones para limpiar el contador de la campana.</div></div>
+  </div>
+</section>
+
+<!-- SOLICITUDES -->
+<section class="section" id="solicitudes">
+  <div class="section-header">
     <div class="doc-section-icon icon-yellow"><i class='bx bx-send'></i></div>
-    <div><h2>Solicitudes de Reposicion</h2><p>Solicitar medicamentos al proveedor cuando el stock esta bajo</p></div>
+    <div><h2>Solicitudes de Inventario</h2><p>Solicitar reposicion de medicamentos al administrador</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="doc-alert info"><i class='bx bx-info-circle'></i><div>Las solicitudes las crean <strong>Recepcionistas y Medicos</strong>. Los <strong>Administradores</strong> las aprueban y al aprobar se registra automaticamente la entrada al inventario.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:16px;">Crear una solicitud</h3>
+  <div class="section-body">
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Solicitudes</h4><p>Haz clic en <strong>Solicitudes</strong> en el menu lateral, o desde el boton <strong>Crear Solicitud de Reposicion</strong> en la alerta de stock bajo en Movimientos.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Seleccionar medicamentos</h4><p>Elige uno o varios medicamentos. Puedes agregar multiples items con el boton <strong>+ Agregar otro medicamento</strong>. Los medicamentos con stock bajo aparecen resaltados.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Cantidad y proveedor</h4><p>Indica la cantidad solicitada y el proveedor sugerido. El proveedor se autocompleta si el medicamento ya tiene uno registrado.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Enviar</h4><p>Haz clic en <strong>Enviar Solicitud</strong>. Se genera un numero de orden (formato SOL-AAAAMM-XXXX) y los administradores reciben una notificacion automatica.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Nueva Solicitud</h4><p>Haz clic en <strong>+ Nueva Solicitud</strong> en el modulo Solicitudes.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Agregar medicamentos</h4><p>Selecciona los medicamentos que necesitas reponer y la cantidad solicitada.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Proveedor sugerido</h4><p>Opcionalmente indica el proveedor y su telefono.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Enviar</h4><p>Los administradores reciben una notificacion automatica para revisar y aprobar.</p></div></div>
     </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Aprobar una solicitud (solo Admin)</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Solicitudes</h4><p>En el menu lateral, seccion Administracion.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Clic en Aprobar</h4><p>Haz clic en el icono de doble check verde junto a la solicitud pendiente.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Confirmar cantidad y factura</h4><p>Verifica la cantidad a ingresar y opcionalmente escribe el numero de factura del proveedor.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Aprobar y Registrar Entrada</h4><p>Al confirmar, el sistema registra automaticamente la entrada al inventario y notifica al solicitante. El numero de orden queda vinculado al movimiento.</p></div></div>
-    </div>
-    <h3 class="doc-subtitle" style="margin-top:24px;">Estados de una solicitud</h3>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una solicitud</h3>
     <table class="doc-table">
-      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
+      <thead><tr><th>Estado</th><th>Descripcion</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Solicitud enviada, esperando revision del administrador</td></tr>
-        <tr><td><span class="badge badge-blue">Aprobada</span></td><td>Aprobada por el admin, entrada registrada automaticamente</td></tr>
-        <tr><td><span class="badge badge-green">Completada</span></td><td>Medicamentos fisicamente recibidos y verificados</td></tr>
-        <tr><td><span class="badge badge-red">Rechazada</span></td><td>Solicitud denegada por el administrador</td></tr>
+        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Esperando revision del administrador</td></tr>
+        <tr><td><span class="badge badge-green">Aprobada</span></td><td>El administrador aprobo la solicitud</td></tr>
+        <tr><td><span class="badge badge-red">Rechazada</span></td><td>El administrador rechazo la solicitud</td></tr>
+        <tr><td><span class="badge badge-blue">Completada</span></td><td>Los medicamentos fueron recibidos y registrados en inventario</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<!-- SECCION: BITACORA -->
-<section class="doc-section" id="bitacora">
-  <div class="doc-section-header">
+<!-- BITACORA -->
+<section class="section" id="bitacora">
+  <div class="section-header">
     <div class="doc-section-icon icon-dark"><i class='bx bx-history'></i></div>
-    <div><h2>Bitacora del Sistema</h2><p>Registro de auditoria de todas las acciones criticas</p></div>
+    <div><h2>Bitacora del Sistema</h2><p>Registro de auditoria de todas las acciones</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="doc-alert info"><i class='bx bx-lock'></i><div>La Bitacora es exclusiva para <strong>Administradores</strong>. Registra automaticamente todas las acciones importantes sin intervencion del usuario.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:16px;">Acceder a la Bitacora</h3>
-    <p class="doc-text">Haz clic en <strong>Bitacora</strong> en el menu lateral, seccion Administracion. Tambien puedes ver las ultimas 15 acciones directamente en el Panel de Control.</p>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Filtros disponibles</h3>
-    <table class="doc-table">
-      <thead><tr><th>Filtro</th><th>Descripcion</th></tr></thead>
+  <div class="section-body">
+    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Este modulo es exclusivo para <strong>Administradores</strong>.</div></div>
+    <p class="doc-text" style="margin-top:16px;">La bitacora registra automaticamente cada accion importante: inicios de sesion, creacion, edicion y eliminacion de registros, cambios de permisos y movimientos de inventario. Incluye usuario, fecha/hora e IP de origen.</p>
+    <table class="doc-table" style="margin-top:16px;">
+      <thead><tr><th>Color</th><th>Tipo de accion</th></tr></thead>
       <tbody>
-        <tr><td>Por Accion</td><td>Filtra por tipo: INICIO SESION, CREAR USUARIO, ENTRADA INVENTARIO, etc.</td></tr>
-        <tr><td>Por Usuario</td><td>Ver solo las acciones de un usuario especifico</td></tr>
-        <tr><td>Por Fecha</td><td>Rango de fechas de inicio y fin</td></tr>
-      </tbody>
-    </table>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Acciones registradas automaticamente</h3>
-    <table class="doc-table">
-      <thead><tr><th>Accion</th><th>Cuando ocurre</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge badge-blue">INICIO SESION</span></td><td>Al autenticarse correctamente</td></tr>
-        <tr><td><span class="badge badge-gray">CIERRE SESION</span></td><td>Al hacer logout</td></tr>
-        <tr><td><span class="badge badge-green">CREAR USUARIO / EMPLEADO</span></td><td>Al registrar un nuevo usuario o empleado</td></tr>
-        <tr><td><span class="badge badge-yellow">EDITAR USUARIO / EMPLEADO</span></td><td>Al modificar datos o contrasena</td></tr>
-        <tr><td><span class="badge badge-red">ELIMINAR USUARIO / EMPLEADO</span></td><td>Al eliminar un registro</td></tr>
-        <tr><td><span class="badge badge-green">ACTIVAR / DESACTIVAR USUARIO</span></td><td>Al cambiar el estado de una cuenta</td></tr>
-        <tr><td><span class="badge badge-green">ENTRADA INVENTARIO</span></td><td>Al registrar entrada de medicamento</td></tr>
-        <tr><td><span class="badge badge-red">SALIDA INVENTARIO</span></td><td>Al registrar salida de medicamento</td></tr>
-        <tr><td><span class="badge badge-yellow">ACTUALIZAR PERFIL</span></td><td>Al cambiar nombre o email propio</td></tr>
+        <tr><td><span class="badge badge-green">Verde</span></td><td>Creacion de registros (CREAR)</td></tr>
+        <tr><td><span class="badge badge-yellow">Amarillo</span></td><td>Edicion de registros (EDITAR)</td></tr>
+        <tr><td><span class="badge badge-red">Rojo</span></td><td>Eliminacion de registros (ELIMINAR)</td></tr>
+        <tr><td><span class="badge badge-cyan">Cyan</span></td><td>Inicio y cierre de sesion</td></tr>
+        <tr><td><span class="badge badge-blue">Azul</span></td><td>Otras acciones del sistema</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<!-- SECCION 12: NOTIFICACIONES -->
-<section class="doc-section" id="notificaciones">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-yellow"><i class='bx bxs-bell'></i></div>
-    <div><h2>Notificaciones</h2><p>Alertas automaticas en tiempo real</p></div>
+<!-- PERMISOS -->
+<section class="section" id="permisos">
+  <div class="section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-shield'></i></div>
+    <div><h2>Permisos Granulares</h2><p>Control de acceso por modulo y accion</p></div>
   </div>
-  <div class="doc-section-body">
+  <div class="section-body">
+    <p class="doc-text">Los administradores pueden configurar exactamente que puede hacer cada usuario en cada modulo del sistema. Los administradores siempre tienen acceso total y no requieren configuracion.</p>
+    <h3 class="doc-subtitle">Configurar permisos de un usuario</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Usuarios</h4><p>Haz clic en <strong>Usuarios</strong> en el menu lateral.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Icono de permisos</h4><p>Haz clic en el icono de escudo del usuario que deseas configurar.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Marcar permisos</h4><p>Para cada modulo, marca las casillas de: Ver, Crear, Editar y Eliminar segun corresponda.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>Los cambios toman efecto inmediatamente en la proxima accion del usuario.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Modulos configurables</h3>
     <table class="doc-table">
-      <thead><tr><th>Tipo</th><th>Color</th><th>Cuando aparece</th><th>Destinatarios</th></tr></thead>
+      <thead><tr><th>Modulo</th><th>Ver</th><th>Crear</th><th>Editar</th><th>Eliminar</th></tr></thead>
       <tbody>
-        <tr><td>Nuevo paciente</td><td><span class="badge badge-green">Verde</span></td><td>Al registrar un paciente</td><td>Todos los usuarios</td></tr>
-        <tr><td>Nueva consulta</td><td><span class="badge badge-blue">Azul</span></td><td>Al crear una consulta</td><td>Todos los usuarios</td></tr>
-        <tr><td>Entrada de inventario</td><td><span class="badge badge-green">Verde</span></td><td>Al registrar una entrada</td><td>Todos los usuarios</td></tr>
-        <tr><td>Salida de inventario</td><td><span class="badge badge-yellow">Amarillo</span></td><td>Al registrar una salida</td><td>Todos los usuarios</td></tr>
-        <tr><td>Stock bajo</td><td><span class="badge badge-red">Rojo</span></td><td>Cuando el stock cae al minimo</td><td>Todos los usuarios</td></tr>
-        <tr><td>Nuevo mensaje</td><td><span class="badge badge-cyan">Cyan</span></td><td>Al recibir un mensaje</td><td>Solo el destinatario</td></tr>
-        <tr><td>Registro pendiente</td><td><span class="badge badge-yellow">Amarillo</span></td><td>Cuando alguien solicita acceso</td><td>Solo administradores</td></tr>
+        <tr><td>Pacientes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Consultas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Agenda / Citas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Recetas</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Medicamentos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Movimientos</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Solicitudes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td></tr>
+        <tr><td>Mensajes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-green">Si</span></td></tr>
+        <tr><td>Reportes</td><td><span class="badge badge-green">Si</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-gray">No</span></td><td><span class="badge badge-gray">No</span></td></tr>
       </tbody>
     </table>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Como usar las notificaciones</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ver notificaciones</h4><p>Haz clic en el icono de campana en la barra superior. Se abre un panel con las ultimas 10 no leidas.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ir al modulo</h4><p>Haz clic en una notificacion para ir directamente al modulo relacionado. Se marca como leida automaticamente.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Marcar todas como leidas</h4><p>Haz clic en <strong>Marcar todas como leidas</strong> en la parte superior del panel.</p></div></div>
-    </div>
-    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Los badges de campana y sobre se actualizan automaticamente cada <strong>30 segundos</strong> sin necesidad de recargar la pagina.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Permisos por defecto segun rol</h3>
+    <p class="doc-text">Al crear un usuario, el sistema asigna automaticamente los permisos adecuados segun su rol. El administrador puede modificarlos en cualquier momento.</p>
+    <table class="doc-table">
+      <thead><tr><th>Rol</th><th>Permisos por defecto</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-red">Administrador</span></td><td>Acceso total &mdash; no usa tabla de permisos</td></tr>
+        <tr><td><span class="badge badge-blue">Medico</span></td><td>Pacientes (ver/crear/editar), Consultas (completo), Citas (completo), Recetas (ver/crear), Medicamentos (ver), Mensajes, Solicitudes, Reportes</td></tr>
+        <tr><td><span class="badge badge-gray">Recepcionista</span></td><td>Pacientes (completo), Citas (completo), Consultas (ver/crear/editar), Recetas (ver), Medicamentos (ver), Mensajes, Solicitudes</td></tr>
+        <tr><td><span class="badge badge-cyan">Enfermera</span></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Recetas (ver), Medicamentos (ver), Mensajes, Solicitudes (ver/crear)</td></tr>
+        <tr><td><span class="badge badge-green">Farmaceutico</span></td><td>Recetas (ver), Medicamentos (ver/crear/editar), Movimientos (ver/crear/editar), Solicitudes (completo), Mensajes</td></tr>
+        <tr><td><span class="badge badge-yellow">Contador</span></td><td>Pacientes (ver), Movimientos (ver), Solicitudes (ver), Reportes, Mensajes</td></tr>
+        <tr><td><span class="badge badge-purple">Laboratorista</span></td><td>Pacientes (ver), Consultas (ver/editar), Citas (ver), Mensajes</td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert info" style="margin-top:12px;"><i class='bx bx-info-circle'></i><div>En el modal de permisos hay botones de acceso rapido: <strong>Seleccionar todo</strong>, <strong>Quitar todo</strong> y <strong>Solo lectura</strong>. Si cambias el rol de un usuario, sus permisos se actualizan automaticamente al nuevo rol.</div></div>
   </div>
 </section>
 
-<!-- SECCION: PERMISOS -->
-<section class="doc-section" id="permisos">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-dark"><i class='bx bx-shield'></i></div>
-    <div><h2>Sistema de Permisos</h2><p>Control granular de acceso por usuario y modulo</p></div>
+<!-- INTERFAZ Y TEMAS -->
+<section class="section" id="interfaz">
+  <div class="section-header">
+    <div class="doc-section-icon icon-purple"><i class='bx bx-palette'></i></div>
+    <div><h2>Interfaz y Temas</h2><p>Modo claro, modo oscuro y personalizacion</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="doc-alert info"><i class='bx bx-lock'></i><div>Solo los <strong>Administradores</strong> pueden configurar permisos. Los administradores siempre tienen acceso total y no se pueden restringir.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:16px;">¿Qué son los permisos?</h3>
-    <p class="doc-text">El sistema de permisos permite al administrador definir exactamente qué puede hacer cada usuario en cada módulo. Por ejemplo, un recepcionista puede ver pacientes pero no eliminarlos.</p>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Configurar permisos de un usuario</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Ir a Usuarios</h4><p>Haz clic en <strong>Usuarios</strong> en el menu lateral (solo admins).</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Clic en el icono de escudo</h4><p>En la columna de acciones, haz clic en el icono <strong>🛡️</strong> del usuario que deseas configurar.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Configurar permisos</h4><p>Se abre un modal con una tabla de módulos. Marca los checkboxes para cada acción permitida.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Guardar</h4><p>Haz clic en <strong>Guardar Permisos</strong>. Los cambios se aplican de inmediato.</p></div></div>
-    </div>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Acciones disponibles por módulo</h3>
-    <table class="doc-table">
-      <thead><tr><th>Accion</th><th>Color</th><th>Descripcion</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge badge-blue">Ver</span></td><td>Azul</td><td>Acceder al módulo y ver la lista de registros</td></tr>
-        <tr><td><span class="badge badge-green">Crear</span></td><td>Verde</td><td>Agregar nuevos registros al módulo</td></tr>
-        <tr><td><span class="badge badge-yellow">Editar</span></td><td>Amarillo</td><td>Modificar registros existentes</td></tr>
-        <tr><td><span class="badge badge-red">Eliminar</span></td><td>Rojo</td><td>Eliminar registros del módulo</td></tr>
-      </tbody>
-    </table>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Accesos rapidos en el modal</h3>
+  <div class="section-body">
+    <h3 class="doc-subtitle">Cambiar entre modo claro y oscuro</h3>
+    <p class="doc-text">En la barra de navegacion superior encontraras el boton de tema. El icono muestra el estado actual del sistema:</p>
     <div class="feature-grid">
-      <div class="feature-item"><i class='bx bx-check-double' style="color:#198754;"></i><div><h4>Seleccionar todo</h4><p>Marca todos los checkboxes de todos los módulos de una sola vez.</p></div></div>
-      <div class="feature-item"><i class='bx bx-x' style="color:#dc3545;"></i><div><h4>Quitar todo</h4><p>Desmarca todos los checkboxes — el usuario queda sin acceso a nada.</p></div></div>
-      <div class="feature-item"><i class='bx bx-show' style="color:#0d6efd;"></i><div><h4>Solo lectura</h4><p>Marca solo los checkboxes de "Ver" en todos los módulos.</p></div></div>
+      <div class="feature-item"><i class='bx bx-sun' style="color:#ffc107;font-size:28px;"></i><div><h4>Sol amarillo = Modo Claro activo</h4><p>Haz clic para cambiar al modo oscuro. El fondo se vuelve oscuro y los textos claros.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-moon' style="color:#6f42c1;font-size:28px;"></i><div><h4>Luna morada = Modo Oscuro activo</h4><p>Haz clic para volver al modo claro. El sistema recuerda tu preferencia automaticamente.</p></div></div>
     </div>
-    <div class="doc-alert warning" style="margin-top:16px;"><i class='bx bx-error'></i><div>Si un usuario intenta acceder a un módulo sin permiso, verá el mensaje: <strong>"Sin permiso para acceder a esta sección."</strong> y será redirigido al Panel de Control.</div></div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>Tu preferencia de tema se guarda en el navegador. La proxima vez que abras el sistema, se aplicara automaticamente sin necesidad de configurarlo de nuevo.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Menu lateral colapsable</h3>
+    <p class="doc-text">Haz clic en el icono de menu <strong><i class='bx bx-menu'></i></strong> en la barra superior para colapsar o expandir el menu lateral. En modo colapsado solo se muestran los iconos, lo que da mas espacio a la pantalla de trabajo. Esta preferencia tambien se guarda automaticamente.</p>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Busqueda global</h3>
+    <p class="doc-text">La barra de busqueda en la parte superior busca en tiempo real en pacientes, consultas, medicamentos y usuarios (solo admin). Escribe al menos 2 caracteres para ver resultados instantaneos.</p>
   </div>
 </section>
 
-<!-- SECCION 13: FAQ -->
-<section class="doc-section" id="faq">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-blue"><i class='bx bx-help-circle'></i></div>
+<!-- DATOS DE PRUEBA -->
+<section class="section" id="datos-prueba">
+  <div class="section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-test-tube'></i></div>
+    <div><h2>Datos de Prueba</h2><p>Informacion precargada para explorar todas las funcionalidades</p></div>
+  </div>
+  <div class="section-body">
+    <div class="doc-alert info"><i class='bx bx-info-circle'></i><div>El sistema incluye datos de prueba realistas para que puedas explorar cada modulo sin ingresar informacion manualmente. Todos los datos son ficticios.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Credenciales de acceso</h3>
+    <table class="doc-table">
+      <thead><tr><th>Usuario</th><th>Contrasena</th><th>Rol</th><th>Acceso</th></tr></thead>
+      <tbody>
+        <tr><td><code>admin</code></td><td><code>admin123</code></td><td><span class="badge badge-red">Administrador</span></td><td>Acceso total a todos los modulos</td></tr>
+        <tr><td><code>medico</code></td><td><code>admin123</code></td><td><span class="badge badge-blue">Medico</span></td><td>Consultas, pacientes, recetas, agenda</td></tr>
+        <tr><td><code>recepcion</code></td><td><code>admin123</code></td><td><span class="badge badge-gray">Recepcionista</span></td><td>Pacientes, citas, mensajes, solicitudes</td></tr>
+        <tr><td><code>enfermera</code></td><td><code>Admin123</code></td><td><span class="badge badge-cyan">Enfermera</span></td><td>Pacientes (ver), consultas, signos vitales</td></tr>
+        <tr><td><code>farmacia</code></td><td><code>Admin123</code></td><td><span class="badge badge-green">Farmaceutico</span></td><td>Inventario completo, recetas (ver)</td></tr>
+        <tr><td><code>contador</code></td><td><code>Admin123</code></td><td><span class="badge badge-yellow">Contador</span></td><td>Movimientos (ver), reportes, mensajes</td></tr>
+        <tr><td><code>laboratorio</code></td><td><code>Admin123</code></td><td><span class="badge badge-purple">Laboratorista</span></td><td>Pacientes (ver), consultas (ver/editar)</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Pacientes de prueba</h3>
+    <table class="doc-table">
+      <thead><tr><th>Nombre</th><th>Cedula</th><th>Sangre</th><th>Alergias</th></tr></thead>
+      <tbody>
+        <tr><td>Juan Perez</td><td><code>402-1234567-1</code></td><td>O+</td><td>Penicilina</td></tr>
+        <tr><td>Maria Gonzalez</td><td><code>402-2345678-2</code></td><td>A+</td><td>Ninguna</td></tr>
+        <tr><td>Pedro Martinez</td><td><code>402-3456789-3</code></td><td>B+</td><td>Aspirina, Ibuprofeno</td></tr>
+        <tr><td>Carmen Rodriguez</td><td><code>402-4567890-4</code></td><td>AB+</td><td>Ninguna</td></tr>
+        <tr><td>Luis Jimenez</td><td><code>402-5678901-5</code></td><td>O-</td><td>Sulfonamidas</td></tr>
+        <tr><td>Ana Vargas</td><td><code>402-6789012-6</code></td><td>A-</td><td>Ninguna</td></tr>
+        <tr><td>Roberto Sanchez</td><td><code>402-7890123-7</code></td><td>B-</td><td>Latex</td></tr>
+        <tr><td>Sofia Herrera</td><td><code>402-8901234-8</code></td><td>O+</td><td>Ninguna</td></tr>
+        <tr><td>Miguel Torres</td><td><code>402-9012345-9</code></td><td>A+</td><td>Morfina</td></tr>
+        <tr><td>Valentina Cruz</td><td><code>402-0123456-0</code></td><td>AB-</td><td>Ninguna</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Personal medico precargado</h3>
+    <table class="doc-table">
+      <thead><tr><th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Salario</th></tr></thead>
+      <tbody>
+        <tr><td>Dr. Carlos Ramirez</td><td>Medico General</td><td>Consultas</td><td>RD$ 85,000</td></tr>
+        <tr><td>Dra. Ana Gutierrez</td><td>Pediatra</td><td>Pediatria</td><td>RD$ 95,000</td></tr>
+        <tr><td>Dr. Luis Fernandez</td><td>Cardiologo</td><td>Cardiologia</td><td>RD$ 110,000</td></tr>
+        <tr><td>Dra. Patricia Morales</td><td>Ginecologa</td><td>Ginecologia</td><td>RD$ 105,000</td></tr>
+        <tr><td>Dr. Jorge Santana</td><td>Traumatologo</td><td>Traumatologia</td><td>RD$ 100,000</td></tr>
+        <tr><td>Maria Castillo</td><td>Enfermera Jefe</td><td>Enfermeria</td><td>RD$ 45,000</td></tr>
+        <tr><td>Carmen Diaz</td><td>Farmaceutica</td><td>Farmacia</td><td>RD$ 38,000</td></tr>
+        <tr><td>Roberto Herrera</td><td>Recepcionista</td><td>Administracion</td><td>RD$ 28,000</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Inventario de medicamentos</h3>
+    <table class="doc-table">
+      <thead><tr><th>Medicamento</th><th>Stock</th><th>Min.</th><th>Estado</th><th>Proveedor</th></tr></thead>
+      <tbody>
+        <tr><td>Amoxicilina 500mg</td><td>150</td><td>20</td><td><span class="badge badge-green">Normal</span></td><td>Farmaceutica Nacional</td></tr>
+        <tr><td>Paracetamol 500mg</td><td>300</td><td>50</td><td><span class="badge badge-green">Normal</span></td><td>MedSupply RD</td></tr>
+        <tr><td>Ibuprofeno 400mg</td><td>200</td><td>30</td><td><span class="badge badge-green">Normal</span></td><td>Farmaceutica Nacional</td></tr>
+        <tr><td>Metformina 850mg</td><td>8</td><td>25</td><td><span class="badge badge-red">Stock Bajo</span></td><td>DiabetesCare RD</td></tr>
+        <tr><td>Losartan 50mg</td><td>5</td><td>20</td><td><span class="badge badge-red">Stock Bajo</span></td><td>CardioMed</td></tr>
+        <tr><td>Omeprazol 20mg</td><td>120</td><td>25</td><td><span class="badge badge-green">Normal</span></td><td>MedSupply RD</td></tr>
+        <tr><td>Atorvastatina 20mg</td><td>90</td><td>15</td><td><span class="badge badge-green">Normal</span></td><td>CardioMed</td></tr>
+        <tr><td>Azitromicina 500mg</td><td>60</td><td>10</td><td><span class="badge badge-green">Normal</span></td><td>Farmaceutica Nacional</td></tr>
+        <tr><td>Salbutamol Inhalador</td><td>25</td><td>5</td><td><span class="badge badge-green">Normal</span></td><td>RespiCare</td></tr>
+        <tr><td>Insulina Glargina 100U</td><td>3</td><td>5</td><td><span class="badge badge-red">Stock Bajo</span></td><td>DiabetesCare RD</td></tr>
+        <tr><td>Ciprofloxacino 500mg</td><td>80</td><td>15</td><td><span class="badge badge-green">Normal</span></td><td>MedSupply RD</td></tr>
+        <tr><td>Diclofenaco 75mg/3ml</td><td>40</td><td>10</td><td><span class="badge badge-green">Normal</span></td><td>Farmaceutica Nacional</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Consultas precargadas</h3>
+    <table class="doc-table">
+      <thead><tr><th>Paciente</th><th>Diagnostico</th><th>Estado</th><th>Signos Vitales</th></tr></thead>
+      <tbody>
+        <tr><td>Juan Perez</td><td>Sinusitis aguda bacteriana</td><td><span class="badge badge-green">Completada</span></td><td>PA 120/80, FC 72, T 37.2°C</td></tr>
+        <tr><td>Maria Gonzalez</td><td>Hipertension arterial controlada</td><td><span class="badge badge-green">Completada</span></td><td>PA 145/92, FC 80, T 36.8°C</td></tr>
+        <tr><td>Pedro Martinez</td><td>Lumbalgia con componente ciatico</td><td><span class="badge badge-green">Completada</span></td><td>PA 118/76, FC 68, T 36.5°C</td></tr>
+        <tr><td>Carmen Rodriguez</td><td>Bronquitis aguda</td><td><span class="badge badge-green">Completada</span></td><td>PA 122/78, FC 88, SpO2 95%</td></tr>
+        <tr><td>Luis Jimenez</td><td>Diabetes mellitus tipo 2</td><td><span class="badge badge-green">Completada</span></td><td>PA 130/85, Glucosa 185 mg/dL</td></tr>
+        <tr><td>Ana Vargas</td><td>Gastritis cronica</td><td><span class="badge badge-green">Completada</span></td><td>PA 115/72, FC 70, T 36.6°C</td></tr>
+        <tr><td>Roberto Sanchez</td><td>Infeccion tracto urinario</td><td><span class="badge badge-green">Completada</span></td><td>PA 125/82, FC 74, T 37.0°C</td></tr>
+        <tr><td>Sofia Herrera</td><td>Chequeo general anual</td><td><span class="badge badge-yellow">Pendiente</span></td><td>&mdash;</td></tr>
+        <tr><td>Miguel Torres</td><td>Evaluacion cardiologica</td><td><span class="badge badge-yellow">Pendiente</span></td><td>&mdash;</td></tr>
+        <tr><td>Valentina Cruz</td><td>Faringoamigdalitis aguda</td><td><span class="badge badge-cyan">En Proceso</span></td><td>&mdash;</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Citas en la agenda</h3>
+    <table class="doc-table">
+      <thead><tr><th>Paciente</th><th>Fecha</th><th>Motivo</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Juan Perez</td><td>Manana 9:00 AM</td><td>Seguimiento sinusitis</td><td><span class="badge badge-green">Confirmada</span></td></tr>
+        <tr><td>Maria Gonzalez</td><td>Manana 10:00 AM</td><td>Control presion arterial</td><td><span class="badge badge-blue">Programada</span></td></tr>
+        <tr><td>Pedro Martinez</td><td>Pasado manana 8:30 AM</td><td>Evaluacion post-tratamiento</td><td><span class="badge badge-blue">Programada</span></td></tr>
+        <tr><td>Luis Jimenez</td><td>En 3 dias 11:00 AM</td><td>Control glucemia</td><td><span class="badge badge-blue">Programada</span></td></tr>
+        <tr><td>Miguel Torres</td><td>En 5 dias 2:00 PM</td><td>Evaluacion cardiologica</td><td><span class="badge badge-green">Confirmada</span></td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:24px;">Que puedes probar con estos datos</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-folder-open' style="color:#0d6efd;"></i><div><h4>Expediente Clinico</h4><p>Abre el expediente de Juan Perez o Luis Jimenez para ver historial completo con signos vitales y recetas.</p></div></div>
+      <div class="feature-item"><i class='bx bx-calendar-event' style="color:#0d6efd;"></i><div><h4>Agenda de Citas</h4><p>Ve al modulo Agenda para ver las citas proximas en el calendario. Prueba convertir una cita en consulta.</p></div></div>
+      <div class="feature-item"><i class='bx bx-file-blank' style="color:#198754;"></i><div><h4>Recetas PDF</h4><p>En el modulo Recetas, haz clic en el icono de impresora de cualquier receta para ver el PDF generado.</p></div></div>
+      <div class="feature-item"><i class='bx bx-bar-chart-alt-2' style="color:#6f42c1;"></i><div><h4>Reportes</h4><p>Ve al modulo Reportes para ver las graficas con los datos precargados de consultas y medicamentos.</p></div></div>
+      <div class="feature-item"><i class='bx bx-heart-circle' style="color:#dc3545;"></i><div><h4>Signos Vitales</h4><p>Edita cualquier consulta completada para ver los signos vitales precargados con IMC calculado automaticamente.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-envelope' style="color:#0dcaf0;"></i><div><h4>Mensajes</h4><p>Hay 5 mensajes precargados incluyendo 1 masivo. Prueba responder o enviar un nuevo mensaje entre usuarios.</p></div></div>
+    </div>
+    <div class="doc-alert warning" style="margin-top:20px;"><i class='bx bx-error'></i><div><strong>Importante:</strong> Cambia las contrasenas por defecto antes de usar el sistema en produccion. Ve a <strong>Mi Perfil &rarr; Cambiar Contrasena</strong> para cada usuario.</div></div>
+  </div>
+</section>
+
+<!-- DATOS DE PRUEBA -->
+<section class="section" id="datos-prueba">
+  <div class="section-header">
+    <div class="doc-section-icon icon-green"><i class='bx bx-test-tube'></i></div>
+    <div><h2>Datos de Prueba</h2><p>Credenciales y datos precargados para explorar el sistema</p></div>
+  </div>
+  <div class="section-body">
+    <div class="doc-alert info"><i class='bx bx-info-circle'></i><div>El sistema incluye datos de prueba realistas. Todos los datos son ficticios y pueden eliminarse cuando el sistema entre en produccion.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:16px;">Credenciales de acceso</h3>
+    <table class="doc-table">
+      <thead><tr><th>Usuario</th><th>Contrasena</th><th>Rol</th><th>Acceso principal</th></tr></thead>
+      <tbody>
+        <tr><td><code>admin</code></td><td><code>admin123</code></td><td><span class="badge badge-red">Administrador</span></td><td>Acceso total</td></tr>
+        <tr><td><code>medico</code></td><td><code>admin123</code></td><td><span class="badge badge-blue">Medico</span></td><td>Pacientes, consultas, recetas, agenda</td></tr>
+        <tr><td><code>recepcion</code></td><td><code>admin123</code></td><td><span class="badge badge-gray">Recepcionista</span></td><td>Pacientes, citas, consultas</td></tr>
+        <tr><td><code>enfermera</code></td><td><code>Admin123</code></td><td><span class="badge badge-cyan">Enfermera</span></td><td>Pacientes (ver), signos vitales</td></tr>
+        <tr><td><code>farmacia</code></td><td><code>Admin123</code></td><td><span class="badge badge-green">Farmaceutico</span></td><td>Inventario completo, recetas (ver)</td></tr>
+        <tr><td><code>contador</code></td><td><code>Admin123</code></td><td><span class="badge badge-yellow">Contador</span></td><td>Reportes, movimientos (ver)</td></tr>
+        <tr><td><code>laboratorio</code></td><td><code>Admin123</code></td><td><span class="badge badge-purple">Laboratorista</span></td><td>Pacientes (ver), consultas (ver)</td></tr>
+      </tbody>
+    </table>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Que puedes probar</h3>
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-folder-open' style="color:#0d6efd;"></i><div><h4>Expediente Clinico</h4><p>Ve a Pacientes y haz clic en el icono de carpeta de Juan Perez o Luis Jimenez para ver el historial completo.</p></div></div>
+      <div class="feature-item"><i class='bx bx-calendar-event' style="color:#0d6efd;"></i><div><h4>Agenda de Citas Interactiva</h4><p>Ve al módulo Agenda para ver las citas en el calendario interactivo. <b>Arrastra y suelta (Drag & Drop)</b> las citas para reprogramarlas rápidamente. Al soltar, el sistema verificará automáticamente si hay conflictos de horario con el médico. Si programas una nueva cita, puedes seleccionar el <b>Servicio (ej. Control, Primera vez)</b> para que el sistema asigne automáticamente los minutos de duración requeridos.</p></div></div>
+      <div class="feature-item"><i class='bx bx-file-blank' style="color:#198754;"></i><div><h4>Recetas PDF</h4><p>En Recetas, haz clic en el icono de impresora para ver el PDF generado con firma del medico.</p></div></div>
+      <div class="feature-item"><i class='bx bx-user-plus' style="color:#0d6efd;"></i><div><h4>Registro rapido</h4><p>En Nueva Consulta, haz clic en "Nuevo paciente" para registrar un paciente sin salir del formulario.</p></div></div>
+      <div class="feature-item"><i class='bx bxs-capsule' style="color:#dc3545;"></i><div><h4>Alertas de Stock</h4><p>El Dashboard mostrara alertas de stock bajo (Metformina, Losartan, Insulina). Prueba registrar una entrada.</p></div></div>
+      <div class="feature-item"><i class='bx bx-bar-chart-alt-2' style="color:#6f42c1;"></i><div><h4>Reportes</h4><p>Ve al modulo Reportes para ver las graficas de consultas, movimientos de inventario y medicamentos.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESO EN RED -->
+<section class="section" id="red-local">
+  <div class="section-header">
+    <div class="doc-section-icon icon-blue"><i class='bx bx-wifi'></i></div>
+    <div><h2>Acceso desde la Red Local</h2><p>Como acceder al sistema desde telefono, tablet u otra computadora en la misma red</p></div>
+  </div>
+  <div class="section-body">
+    <p class="doc-text">SISGECLIN funciona en red local (LAN/WiFi). Cualquier dispositivo conectado a la misma red puede acceder al sistema sin necesidad de internet.</p>
+    <h3 class="doc-subtitle">Pasos para habilitar el acceso en red</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Asegurate de que Laragon este activo</h4><p>Abre Laragon y verifica que Apache este en verde (activo). Sin Apache el sistema no es accesible.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Ejecuta ABRIR_FIREWALL.bat como Administrador</h4><p>En la carpeta del proyecto encontraras el archivo <strong>ABRIR_FIREWALL.bat</strong>. Haz clic derecho y selecciona <strong>"Ejecutar como administrador"</strong>. El script abre los puertos 80 y 443, detecta automaticamente la ruta de Apache en Laragon y muestra la IP de tu computadora.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Conecta el dispositivo a la misma red</h4><p>El telefono, tablet u otra computadora debe estar conectado al mismo WiFi o red LAN que el servidor.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Accede desde el navegador</h4><p>Abre el navegador en el dispositivo y escribe la URL que muestra el script, por ejemplo: <code>http://192.168.1.5/SISGECLIN/public</code></p></div></div>
+    </div>
+    <div class="doc-alert info" style="margin-top:16px;"><i class='bx bx-info-circle'></i><div>La IP puede cambiar si reinicias el router. Si el sistema deja de ser accesible desde otros dispositivos, vuelve a ejecutar <strong>ABRIR_FIREWALL.bat</strong> para ver la IP actualizada.</div></div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">URLs de acceso</h3>
+    <table class="doc-table">
+      <thead><tr><th>Dispositivo</th><th>URL</th></tr></thead>
+      <tbody>
+        <tr><td>Esta computadora (servidor)</td><td><code>http://localhost/SISGECLIN/public</code></td></tr>
+        <tr><td>Otro dispositivo en la red</td><td><code>http://[IP-DEL-SERVIDOR]/SISGECLIN/public</code></td></tr>
+        <tr><td>Telefono/Tablet (misma WiFi)</td><td><code>http://[IP-DEL-SERVIDOR]/SISGECLIN/public</code></td></tr>
+      </tbody>
+    </table>
+    <div class="doc-alert warning" style="margin-top:12px;"><i class='bx bx-error'></i><div><strong>Seguridad:</strong> Este acceso es solo para redes internas de confianza. No expongas el sistema directamente a internet sin configurar HTTPS y autenticacion adicional.</div></div>
+  </div>
+</section>
+
+<!-- SEGURIDAD -->
+<section class="section" id="seguridad">
+  <div class="section-header">
+    <div class="doc-section-icon icon-red"><i class='bx bx-lock'></i></div>
+    <div><h2>Seguridad del Sistema</h2><p>Medidas de proteccion implementadas</p></div>
+  </div>
+  <div class="section-body">
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-shield-alt-2' style="color:#dc3545;"></i><div><h4>Proteccion contra fuerza bruta</h4><p>Despues de 5 intentos fallidos de login, el sistema bloquea el acceso por 60 segundos para esa IP y usuario.</p></div></div>
+      <div class="feature-item"><i class='bx bx-key' style="color:#198754;"></i><div><h4>Contrasenas seguras</h4><p>Las contrasenas deben tener minimo 8 caracteres, al menos una mayuscula, una minuscula y un numero.</p></div></div>
+      <div class="feature-item"><i class='bx bx-data' style="color:#0d6efd;"></i><div><h4>Borrado logico</h4><p>Los registros eliminados no se borran de la base de datos. Se marcan como eliminados para mantener trazabilidad clinica.</p></div></div>
+      <div class="feature-item"><i class='bx bx-history' style="color:#6f42c1;"></i><div><h4>Bitacora de auditoria</h4><p>Cada accion del sistema queda registrada con usuario, fecha, hora e IP de origen.</p></div></div>
+      <div class="feature-item"><i class='bx bx-save' style="color:#fd7e14;"></i><div><h4>Backup automatico</h4><p>El sistema genera un respaldo de la base de datos automaticamente cada noche a las 2:00 AM. Los backups se conservan por 7 dias.</p></div></div>
+      <div class="feature-item"><i class='bx bx-shield' style="color:#198754;"></i><div><h4>Permisos granulares</h4><p>Cada usuario solo puede acceder a los modulos y acciones que el administrador le haya habilitado.</p></div></div>
+    </div>
+    <h3 class="doc-subtitle" style="margin-top:20px;">Recomendaciones de seguridad</h3>
+    <table class="doc-table">
+      <thead><tr><th>Recomendacion</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td>Cambiar contrasenas por defecto</td><td>Cambia las contrasenas de admin, medico y recepcion inmediatamente despues de la instalacion</td></tr>
+        <tr><td>No compartir credenciales</td><td>Cada usuario debe tener su propia cuenta para mantener la trazabilidad de la bitacora</td></tr>
+        <tr><td>Cerrar sesion al terminar</td><td>Usa el boton de cerrar sesion, especialmente en computadoras compartidas</td></tr>
+        <tr><td>Revisar la bitacora periodicamente</td><td>El administrador debe revisar la bitacora regularmente para detectar accesos no autorizados</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-header">
+    <div class="doc-section-icon icon-cyan"><i class='bx bx-help-circle'></i></div>
     <div><h2>Preguntas Frecuentes</h2><p>Soluciones a los problemas mas comunes</p></div>
   </div>
-  <div class="doc-section-body">
-    <div class="steps">
-      <div class="step" style="border-left-color:#dc3545;"><div class="step-num" style="background:#dc3545;">?</div><div class="step-body"><h4>No puedo iniciar sesion</h4><p>Verifica usuario y contrasena. Si tu cuenta esta desactivada, contacta al administrador. Asegurate de que XAMPP este corriendo.</p></div></div>
-      <div class="step" style="border-left-color:#6f42c1;"><div class="step-num" style="background:#6f42c1;">?</div><div class="step-body"><h4>No veo el modulo de Nomina o Usuarios</h4><p>Esos modulos son exclusivos del rol Administrador. Solicita al admin que cambie tu rol si necesitas acceso.</p></div></div>
-      <div class="step" style="border-left-color:#fd7e14;"><div class="step-num" style="background:#fd7e14;">?</div><div class="step-body"><h4>Como accedo desde otra computadora?</h4><p>Usa la URL: <code>http://192.168.1.3/SISGECLIN/public</code>. Ambas computadoras deben estar en la misma red WiFi o LAN. Ejecuta <code>ABRIR_FIREWALL.bat</code> como administrador si es la primera vez.</p></div></div>
-      <div class="step" style="border-left-color:#198754;"><div class="step-num" style="background:#198754;">?</div><div class="step-body"><h4>Me sale Stock insuficiente al registrar salida</h4><p>La cantidad que intentas retirar supera el stock disponible. Registra primero una entrada para reponer el inventario.</p></div></div>
-      <div class="step" style="border-left-color:#0dcaf0;"><div class="step-num" style="background:#0dcaf0;">?</div><div class="step-body"><h4>Como recupero mi contrasena?</h4><p>Contacta al administrador para que la restablezca desde el modulo Usuarios usando el boton Editar.</p></div></div>
-      <div class="step" style="border-left-color:#856404;"><div class="step-num" style="background:#856404;">?</div><div class="step-body"><h4>Que significa el numero rojo en la campana?</h4><p>Es la cantidad de notificaciones no leidas. Se actualiza automaticamente cada 30 segundos sin recargar la pagina.</p></div></div>
+  <div class="section-body">
+    <div class="feature-grid">
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>No puedo iniciar sesion</h4><p>Verifica que tu cuenta este activa. Si ves "cuenta desactivada", contacta al administrador. Si fallaste 5 veces, espera 60 segundos.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>No veo un modulo en el menu</h4><p>El administrador debe habilitarte el permiso "Ver" para ese modulo desde el panel de Usuarios &rarr; Permisos.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>El PDF no se genera</h4><p>Verifica que la carpeta <code>storage/app/mpdf</code> exista y tenga permisos de escritura. Contacta al administrador del servidor.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>No puedo registrar una salida de inventario</h4><p>El stock disponible es menor a la cantidad solicitada. Registra primero una entrada para reponer el medicamento.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>La cita no aparece en el calendario / Conflictos</h4><p>Verifica que el estado de la cita no sea "Cancelada". Si al arrastrar una cita te marca un error rojo, significa que ese médico ya está ocupado en ese rango exacto de minutos (solapamiento bloqueado).</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>La receta aparece como "Vencida"</h4><p>La fecha de vencimiento de la receta ya paso. El sistema la marca automaticamente cada noche. Genera una nueva receta si es necesario.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>Como acceder desde otro dispositivo en la red</h4><p>Usa la IP del servidor: <code>http://192.168.X.X/SISGECLIN/public</code>. Ejecuta el archivo <strong>ABRIR_FIREWALL.bat</strong> como administrador para habilitar el acceso desde la red local. El archivo detecta automaticamente la IP y la ruta de Apache en Laragon.</p></div></div>
+      <div class="feature-item"><i class='bx bx-question-mark' style="color:#0d6efd;"></i><div><h4>Donde estan los backups de la base de datos</h4><p>En la carpeta <code>storage/app/backups/</code> del servidor. Se generan automaticamente cada noche y se conservan por 7 dias. Para generar uno manualmente: <code>php artisan db:backup</code></p></div></div>
     </div>
   </div>
 </section>
 
   </main>
 </div>
-
-<footer class="doc-footer">
-  <strong>SISGECLIN v2.5</strong> &mdash; Manual de Usuario &mdash; Sistema de Gestion Clinica &mdash; &copy; 2026
+<footer style="text-align:center;padding:24px;font-size:12px;color:#6c757d;border-top:1px solid #dee2e6;margin-top:40px;">
+  SISGECLIN v3.0 &mdash; Sistema de Gestion Clinica Institucional &mdash; Manual de Usuario &mdash; &copy; 2026
 </footer>
 
+<!-- Modal Zoom -->
+<div class="diagram-modal" id="diagramModal">
+  <div class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></div>
+  <div class="modal-content" id="modalContent">
+    <div class="modal-svg-wrapper" id="modalSvgWrapper"></div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomIn()"><i class='bx bx-zoom-in'></i></button>
+    <button class="zoom-btn" onclick="zoomOut()"><i class='bx bx-zoom-out'></i></button>
+    <button class="zoom-btn" onclick="resetZoom()"><i class='bx bx-reset'></i></button>
+  </div>
+</div>
+
+
+<!-- Modal Zoom -->
+<div class="diagram-modal" id="diagramModal">
+  <div class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></div>
+  <div class="modal-content" id="modalContent">
+    <div class="modal-svg-wrapper" id="modalSvgWrapper"></div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomIn()"><i class='bx bx-zoom-in'></i></button>
+    <button class="zoom-btn" onclick="zoomOut()"><i class='bx bx-zoom-out'></i></button>
+    <button class="zoom-btn" onclick="resetZoom()"><i class='bx bx-reset'></i></button>
+  </div>
+</div>
+
 <script>
-// Resaltar item activo en sidebar al hacer scroll
-const sections = document.querySelectorAll('.doc-section');
-const links = document.querySelectorAll('.doc-sidebar-menu a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
-  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
-});
+  // ==================== SEARCH / FILTER ====================
+  function filterDocs() {
+    let inputEl = document.getElementById('searchInput');
+    if(!inputEl) return;
+    let input = inputEl.value.toLowerCase();
+    
+    // 1. Filtrar Sidebar
+    let links = document.querySelectorAll('.sidebar .sb-link, .sidebar .sb-sub');
+    links.forEach(link => {
+      let text = link.textContent.toLowerCase();
+      link.style.display = text.includes(input) ? '' : 'none';
+    });
+
+    // 2. Filtrar Contenido Principal (Búsqueda en texto)
+    let contentBlocks = document.querySelectorAll('.info-card, .feature-item, .step, .class-block, .mod-accordion, .sec-item, .endpoint');
+    if (contentBlocks.length > 0) {
+        contentBlocks.forEach(block => {
+            let text = block.textContent.toLowerCase();
+            if (input === '') {
+                block.style.display = '';
+            } else {
+                block.style.display = text.includes(input) ? '' : 'none';
+            }
+        });
+    }
+  }
+
+  // ==================== SCROLLSPY ====================
+  const sections = document.querySelectorAll('.section');
+  const navLinks  = document.querySelectorAll('.sidebar .sb-link');
+  if (sections.length > 0) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const link = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  // ==================== ZOOM MODAL PARA DIAGRAMAS ====================
+  let currentZoom = 1;
+  let isDragging = false;
+  let startX = 0, startY = 0, translateX = 0, translateY = 0;
+
+  document.body.addEventListener('click', (e) => {
+      const wrap = e.target.closest('.mermaid-wrap');
+      if(wrap) {
+          const svg = wrap.querySelector('svg') || wrap.querySelector('img'); // Support for both Mermaid and standard images
+          if (svg) openModal(svg.outerHTML);
+      }
+  });
+
+  function getModalElements() {
+      return {
+          modal: document.getElementById('diagramModal'),
+          wrapper: document.getElementById('modalSvgWrapper'),
+          content: document.getElementById('modalContent')
+      };
+  }
+
+  function openModal(contentHtml) {
+      const { modal, wrapper } = getModalElements();
+      if(!modal || !wrapper) return;
+      
+      wrapper.innerHTML = contentHtml;
+      const svg = wrapper.querySelector('svg') || wrapper.querySelector('img');
+      if(svg) {
+          svg.style.maxWidth = 'none';
+          svg.style.height = 'auto';
+          svg.style.width = '100%';
+      }
+      modal.classList.add('active');
+      resetZoom();
+  }
+
+  function closeModal() {
+      const { modal, wrapper } = getModalElements();
+      if(!modal) return;
+      modal.classList.remove('active');
+      setTimeout(() => { if(wrapper) wrapper.innerHTML = ''; }, 200);
+  }
+
+  function updateTransform() {
+      const { wrapper } = getModalElements();
+      if(wrapper) {
+          wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+      }
+  }
+
+  function zoomIn() { currentZoom += 0.2; updateTransform(); }
+  function zoomOut() { currentZoom = Math.max(0.2, currentZoom - 0.2); updateTransform(); }
+  function resetZoom() {
+      currentZoom = 1; translateX = 0; translateY = 0;
+      updateTransform();
+  }
+
+  // Setup wheel and drag events after DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+      const { content } = getModalElements();
+      if(content) {
+          content.addEventListener('wheel', (e) => {
+              e.preventDefault();
+              if (e.deltaY < 0) zoomIn();
+              else zoomOut();
+          });
+          content.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              startX = e.clientX - translateX;
+              startY = e.clientY - translateY;
+          });
+          window.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              translateX = e.clientX - startX;
+              translateY = e.clientY - startY;
+              updateTransform();
+          });
+          window.addEventListener('mouseup', () => { isDragging = false; });
+      }
+  });
+
 </script>
 </body>
-</html><!-- SECCION SOLICITUDES - agregar al manual -->
-<section class="doc-section" id="solicitudes">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-yellow"><i class="bx bx-send"></i></div>
-    <div><h2>Solicitudes de Reposicion</h2><p>Solicitar medicamentos al proveedor y registrar entradas</p></div>
-  </div>
-  <div class="doc-section-body">
-    <div class="doc-alert warning"><i class="bx bx-info-circle"></i><div>Las solicitudes solo pueden ser creadas por <strong>Recepcionistas y Medicos</strong>. Los <strong>Administradores</strong> las aprueban y registran la entrada automaticamente.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:16px;">Flujo de una solicitud</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Crear solicitud</h4><p>Desde Movimientos, haz clic en <strong>Crear Solicitud de Reposicion</strong> cuando haya stock bajo. Puedes agregar varios medicamentos en una sola solicitud.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Numero de orden automatico</h4><p>El sistema genera un numero unico formato <code>SOL-202605-0001</code> para identificar la solicitud.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Admin aprueba</h4><p>El administrador recibe una notificacion, revisa la solicitud y hace clic en el boton de aprobar.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Entrada automatica</h4><p>Al aprobar, se registra automaticamente la entrada al inventario con el numero de orden y factura como referencia.</p></div></div>
-    </div>
-    <h3 class="doc-subtitle" style="margin-top:20px;">Estados de una solicitud</h3>
-    <table class="doc-table">
-      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge badge-yellow">Pendiente</span></td><td>Solicitud enviada, esperando aprobacion del administrador</td></tr>
-        <tr><td><span class="badge badge-blue">Aprobada</span></td><td>Aprobada y entrada registrada en inventario</td></tr>
-        <tr><td><span class="badge badge-green">Completada</span></td><td>Medicamentos fisicamente recibidos y verificados</td></tr>
-        <tr><td><span class="badge badge-red">Rechazada</span></td><td>Solicitud rechazada por el administrador</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+</html>
 
-<!-- SECCION BITACORA -->
-<section class="doc-section" id="bitacora">
-  <div class="doc-section-header">
-    <div class="doc-section-icon icon-dark"><i class="bx bx-history"></i></div>
-    <div><h2>Bitacora del Sistema</h2><p>Registro completo de todas las acciones - Solo Administradores</p></div>
-  </div>
-  <div class="doc-section-body">
-    <div class="doc-alert info"><i class="bx bx-lock"></i><div>La bitacora es exclusiva para <strong>Administradores</strong>. Registra automaticamente todas las acciones criticas del sistema.</div></div>
-    <h3 class="doc-subtitle" style="margin-top:16px;">Filtros disponibles</h3>
-    <div class="feature-grid">
-      <div class="feature-item"><i class="bx bx-filter" style="color:#0d6efd;"></i><div><h4>Por Accion</h4><p>Filtra por tipo: inicio sesion, crear usuario, entrada inventario, etc.</p></div></div>
-      <div class="feature-item"><i class="bx bxs-user" style="color:#6f42c1;"></i><div><h4>Por Usuario</h4><p>Ver todas las acciones de un usuario especifico.</p></div></div>
-      <div class="feature-item"><i class="bx bx-calendar" style="color:#198754;"></i><div><h4>Por Fecha</h4><p>Filtrar registros de un dia especifico.</p></div></div>
-    </div>
-  </div>
-</section>
+
+
+

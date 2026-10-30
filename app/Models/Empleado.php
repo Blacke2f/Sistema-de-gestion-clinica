@@ -9,9 +9,11 @@ namespace App\Models;
  */
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Empleado extends Model
 {
+    use SoftDeletes;
     protected $table = 'nomina';
 
     protected $fillable = [
@@ -53,7 +55,8 @@ class Empleado extends Model
     public function scopeMedicos($query)
     {
         $cargos = [
-            'Médico General', 'Pediatra', 'Cardiólogo', 'Cirujano',
+            'Médico General', 'Médico Ocupacional', 'Médico Laboral',
+            'Pediatra', 'Cardiólogo', 'Cirujano',
             'Ginecólogo', 'Obstetra', 'Neurólogo', 'Traumatólogo',
             'Oftalmólogo', 'Otorrinolaringólogo', 'Dermatólogo', 'Urólogo',
             'Psiquiatra', 'Anestesiólogo', 'Radiólogo', 'Patólogo',
@@ -74,6 +77,8 @@ class Empleado extends Model
         return $query->where(function ($q) use ($term) {
             $q->where('nombre', 'like', "%{$term}%")
               ->orWhere('apellido', 'like', "%{$term}%")
+              ->orWhereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$term}%"])
+              ->orWhere('cargo', 'like', "%{$term}%")
               ->orWhere('cedula', 'like', "%{$term}%");
         });
     }

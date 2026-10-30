@@ -15,29 +15,28 @@ namespace App\Models;
  */
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Medicamento extends Model
 {
+    use SoftDeletes;
     // La tabla se llama 'inventario', no 'medicamentos'
     protected $table = 'inventario';
 
     // Campos permitidos para asignación masiva
     protected $fillable = [
-        'nombre_medicamento', // Nombre comercial o genérico del medicamento
-        'descripcion',        // Descripción adicional (opcional)
-        'cantidad',           // Stock actual disponible en la clínica
-        'unidad',             // Unidad de medida: tabletas, cápsulas, frascos, etc.
-        'precio',             // Precio unitario en RD$
-        'fecha_vencimiento',  // Fecha de vencimiento del lote actual (opcional)
-        'proveedor',          // Nombre del proveedor habitual (opcional)
-        'telefono_proveedor', // Teléfono del proveedor para contacto (opcional)
-        'stock_minimo',       // Cantidad mínima antes de generar alerta de stock bajo
+        'nombre_medicamento',
+        'descripcion',
+        'cantidad',
+        'unidad',
+        'fecha_vencimiento',
+        'proveedor',
+        'telefono_proveedor',
+        'stock_minimo',
     ];
 
-    // Conversión automática de tipos al leer de la BD
     protected $casts = [
-        'precio'            => 'decimal:2', // Siempre 2 decimales
-        'fecha_vencimiento' => 'date',      // Solo fecha, sin hora
+        'fecha_vencimiento' => 'date',
     ];
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -61,11 +60,11 @@ class Medicamento extends Model
     {
         return $this->belongsToMany(
             Consulta::class,
-            'consultas_medicamentos', // tabla pivote
-            'medicamento_id',         // clave de este modelo en la pivote
-            'consulta_id'             // clave del otro modelo en la pivote
+            'consultas_medicamentos',
+            'medicamento_id',
+            'consulta_id'
         )
-        ->withPivot('cantidad', 'indicaciones'); // datos extra de la pivote
+        ->withPivot('cantidad', 'indicaciones'); // sin withTimestamps — la tabla solo tiene created_at
     }
 
     // ══════════════════════════════════════════════════════════════════════════

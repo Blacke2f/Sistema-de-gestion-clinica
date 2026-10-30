@@ -44,6 +44,14 @@ class BitacoraController extends Controller
 
         // Construir la consulta con filtros opcionales
         $bitacora = Bitacora::with('usuario') // cargar datos del usuario para mostrar su nombre
+            ->when($request->search, function ($q, $s) {
+                $q->where(function ($sub) use ($s) {
+                    $sub->where('accion', 'like', "%{$s}%")
+                        ->orWhere('tabla', 'like', "%{$s}%")
+                        ->orWhere('detalles', 'like', "%{$s}%")
+                        ->orWhereHas('usuario', fn ($u) => $u->where('nombre_completo', 'like', "%{$s}%"));
+                });
+            })
             // Filtro por tipo de acción (ej: 'INICIO SESIÓN', 'CREAR USUARIO')
             ->when($request->accion,     fn ($q) => $q->where('accion', $request->accion))
             // Filtro por usuario específico (ID del usuario)

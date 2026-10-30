@@ -35,17 +35,31 @@ class InventarioMovimientosController extends Controller
 
         [$fechaInicio, $fechaFin] = $this->getPeriodoDates($periodo);
 
-        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario'])
+        $movimientos = InventarioMovimiento::with([
+                'medicamento',
+                'usuario',
+                'paciente',
+                'consulta.recetas',
+            ])
             ->byDateRange($fechaInicio, $fechaFin)
             ->when($tipo, fn ($q) => $q->where('tipo_movimiento', $tipo))
             ->when($search, function ($q) use ($search) {
-                $q->whereHas('medicamento', function ($m) use ($search) {
-                    $m->where('nombre_medicamento', 'like', "%{$search}%");
-                })->orWhere('motivo', 'like', "%{$search}%")
-                  ->orWhere('tipo_movimiento', 'like', "%{$search}%")
-                  ->orWhereHas('usuario', function ($u) use ($search) {
-                      $u->where('nombre_completo', 'like', "%{$search}%");
-                  });
+                $q->where(function ($sub) use ($search) {
+                    $sub->whereHas('medicamento', function ($m) use ($search) {
+                        $m->where('nombre_medicamento', 'like', "%{$search}%");
+                    })->orWhere('motivo', 'like', "%{$search}%")
+                      ->orWhere('tipo_movimiento', 'like', "%{$search}%")
+                      ->orWhere('recibido_por_nombre', 'like', "%{$search}%")
+                      ->orWhereHas('paciente', function ($p) use ($search) {
+                          $p->where('nombre', 'like', "%{$search}%")
+                            ->orWhere('apellido', 'like', "%{$search}%")
+                            ->orWhereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$search}%"])
+                            ->orWhere('cedula', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('usuario', function ($u) use ($search) {
+                          $u->where('nombre_completo', 'like', "%{$search}%");
+                      });
+                });
             })
             ->latest()
             ->paginate($perPage)
@@ -122,101 +136,144 @@ class InventarioMovimientosController extends Controller
 
     public function registrarSalida(Request $request)
     {
-        // Validar los campos del formulario de salida, incluyendo los de firma
-        $request->validate([
-            'medicamento_id'        => 'required|exists:inventario,id',
-            'cantidad'              => 'required|integer|min:1',
+        // Soportar tanto múltiples medicamentos (items[]) como un único medicamento (medicamento_id, cantidad)
+        $hasItems = $request->has('items') && is_array($request->items);
+
+        $rules = [
             'motivo'                => 'nullable|string|max:255',
             'consulta_id'           => 'nullable|exists:consultas,id',
             'paciente_id'           => 'nullable|exists:pacientes,id',
-            // Campos de firma — opcionales pero recomendados para auditoría
             'entregado_por_nombre'  => 'nullable|string|max:150',
             'recibido_por_nombre'   => 'nullable|string|max:150',
             'recibido_por_cedula'   => 'nullable|string|max:20',
             'observaciones_entrega' => 'nullable|string',
+        ];
+
+        if ($hasItems) {
+            $rules['items']                  = 'required|array|min:1';
+            $rules['items.*.medicamento_id'] = 'required|exists:inventario,id';
+            $rules['items.*.cantidad']       = 'required|integer|min:1';
+        } else {
+            $rules['medicamento_id'] = 'required|exists:inventario,id';
+            $rules['cantidad']       = 'required|integer|min:1';
+        }
+
+        $request->validate($rules, [
+            'items.required'                  => 'Agregue al menos un medicamento.',
+            'items.*.medicamento_id.required' => 'Seleccione el medicamento en todas las filas.',
+            'items.*.cantidad.required'       => 'Indique la cantidad en todas las filas.',
+            'items.*.cantidad.min'            => 'La cantidad mínima es 1.',
         ]);
 
-        try {
-            $medicamento = Medicamento::findOrFail($request->medicamento_id);
+        // Normalizar lista de ítems a procesar y agrupar cantidades si se repite el mismo medicamento
+        $rawItems = $hasItems
+            ? $request->items
+            : [['medicamento_id' => $request->medicamento_id, 'cantidad' => $request->cantidad]];
 
-            // Verificar que hay suficiente stock antes de proceder
-            if ($medicamento->cantidad < $request->cantidad) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Stock insuficiente de {$medicamento->nombre_medicamento}. Disponible: {$medicamento->cantidad}",
-                ], 422);
+        $grouped = [];
+        foreach ($rawItems as $it) {
+            $medId = (int) $it['medicamento_id'];
+            $cant  = (int) $it['cantidad'];
+            if (!isset($grouped[$medId])) {
+                $grouped[$medId] = 0;
+            }
+            $grouped[$medId] += $cant;
+        }
+
+        try {
+            // 1. Verificar stock disponible de todos los medicamentos antes de iniciar transacción
+            $medicamentosMap = [];
+            foreach ($grouped as $medId => $totalCant) {
+                $med = Medicamento::findOrFail($medId);
+                if ($med->cantidad < $totalCant) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Stock insuficiente de {$med->nombre_medicamento}. Solicitado: {$totalCant}, Disponible: {$med->cantidad}",
+                    ], 422);
+                }
+                $medicamentosMap[$medId] = $med;
             }
 
-            $cantidadAnterior = $medicamento->cantidad;
-            $cantidadNueva    = $cantidadAnterior - $request->cantidad;
+            $totalRegistrados = 0;
 
-            // Usar transacción para garantizar consistencia:
-            // si algo falla, el stock NO se actualiza y el movimiento NO se crea
-            DB::transaction(function () use ($request, $medicamento, $cantidadAnterior, $cantidadNueva) {
-                // Actualizar el stock del medicamento
-                $medicamento->update(['cantidad' => $cantidadNueva]);
+            // 2. Ejecutar descuento de stock y registro de movimientos en transacción
+            DB::transaction(function () use ($request, $rawItems, $medicamentosMap, &$totalRegistrados) {
+                foreach ($rawItems as $it) {
+                    $medId       = (int) $it['medicamento_id'];
+                    $cantSalida  = (int) $it['cantidad'];
+                    $medicamento = $medicamentosMap[$medId]->fresh();
 
-                // Crear el registro del movimiento con todos los campos de firma
-                $movimiento = InventarioMovimiento::create([
-                    'medicamento_id'        => $medicamento->id,
-                    'tipo_movimiento'       => 'salida',
-                    'cantidad'              => $request->cantidad,
-                    'cantidad_anterior'     => $cantidadAnterior,
-                    'cantidad_nueva'        => $cantidadNueva,
-                    'motivo'                => $request->motivo ?? 'Salida de inventario',
-                    'consulta_id'           => $request->consulta_id,
-                    'paciente_id'           => $request->paciente_id,
-                    'usuario_id'            => Auth::id(),
-                    // Datos de firma para el comprobante de entrega
-                    'entregado_por_nombre'  => $request->entregado_por_nombre ?? Auth::user()->nombre_completo,
-                    'recibido_por_nombre'   => $request->recibido_por_nombre,
-                    'recibido_por_cedula'   => $request->recibido_por_cedula,
-                    'observaciones_entrega' => $request->observaciones_entrega,
-                ]);
+                    $cantidadAnterior = $medicamento->cantidad;
+                    $cantidadNueva    = $cantidadAnterior - $cantSalida;
 
-                // Registrar en bitácora (no crítico — si falla no afecta el movimiento)
-                try {
-                    Bitacora::registrar(
-                        Auth::id(),
-                        'SALIDA INVENTARIO',
-                        'inventario_movimientos',
-                        $movimiento->id,
-                        "Salida de {$request->cantidad} unidades de {$medicamento->nombre_medicamento}" .
-                        ($request->recibido_por_nombre ? " — Recibido por: {$request->recibido_por_nombre}" : '')
-                    );
-                } catch (\Throwable $e) { /* bitácora no crítica */ }
+                    $medicamento->update(['cantidad' => $cantidadNueva]);
 
-                // Notificar a todos sobre la salida (no crítico)
-                try {
-                    Notificacion::notificarTodos(
-                        tipo:      'salida_inventario',
-                        titulo:    'Salida de Inventario',
-                        mensaje:   "-{$request->cantidad} unidades de {$medicamento->nombre_medicamento} retiradas del stock",
-                        icono:     'bx-down-arrow-circle',
-                        color:     'warning',
-                        url:       '/inventario',
-                        excluirId: Auth::id()
-                    );
-                } catch (\Throwable $e) { /* notificación no crítica */ }
+                    $movimiento = InventarioMovimiento::create([
+                        'medicamento_id'        => $medicamento->id,
+                        'tipo_movimiento'       => 'salida',
+                        'cantidad'              => $cantSalida,
+                        'cantidad_anterior'     => $cantidadAnterior,
+                        'cantidad_nueva'        => $cantidadNueva,
+                        'motivo'                => $request->motivo ?? 'Salida de inventario',
+                        'consulta_id'           => $request->consulta_id,
+                        'paciente_id'           => $request->paciente_id,
+                        'usuario_id'            => Auth::id(),
+                        'entregado_por_nombre'  => $request->entregado_por_nombre ?? Auth::user()->nombre_completo,
+                        'recibido_por_nombre'   => $request->recibido_por_nombre,
+                        'recibido_por_cedula'   => $request->recibido_por_cedula,
+                        'observaciones_entrega' => $request->observaciones_entrega,
+                    ]);
 
-                // Verificar si el stock quedó bajo y notificar (no crítico)
-                try {
-                    if ($medicamento->fresh()->tieneStockBajo()) {
-                        Notificacion::notificarTodos(
-                            tipo:    'stock_bajo',
-                            titulo:  'Alerta: Stock Bajo',
-                            mensaje: "{$medicamento->nombre_medicamento} tiene stock bajo ({$medicamento->fresh()->cantidad} unidades)",
-                            icono:   'bx-error',
-                            color:   'danger',
-                            url:     '/medicina'
+                    $totalRegistrados++;
+
+                    // Registrar en bitácora (no crítico)
+                    try {
+                        Bitacora::registrar(
+                            Auth::id(),
+                            'SALIDA INVENTARIO',
+                            'inventario_movimientos',
+                            $movimiento->id,
+                            "Salida de {$cantSalida} unidades de {$medicamento->nombre_medicamento}" .
+                            ($request->recibido_por_nombre ? " — Recibido por: {$request->recibido_por_nombre}" : '')
                         );
-                    }
-                } catch (\Throwable $e) { /* alerta stock no crítica */ }
+                    } catch (\Throwable $e) { /* bitácora no crítica */ }
+
+                    // Notificar sobre la salida (no crítico)
+                    try {
+                        Notificacion::notificarTodos(
+                            tipo:      'salida_inventario',
+                            titulo:    'Salida de Inventario',
+                            mensaje:   "-{$cantSalida} unidades de {$medicamento->nombre_medicamento} retiradas del stock",
+                            icono:     'bx-down-arrow-circle',
+                            color:     'warning',
+                            url:       '/inventario',
+                            excluirId: Auth::id()
+                        );
+                    } catch (\Throwable $e) { /* notificación no crítica */ }
+
+                    // Verificar si el stock quedó bajo y notificar (no crítico)
+                    try {
+                        if ($medicamento->fresh()->tieneStockBajo()) {
+                            Notificacion::notificarTodos(
+                                tipo:    'stock_bajo',
+                                titulo:  'Alerta: Stock Bajo',
+                                mensaje: "{$medicamento->nombre_medicamento} tiene stock bajo ({$medicamento->fresh()->cantidad} unidades)",
+                                icono:   'bx-error',
+                                color:   'danger',
+                                url:     '/medicina'
+                            );
+                        }
+                    } catch (\Throwable $e) { /* alerta stock no crítica */ }
+                }
             });
+
+            $msg = $totalRegistrados > 1
+                ? "Se registraron {$totalRegistrados} salidas de medicamentos correctamente."
+                : 'Salida registrada correctamente.';
 
             return response()->json([
                 'success' => true,
-                'message' => 'Salida registrada correctamente.',
+                'message' => $msg,
             ]);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => 'Error al registrar salida: ' . $e->getMessage()], 500);
@@ -290,6 +347,51 @@ class InventarioMovimientosController extends Controller
         }
     }
 
+    public function comprobanteEntrega(InventarioMovimiento $movimiento)
+    {
+        $movimiento->load(['medicamento', 'usuario', 'paciente', 'consulta']);
+
+        // Agrupar movimientos hermanos si fueron registrados en la misma operación (mismo segundo/motivo/paciente)
+        $itemsEntrega = InventarioMovimiento::with('medicamento')
+            ->where('tipo_movimiento', $movimiento->tipo_movimiento)
+            ->where('usuario_id', $movimiento->usuario_id)
+            ->where('paciente_id', $movimiento->paciente_id)
+            ->where('motivo', $movimiento->motivo)
+            ->whereBetween('created_at', [
+                $movimiento->created_at->copy()->subSeconds(5),
+                $movimiento->created_at->copy()->addSeconds(5),
+            ])
+            ->orderBy('id')
+            ->get();
+
+        if ($itemsEntrega->isEmpty()) {
+            $itemsEntrega = collect([$movimiento]);
+        }
+
+        try {
+            $mpdf = new \Mpdf\Mpdf([
+                'mode'          => 'utf-8',
+                'format'        => 'A5-L',
+                'margin_left'   => 12,
+                'margin_right'  => 12,
+                'margin_top'    => 12,
+                'margin_bottom' => 12,
+                'tempDir'       => storage_path('app/mpdf'),
+            ]);
+
+            $html = view('exports.comprobante-entrega-pdf', compact('movimiento', 'itemsEntrega'))->render();
+            $mpdf->WriteHTML($html);
+
+            $filename = 'Comprobante_Movimiento_' . $movimiento->id . '.pdf';
+            return response($mpdf->Output('', 'S'), 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => "inline; filename=\"{$filename}\"",
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => 'Error al generar comprobante: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function getByMedicamento(Medicamento $medicamento)
     {
         $movimientos = InventarioMovimiento::with('usuario')
@@ -308,7 +410,7 @@ class InventarioMovimientosController extends Controller
 
         [$fechaInicio, $fechaFin] = $this->getPeriodoDates($periodo);
 
-        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario'])
+        $movimientos = InventarioMovimiento::with(['medicamento', 'usuario', 'paciente', 'consulta'])
             ->when($periodo !== 'todos', fn ($q) => $q->byDateRange($fechaInicio, $fechaFin))
             ->when($tipo, fn ($q) => $q->where('tipo_movimiento', $tipo))
             ->latest()
@@ -324,19 +426,29 @@ class InventarioMovimientosController extends Controller
         $callback = function () use ($movimientos) {
             $output = fopen('php://output', 'w');
             fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
-            fputcsv($output, ['ID', 'Fecha/Hora', 'Medicamento', 'Tipo', 'Cantidad', 'Stock Anterior', 'Stock Nuevo', 'Motivo', 'Usuario', 'Consulta ID']);
+            fputcsv($output, [
+                'ID', 'Fecha/Hora', 'Medicamento', 'Tipo', 'Cantidad',
+                'Stock Anterior', 'Stock Nuevo', 'Paciente', 'Consulta ID',
+                'Entregado Por', 'Recibido Por', 'Cédula Receptor',
+                'Motivo', 'Observaciones', 'Usuario'
+            ]);
             foreach ($movimientos as $m) {
                 fputcsv($output, [
                     $m->id,
                     $m->created_at->format('d/m/Y H:i'),
-                    $m->medicamento->nombre_medicamento,
+                    $m->medicamento->nombre_medicamento ?? '',
                     ucfirst($m->tipo_movimiento),
                     $m->cantidad,
                     $m->cantidad_anterior,
                     $m->cantidad_nueva,
-                    $m->motivo ?? '',
-                    $m->usuario->nombre_completo,
+                    $m->paciente?->nombre_completo ?? '',
                     $m->consulta_id ?? '',
+                    $m->entregado_por_nombre ?? '',
+                    $m->recibido_por_nombre ?? '',
+                    $m->recibido_por_cedula ?? '',
+                    $m->motivo ?? '',
+                    $m->observaciones_entrega ?? '',
+                    $m->usuario->nombre_completo ?? '',
                 ]);
             }
             fclose($output);

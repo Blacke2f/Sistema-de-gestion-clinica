@@ -49,10 +49,12 @@ class ConsultasController extends Controller
                 $q->whereHas('paciente', function ($p) use ($search) {
                     $p->where('nombre',   'like', "%{$search}%")
                       ->orWhere('apellido', 'like', "%{$search}%")
+                      ->orWhereRaw("CONCAT(nombre, ' ', apellido) LIKE ?", ["%{$search}%"])
                       ->orWhere('cedula',   'like', "%{$search}%");
                 })->orWhere('motivo',      'like', "%{$search}%")
                   ->orWhere('estado',      'like', "%{$search}%")
-                  ->orWhere('diagnostico', 'like', "%{$search}%");
+                  ->orWhere('diagnostico', 'like', "%{$search}%")
+                  ->orWhere('id', $search);
             })
             ->latest('fecha_hora')   // ordenar por fecha de consulta, más recientes primero
             ->paginate($perPage)
@@ -164,6 +166,14 @@ class ConsultasController extends Controller
 
         try {
             $consulta->update($data);
+
+            if ($data['estado'] === 'completada') {
+                $cita = \App\Models\Cita::where('consulta_id', $consulta->id)->first();
+                if ($cita) {
+                    $cita->update(['estado' => 'completada']);
+                }
+            }
+
             return response()->json(['success' => true, 'message' => 'Consulta actualizada correctamente.']);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => 'Error al actualizar: ' . $e->getMessage()], 500);

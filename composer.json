@@ -2,15 +2,22 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "sisgeclin/sistema-gestion-clinica",
     "type": "project",
-    "description": "Sistema de Gestión Clínica — Laravel 13 | PHP 8.2+ | MySQL",
-    "keywords": ["laravel", "clinica", "gestion", "salud"],
+    "description": "Sistema de Gesti\u00f3n Cl\u00ednica \u2014 Laravel 13 | PHP 8.2+ | MySQL",
+    "keywords": [
+        "laravel",
+        "clinica",
+        "gestion",
+        "salud"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "laravel/framework": "^13.7",
+        "laravel/framework": "^12.0",
         "laravel/tinker": "^3.0",
         "mpdf/mpdf": "^8.3",
-        "phpoffice/phpspreadsheet": "^5.7"
+        "phpoffice/phpspreadsheet": "^5.7",
+        "spatie/laravel-backup": "*",
+        "symfony/var-dumper": "7.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -82,7 +89,10 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         },
-        "platform-check": false
+        "platform-check": false,
+        "audit": {
+            "block-insecure": false
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true

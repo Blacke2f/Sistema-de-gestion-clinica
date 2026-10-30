@@ -29,7 +29,7 @@
                 <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block;">
                     <i class='bx bx-calendar'></i> Período
                 </label>
-                <select id="exp-{{ $exportModule }}-periodo" style="width:100%;padding:9px 12px;border:1.5px solid var(--border-color);border-radius:8px;font-size:13px;background:var(--bg-card);color:var(--text-primary);" onchange="toggleFechasExportModal('{{ $exportModule }}')">
+                <select id="exp-{{ $exportModule }}-periodo" class="form-control" onchange="toggleFechasExportModal('{{ $exportModule }}')">
                     <option value="todos">Todos los registros</option>
                     <option value="mensual">Último mes</option>
                     <option value="semanal">Última semana</option>

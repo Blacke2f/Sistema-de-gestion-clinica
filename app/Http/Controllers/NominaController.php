@@ -66,7 +66,7 @@ class NominaController extends Controller
         $data = $request->validate([
             'nombre'        => 'required|string|max:80',
             'apellido'      => 'required|string|max:80',
-            'cedula'        => 'required|string|max:20|unique:nomina,cedula', // cédula única en nómina
+            'cedula'        => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('nomina', 'cedula')->whereNull('deleted_at')], // cédula única en nómina
             'cargo'         => 'required|string|max:100',   // ej: Médico General, Enfermera
             'departamento'  => 'required|string|max:100',   // ej: Consultas, Administración
             'salario'       => 'required|numeric|min:0',    // salario mensual en RD$
@@ -86,7 +86,8 @@ class NominaController extends Controller
 
         try {
             // Crear el empleado en la base de datos
-            $empleado = Empleado::create($data);
+            $trashed = Empleado::onlyTrashed()->where('cedula', $data['cedula'])->first();
+            if ($trashed) { $trashed->restore(); $trashed->update($data); $empleado = $trashed; } else { $empleado = Empleado::create($data); }
 
             // Registrar la acción en la bitácora (no crítico — si falla no afecta el registro)
             try {
@@ -140,7 +141,7 @@ class NominaController extends Controller
             'nombre'        => 'required|string|max:80',
             'apellido'      => 'required|string|max:80',
             // unique con excepción: permite la misma cédula del empleado actual
-            'cedula'        => "required|string|max:20|unique:nomina,cedula,{$nomina->id}",
+            'cedula'        => ['required', 'string', 'max:20', \Illuminate\Validation\Rule::unique('nomina', 'cedula')->ignore($nomina->id)->whereNull('deleted_at')],
             'cargo'         => 'required|string|max:100',
             'departamento'  => 'required|string|max:100',
             'salario'       => 'required|numeric|min:0',

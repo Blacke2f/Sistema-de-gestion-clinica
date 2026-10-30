@@ -23,7 +23,12 @@ class AppServiceProvider extends ServiceProvider
         if (isset($_SERVER['HTTP_HOST'])) {
             $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
             $host   = $_SERVER['HTTP_HOST'];
-            URL::forceRootUrl("{$scheme}://{$host}/SISGECLIN/public");
+            
+            if (php_sapi_name() === 'cli-server') {
+                URL::forceRootUrl("{$scheme}://{$host}");
+            } else {
+                URL::forceRootUrl("{$scheme}://{$host}/SISGECLIN/public");
+            }
         }
     }
 }

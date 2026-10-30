@@ -49,7 +49,7 @@ class SolicitudInventario extends Model
 
     public function medicamento()
     {
-        return $this->belongsTo(Medicamento::class, 'medicamento_id');
+        return $this->belongsTo(Medicamento::class, 'medicamento_id')->withTrashed();
     }
 
     public function solicitadoPor()

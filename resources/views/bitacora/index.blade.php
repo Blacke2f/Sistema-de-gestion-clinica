@@ -76,10 +76,10 @@
                         </td>
                         <td>
                             <div class="cell-user">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($b->usuario->nombre_completo) }}&background=0d6efd&color=fff&size=32" alt="">
+                                <img src="" data-avatar="{{ $b->usuario?->nombre_completo ?? 'Sistema' }}" data-bg="#0d6efd" data-size="32" alt="">
                                 <div>
-                                    <span>{{ $b->usuario->nombre_completo }}</span><br>
-                                    <small class="text-muted">{{ $b->usuario->username }}</small>
+                                    <span>{{ $b->usuario?->nombre_completo ?? 'Usuario eliminado' }}</span><br>
+                                    <small class="text-muted">{{ $b->usuario?->username ?? '-' }}</small>
                                 </div>
                             </div>
                         </td>
