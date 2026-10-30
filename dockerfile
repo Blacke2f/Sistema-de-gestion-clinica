@@ -1,44 +1,13 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.1-apache
 
-WORKDIR /app
+# Habilitar el módulo rewrite de Apache (común en aplicaciones PHP)
+RUN a2enmod rewrite
 
-# Install system dependencies and PHP extensions
-RUN apk add --no-cache \
-    curl \
-    git \
-    unzip \
-    mysql-client \
-    $PHPIZE_DEPS && \
-    docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    bcmath \
-    ctype \
-    fileinfo \
-    json \
-    mbstring \
-    tokenizer \
-    xml && \
-    apk del $PHPIZE_DEPS
+# Instalar extensiones PHP comunes (ejemplo: MySQL)
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Copiar el código de tu aplicación al contenedor
+COPY . /var/www/html/
 
-# Copy configuration files
-COPY docker/php.ini /usr/local/etc/php/conf.d/docker.ini
-COPY docker/www.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Copy application
-COPY . .
-
-# Install Laravel dependencies
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader || true
-
-# Set permissions
-RUN mkdir -p storage/logs storage/framework/views storage/framework/cache storage/framework/sessions && \
-    chown -R www-data:www-data /app && \
-    chmod -R 755 storage bootstrap/cache
-
-EXPOSE 9000
-
-CMD ["php-fpm"]
+# Asegurar los permisos correctos para Apache
+RUN chown -R www-data:www-data /var/www/html

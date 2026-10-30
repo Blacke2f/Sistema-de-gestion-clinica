@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ============================================
    SISGECLIN - Sistema de Gestión Clínica
@@ -246,7 +246,27 @@ img {
 }
 
 /* Mejoras para el sidebar en móvil */
-/* Estilos móviles del sidebar gestionados en mobile.css */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+    
+    #sidebar .brand {
+        position: sticky;
+        top: 0;
+        background: var(--bg-sidebar);
+        z-index: 10;
+    }
+    
+    #sidebar .side-menu.bottom {
+        position: relative;
+        margin-top: auto;
+    }
+}
 
 /* ============================================
    CONTENT AREA
@@ -273,32 +293,10 @@ img {
     z-index: 900;
 }
 
-#content nav .bx-menu,
-.sidebar-toggle-btn {
+#content nav .bx-menu {
     font-size: 24px;
     cursor: pointer;
     color: var(--text-secondary);
-    /* Botón sin estilos nativos */
-    background: none;
-    border: none;
-    padding: 0;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    /* Área de toque mínima para móvil (WCAG 2.5.5) */
-    min-width: 44px;
-    min-height: 44px;
-    border-radius: 8px;
-    transition: background .15s, color .15s;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-#content nav .bx-menu:hover,
-.sidebar-toggle-btn:hover {
-    background: var(--bg-body);
-    color: var(--primary);
 }
 
 #content nav .nav-title {
@@ -347,65 +345,46 @@ img {
     background: var(--primary-dark);
 }
 
-/* Dark Mode Toggle — muestra el estado actual: sol=claro, luna=oscuro */
+/* Dark Mode Toggle */
 #content nav .switch-mode {
     position: relative;
-    width: 52px;
-    height: 28px;
+    width: 50px;
+    height: 26px;
     background: var(--bg-body);
     border-radius: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 4px 8px;
     border: 2px solid var(--border-color);
-    transition: var(--transition);
-    overflow: hidden;
 }
 
 #content nav .switch-mode i {
-    font-size: 15px;
+    font-size: 14px;
     z-index: 1;
-    position: absolute;
-    transition: opacity .3s ease, transform .3s ease;
 }
 
-/* Modo claro (default): mostrar sol, ocultar luna */
-#content nav .switch-mode .bx-sun {
-    color: #ffc107;
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
 #content nav .switch-mode .bxs-moon {
-    color: #6f42c1;
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
+    color: var(--warning);
 }
 
-/* Modo oscuro (.active): mostrar luna, ocultar sol */
-#content nav .switch-mode.active .bx-sun {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.5);
-}
-#content nav .switch-mode.active .bxs-moon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
+#content nav .switch-mode .bx-sun {
+    color: var(--warning);
 }
 
 #content nav .switch-mode .ball {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+    background: var(--primary);
     border-radius: 50%;
     left: 3px;
     transition: var(--transition);
-    z-index: 0;
-    background: #ffc107; /* amarillo en modo claro */
 }
 
 #content nav .switch-mode.active .ball {
-    left: calc(100% - 23px);
-    background: #6f42c1; /* morado en modo oscuro */
+    left: calc(100% - 21px);
 }
 
 /* Notifications */
@@ -910,7 +889,7 @@ img {
 
 .data-table th {
     background: var(--bg-body);
-    padding: 11px 14px;
+    padding: 14px 16px;
     text-align: left;
     font-size: 12px;
     font-weight: 600;
@@ -921,11 +900,10 @@ img {
 }
 
 .data-table td {
-    padding: 10px 14px;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--border-color);
     color: var(--text-primary);
     vertical-align: middle;
-    font-size: 13px;
 }
 
 .data-table tbody tr:hover {
@@ -1651,16 +1629,6 @@ code {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* CRÍTICO: el contenedor no bloquea toques cuando está vacío */
-    pointer-events: none;
-    /* Tamaño mínimo para no ocupar área invisible */
-    width: auto;
-    height: auto;
-}
-
-/* Los toasts individuales sí reciben eventos */
-.toast {
-    pointer-events: auto;
 }
 
 .toast {
@@ -1713,9 +1681,209 @@ code {
     }
 }
 
-
-/* [mobile.css] bloque movil 1 eliminado — gestionado en mobile.css */
-
+@media (max-width: 768px) {
+    /* Sidebar móvil */
+    #sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        z-index: 2000;
+    }
+    
+    #sidebar.show {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Overlay cuando sidebar está abierto */
+    body.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+    }
+    
+    #content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    /* Navbar móvil */
+    #content nav {
+        padding: 0 16px;
+        gap: 8px;
+    }
+    
+    #content nav .nav-title {
+        display: none;
+    }
+    
+    #content nav .bx-menu {
+        font-size: 26px;
+    }
+    
+    #content nav .search-form {
+        display: none;
+    }
+    
+    /* Botones de modo oscuro y notificaciones más pequeños */
+    #content nav .switch-mode {
+        width: 44px;
+        height: 24px;
+    }
+    
+    #content nav .switch-mode .ball {
+        width: 16px;
+        height: 16px;
+    }
+    
+    #content nav .switch-mode.active .ball {
+        left: calc(100% - 18px);
+    }
+    
+    #content nav .switch-mode i {
+        font-size: 12px;
+    }
+    
+    /* Formularios */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Header de página */
+    .head-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .head-title h1 {
+        font-size: 20px;
+    }
+    
+    .head-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .head-actions .btn-primary,
+    .head-actions .btn-export {
+        flex: 1;
+        justify-content: center;
+        min-width: 140px;
+    }
+    
+    /* Tablas */
+    .table-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .table-stats {
+        flex-wrap: wrap;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .data-table .actions {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .btn-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    /* Cards del dashboard */
+    .box-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .box-info li {
+        padding: 16px;
+    }
+    
+    .box-info li .bx {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .box-info li .text h3 {
+        font-size: 24px;
+    }
+    
+    /* Modales */
+    .modal-content {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-header {
+        padding: 16px;
+    }
+    
+    .modal-header h2 {
+        font-size: 16px;
+    }
+    
+    .modal-form,
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .modal-footer {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .modal-footer .btn-primary,
+    .modal-footer .btn-secondary {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    /* Perfil */
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-avatar-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    /* Detalles */
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Mensajes */
+    .message-card {
+        padding: 12px 16px;
+    }
+    
+    /* Toast */
+    .toast-container {
+        left: 10px;
+        right: 10px;
+    }
+    
+    .toast {
+        min-width: auto;
+        width: 100%;
+    }
+}
 
 @media (max-width: 480px) {
     #content main {
@@ -1791,7 +1959,7 @@ code {
     }
 }
 
-/* Sidebar overlay para móvil */
+/* Sidebar fondo oscuro para móvil */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -1800,23 +1968,61 @@ code {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1030;
+    z-index: 1999;
 }
 
 .sidebar-overlay.show {
     display: block;
-    animation: overlayFadeIn .2s ease;
-}
-
-@keyframes overlayFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
 }
 
 /* Mejoras para datos móviles */
-
-/* [mobile.css] bloque movil 2 eliminado — gestionado en mobile.css */
-
+@media (max-width: 768px) {
+    /* Bitácora más compacta */
+    .table-container .data-table th:nth-child(4),
+    .table-container .data-table td:nth-child(4) {
+        display: none;
+    }
+    
+    /* Badge más pequeño */
+    .badge {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+    
+    /* Status más compacto */
+    .status {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+    
+    /* Cell user más compacto */
+    .cell-user img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .cell-user span {
+        font-size: 13px;
+    }
+    
+    /* Modal de ver detalles responsive */
+    .modal-lg {
+        max-width: 100%;
+    }
+    
+    /* Footer del modal centrado */
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn-secondary,
+    .modal-footer .btn-primary,
+    .modal-footer .btn-danger,
+    .modal-footer .btn-warning {
+        width: 100%;
+        justify-content: center;
+    }
+}
 
 /* ============================================
    FILAS CLICKEABLES (click para ver detalles)
@@ -2031,24 +2237,41 @@ body.sidebar-collapsed #sidebar .side-menu li a:hover::after {
 }
 
 /* Icono del menu toggle rota al colapsar */
-body.sidebar-collapsed #content nav .bx-menu,
-body.sidebar-collapsed .sidebar-toggle-btn {
+body.sidebar-collapsed #content nav .bx-menu {
     transform: rotate(180deg);
 }
-#content nav .bx-menu,
-.sidebar-toggle-btn {
+#content nav .bx-menu {
     transition: transform 0.3s ease;
 }
 
 /* Solo aplica en desktop */
+@media (max-width: 768px) {
+    body.sidebar-collapsed #sidebar {
+        width: var(--sidebar-width);
+    }
+    body.sidebar-collapsed #content {
+        margin-left: 0;
+    }
+    body.sidebar-collapsed #sidebar .brand span,
+    body.sidebar-collapsed #sidebar .side-menu li a span {
+        display: inline;
+    }
+    body.sidebar-collapsed #sidebar .brand {
+        justify-content: flex-start;
+        padding: 20px;
+    }
+    body.sidebar-collapsed #sidebar .side-menu li a {
+        justify-content: flex-start;
+        padding: 12px 16px;
+    }
+    body.sidebar-collapsed #sidebar .side-menu li a::after {
+        display: none;
+    }
+}
 
-/* [mobile.css] bloque movil 3 eliminado — gestionado en mobile.css */
-
-
-/* Ocultar texto del boton de cerrar sesion y labels de grupos al colapsar, pero dejar icono visible */
-body.sidebar-collapsed #sidebar .side-menu li button span:not(.grp-icon),
-body.sidebar-collapsed #sidebar .side-menu li button .logout-text,
-body.sidebar-collapsed #sidebar .side-menu li button .grp-arrow {
+/* Ocultar texto del boton de cerrar sesion al colapsar */
+body.sidebar-collapsed #sidebar .side-menu li button span,
+body.sidebar-collapsed #sidebar .side-menu li button .logout-text {
     display: none !important;
 }
 
@@ -2060,9 +2283,15 @@ body.sidebar-collapsed #sidebar .side-menu li button {
 }
 
 /* Restaurar en movil */
-
-/* [mobile.css] bloque movil 4 eliminado — gestionado en mobile.css */
-
+@media (max-width: 768px) {
+    body.sidebar-collapsed #sidebar .side-menu li button span {
+        display: inline !important;
+    }
+    body.sidebar-collapsed #sidebar .side-menu li button {
+        justify-content: flex-start !important;
+        padding: 12px 16px !important;
+    }
+}
 
 /* Boton de cerrar sesion en sidebar */
 .sidebar-logout-btn {
@@ -2125,9 +2354,19 @@ body.sidebar-collapsed .sidebar-logout-btn:hover::after {
 }
 
 /* Restaurar en movil */
-
-/* [mobile.css] bloque movil 5 eliminado — gestionado en mobile.css */
-
+@media (max-width: 768px) {
+    body.sidebar-collapsed .sidebar-logout-btn {
+        justify-content: flex-start !important;
+        padding: 12px 16px !important;
+        gap: 12px !important;
+    }
+    body.sidebar-collapsed .sidebar-logout-btn span {
+        display: inline !important;
+    }
+    body.sidebar-collapsed .sidebar-logout-btn::after {
+        display: none !important;
+    }
+}
 
 /* ============================================
    PAGINADOR MEJORADO CON SELECTOR DE REGISTROS
@@ -2467,198 +2706,3 @@ body.sidebar-collapsed .side-menu-sep { margin: 6px 8px; }
 body.sidebar-collapsed .sidebar-scroll {
     overflow: visible !important;
 }
-
-/* ============================================
-   SIDEBAR COMPACTO — v3.0 (muchos módulos)
-   ============================================ */
-
-/* Sidebar como columna flex con scroll en el medio */
-#sidebar {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-}
-
-/* Brand fijo arriba — no scrollea */
-#sidebar .brand {
-    flex-shrink: 0 !important;
-    min-height: 60px;
-}
-
-/* Zona scrollable — ocupa todo el espacio disponible */
-.sidebar-scroll {
-    flex: 1 1 0 !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    min-height: 0 !important; /* crítico para que flex funcione */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,.15) transparent;
-}
-.sidebar-scroll::-webkit-scrollbar { width: 3px; }
-.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 3px; }
-
-/* Bottom fijo abajo — no scrollea */
-#sidebar .side-menu.bottom {
-    flex-shrink: 0 !important;
-    position: relative !important;
-    bottom: auto !important;
-    border-top: 1px solid rgba(255,255,255,.08) !important;
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
-    background: var(--bg-sidebar) !important;
-}
-
-/* Items más compactos para que quepan todos */
-#sidebar .side-menu li a,
-#sidebar .side-menu li button.sidebar-logout-btn {
-    padding: 9px 16px !important;
-    font-size: 13px !important;
-}
-
-#sidebar .side-menu li a i,
-#sidebar .side-menu li button.sidebar-logout-btn i {
-    font-size: 17px !important;
-    min-width: 20px;
-}
-
-#sidebar .side-menu li a span {
-    font-size: 13px !important;
-}
-
-/* Separadores más delgados */
-.side-menu-sep {
-    height: 1px !important;
-    margin: 4px 12px !important;
-}
-
-/* Modo colapsado — íconos centrados y visibles */
-body.sidebar-collapsed #sidebar {
-    overflow: visible !important;
-}
-
-body.sidebar-collapsed .sidebar-scroll {
-    overflow-y: auto !important;
-    overflow-x: hidden !important; /* Evitar scroll horizontal molesto */
-}
-
-body.sidebar-collapsed #sidebar .side-menu li a,
-body.sidebar-collapsed #sidebar .side-menu li button.sidebar-logout-btn {
-    padding: 11px 0 !important;
-    justify-content: center !important;
-}
-
-/* Tooltip en modo colapsado — más visible */
-body.sidebar-collapsed #sidebar .side-menu li a::after {
-    content: attr(data-tooltip) !important;
-    position: absolute !important;
-    left: calc(100% + 12px) !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background: #1e293b !important;
-    color: #f1f5f9 !important;
-    padding: 6px 12px !important;
-    border-radius: 8px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    white-space: nowrap !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    z-index: 9999 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,.4) !important;
-    border: 1px solid rgba(255,255,255,.1) !important;
-    transition: opacity .15s ease !important;
-}
-
-body.sidebar-collapsed #sidebar .side-menu li a:hover::after {
-    opacity: 1 !important;
-}
-
-/* ============================================
-   RESPONSIVE MÓVIL — v3.0 COMPLETO
-   ============================================ */
-
-/* ── Breakpoint principal: 768px ── */
-
-/* [mobile.css] bloque movil 6 eliminado — gestionado en mobile.css */
-
-
-/* ── Breakpoint tablet: 480px–768px ── */
-@media (max-width: 480px) {
-
-    .box-info {
-        grid-template-columns: 1fr !important;
-    }
-
-    .head-actions .btn-export {
-        display: none !important;
-    }
-
-    .data-table th:nth-child(4),
-    .data-table td:nth-child(4) {
-        display: none !important;
-    }
-
-    /* Búsqueda oculta en pantallas muy pequeñas */
-    #content nav .search-form {
-        display: none !important;
-    }
-
-    /* Expediente en columna */
-    .exp-stats {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
-
-/* ── Sidebar bottom siempre visible en móvil ── */
-
-/* [mobile.css] bloque movil 7 eliminado — gestionado en mobile.css */
-
-
-/* ================================================================
-   FLYOUT MENU: Para sidebar colapsado (body.sidebar-collapsed)
-   ================================================================ */
-body.sidebar-collapsed #sidebar .side-menu-group { position: relative; }
-body.sidebar-collapsed #sidebar .side-submenu {
-    display: none !important;
-    position: fixed !important;
-    left: 60px !important;
-    margin-top: -50px !important; /* Sube la caja */
-    padding-top: 35px !important; /* Puente invisible arriba */
-    padding-bottom: 35px !important; /* Puente invisible abajo */
-    padding-left: 10px !important; /* Puente invisible izquierda */
-    padding-right: 10px !important; /* Puente invisible derecha */
-    top: auto !important;
-    width: 210px !important;
-    background: transparent !important; /* Para que el puente no tape nada visualmente */
-    z-index: 9999 !important;
-}
-/* Contenedor real del submenú para el fondo blanco */
-body.sidebar-collapsed #sidebar .side-submenu::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 35px; left: 10px; right: 10px; bottom: 35px;
-    background: var(--bg-card) !important;
-    border-radius: 10px !important;
-    box-shadow: 4px 4px 20px rgba(0,0,0,.2) !important;
-    z-index: -1 !important;
-}
-body.sidebar-collapsed #sidebar .side-menu-group:hover > .side-submenu {
-    display: block !important;
-}
-body.sidebar-collapsed #sidebar .side-submenu li a {
-    padding: 9px 16px !important;
-    border-radius: 0 !important;
-    font-size: 13px !important;
-    justify-content: flex-start !important;
-    color: var(--text-primary) !important;
-}
-body.sidebar-collapsed #sidebar .side-submenu li a span {
-    display: inline !important;
-    color: var(--text-primary) !important;
-}
-body.sidebar-collapsed #sidebar .side-submenu li a i {
-    color: var(--text-primary) !important;
-}
-
-

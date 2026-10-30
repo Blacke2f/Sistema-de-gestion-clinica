@@ -19,7 +19,6 @@ namespace App\Http\Controllers;
  */
 
 use App\Models\Bitacora;
-use App\Models\Cita;
 use App\Models\Consulta;
 use App\Models\Medicamento;
 use App\Models\Paciente;
@@ -39,56 +38,39 @@ class DashboardController extends Controller
 
         // ── Estadísticas para las tarjetas del dashboard ──────────────────────
         $stats = [
+            // Total de pacientes registrados en el sistema
             'pacientes'  => Paciente::count(),
+
+            // Consultas programadas para el día de hoy (usa el scope 'hoy' del modelo)
             'consultas'  => Consulta::hoy()->count(),
+
+            // Medicamentos cuyo stock actual es menor o igual al stock mínimo
+            // Se usa el scope 'stockBajo' del modelo Medicamento
             'inventario' => Medicamento::stockBajo()->count(),
+
+            // Mensajes no leídos del usuario actual (método del modelo Usuario)
             'mensajes'   => $usuario->mensajesNoLeidos(),
-            'citas_hoy'  => class_exists(\App\Models\Cita::class) ? \App\Models\Cita::hoy()->whereNotIn('estado', ['cancelada'])->count() : 0,
         ];
 
-        // ── Consultas recientes ───────────────────────────────────────────────
+        // ── Consultas recientes para la tabla del dashboard ───────────────────
+        // Carga las relaciones para evitar N+1 queries (eager loading)
         $consultasRecientes = Consulta::with(['paciente', 'empleado', 'medico'])
-            ->latest()
-            ->limit(4)
+            ->latest()   // ordenar por created_at DESC (más recientes primero)
+            ->limit(4)   // solo las últimas 4 consultas
             ->get();
 
-        // ── Citas de hoy ─────────────────────────────────────────────────────
-        $citasHoy = \App\Models\Cita::with(['paciente', 'empleado', 'medico'])
-            ->hoy()
-            ->whereNotIn('estado', ['cancelada'])
-            ->orderBy('fecha_hora')
-            ->limit(5)
-            ->get();
+        // ── Bitácora del sistema (solo para administradores) ──────────────────
+        $bitacora = null; // por defecto null para no-admins
 
-        // ── Gráfica: consultas últimos 7 días ────────────────────────────────
-        $consultasSemana = Consulta::select(
-                DB::raw('DATE(fecha_hora) as fecha'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->where('fecha_hora', '>=', now()->subDays(6)->startOfDay())
-            ->groupBy('fecha')
-            ->orderBy('fecha')
-            ->get()
-            ->keyBy('fecha');
-
-        $labels7dias = [];
-        $data7dias   = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $fecha       = now()->subDays($i)->format('Y-m-d');
-            $labels7dias[] = now()->subDays($i)->format('d/m');
-            $data7dias[]   = $consultasSemana->get($fecha)?->total ?? 0;
-        }
-
-        // ── Bitácora (solo admin) ─────────────────────────────────────────────
-        $bitacora = null;
         if ($usuario->isAdmin()) {
-            $bitacora = Bitacora::with('usuario')->latest()->limit(15)->get();
+            // Los admins ven las últimas 15 acciones del sistema
+            $bitacora = Bitacora::with('usuario') // cargar el usuario de cada registro
+                ->latest()
+                ->limit(15)
+                ->get();
         }
 
         // Pasar todas las variables a la vista del dashboard
-        return view('dashboard.index', compact(
-            'stats', 'consultasRecientes', 'citasHoy',
-            'bitacora', 'labels7dias', 'data7dias'
-        ));
+        return view('dashboard.index', compact('stats', 'consultasRecientes', 'bitacora'));
     }
 }

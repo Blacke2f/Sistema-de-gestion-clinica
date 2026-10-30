@@ -58,7 +58,7 @@
                         <td>{{ $empleados->firstItem() + $i }}</td>
                         <td>
                             <div class="cell-user">
-                                <img src="" data-avatar="{{ $e->nombre_completo }}" data-bg="#764ba2" data-size="32" alt="">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($e->nombre_completo) }}&background=764ba2&color=fff&size=32" alt="">
                                 <span>{{ $e->nombre_completo }}</span>
                             </div>
                         </td>

@@ -7,15 +7,23 @@
     <title>SISGECLIN - @yield('title', 'Sistema de Gestión Clínica')</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/image-Photoroom.png') }}">
     <link rel="shortcut icon" href="{{ asset('img/image-Photoroom.ico') }}">
-    <link href="{{ asset('vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/styleS.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dark-mode-improvements.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pagination-pro.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/pro-ui.css') }}">
-    {{-- Anti-FOUC script movido al inicio del body para aplicar clases reales --}}
+    {{-- Aplicar sidebar colapsado ANTES de pintar para evitar flash --}}
+    <script>
+        (function() {
+            if (window.innerWidth > 768 && localStorage.getItem('sidebarCollapsed') === 'true') {
+                document.documentElement.classList.add('sidebar-collapsed-init');
+            }
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.documentElement.classList.add('dark-mode-init');
+            }
+        })();
+    </script>
     <style>
-        /* Estado colapsado (SOLO desktop) */
+        /* Aplicar estado colapsado inmediatamente sin transición */
         .sidebar-collapsed-init #sidebar { width: 70px !important; transition: none !important; }
         .sidebar-collapsed-init #content { margin-left: 70px !important; transition: none !important; }
         .sidebar-collapsed-init #sidebar .brand span,
@@ -24,47 +32,8 @@
         .sidebar-collapsed-init #sidebar .brand { justify-content: center; padding: 20px 0; }
         .sidebar-collapsed-init #sidebar .side-menu li a { justify-content: center; padding: 14px 0; }
         .sidebar-collapsed-init .sidebar-logout-btn { justify-content: center !important; padding: 14px 0 !important; gap: 0 !important; }
-        /* Dark mode inmediato */
+        /* Aplicar dark mode inmediatamente */
         .dark-mode-init body { background: #0f172a; color: #f1f5f9; }
-
-        /* MÓVIL: nunca aplicar collapsed-init */
-        @media (max-width: 768px) {
-            .sidebar-collapsed-init #sidebar {
-                width: var(--sidebar-mobile-width, 280px) !important;
-                transform: translateX(-100%) !important;
-                margin-left: 0 !important;
-            }
-            .sidebar-collapsed-init #content {
-                margin-left: 0 !important;
-            }
-        }
-        /* ── Grupos en sidebar colapsado ── */
-        .sidebar-collapsed-init #sidebar .grp-label,
-        .sidebar-collapsed-init #sidebar .grp-arrow { display: none !important; }
-        .sidebar-collapsed-init #sidebar .side-menu-group-btn { justify-content: center !important; padding: 13px 0 !important; position: relative; }
-        .sidebar-collapsed-init #sidebar .grp-icon { font-size: 22px !important; }
-        /* flyout: mostrar submenú a la derecha al hover */
-        .sidebar-collapsed-init #sidebar .side-menu-group { position: relative; }
-        .sidebar-collapsed-init #sidebar .side-submenu {
-            display: none !important;
-            position: fixed !important;
-            left: 70px !important;
-            top: auto !important;
-            width: 200px !important;
-            background: var(--bg-card) !important;
-            border-radius: 0 10px 10px 0 !important;
-            box-shadow: 4px 4px 20px rgba(0,0,0,.2) !important;
-            padding: 6px 0 !important;
-            max-height: none !important;
-            opacity: 1 !important;
-            z-index: 9999 !important;
-        }
-        .sidebar-collapsed-init #sidebar .side-menu-group:hover > .side-submenu { display: block !important; }
-        .sidebar-collapsed-init #sidebar .side-submenu li a {
-            padding: 9px 16px !important;
-            border-radius: 0 !important;
-            font-size: 13px !important;
-        }
     </style>
     <style>
         /* ── Notificaciones dropdown ── */
@@ -111,14 +80,9 @@
             width: 340px;
             background: var(--bg-card);
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,.25);
+            box-shadow: 0 8px 30px rgba(0,0,0,.18);
             z-index: 9999;
             overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        body.dark-mode .notif-dropdown {
-            box-shadow: 0 8px 40px rgba(0,0,0,.6);
-            border-color: #334155;
         }
         .notif-dropdown.open { display: block; }
 
@@ -132,13 +96,11 @@
             cursor: pointer;
             transition: background .15s;
             text-decoration: none;
-            color: var(--text-primary);
+            color: inherit;
         }
         .notif-item:hover { background: var(--bg-body); }
         .notif-item.unread { background: rgba(13,110,253,.08); }
-        .notif-item.unread:hover { background: rgba(13,110,253,.14); }
-        body.dark-mode .notif-item.unread { background: rgba(13,110,253,.15); }
-        body.dark-mode .notif-item.unread:hover { background: rgba(13,110,253,.22); }
+        .notif-item.unread:hover { background: rgba(13,110,253,.12); }
 
         .notif-icon {
             width: 38px; height: 38px;
@@ -147,19 +109,18 @@
             font-size: 18px;
             flex-shrink: 0;
         }
-        /* Modo oscuro — colores vibrantes para mejor contraste */
-        .notif-icon.primary { background: rgba(13,110,253,.25);  color: #6ea8fe; }
-        .notif-icon.success { background: rgba(25,135,84,.25);   color: #75b798; }
-        .notif-icon.danger  { background: rgba(220,53,69,.25);   color: #ea868f; }
-        .notif-icon.warning { background: rgba(255,193,7,.25);   color: #ffda6a; }
-        .notif-icon.info    { background: rgba(13,202,240,.25);  color: #6edff6; }
+        .notif-icon.primary { background: rgba(13,110,253,.15);  color: #4d9fff; }
+        .notif-icon.success { background: rgba(25,135,84,.15);   color: #4dbb8a; }
+        .notif-icon.danger  { background: rgba(220,53,69,.15);   color: #ff6b7a; }
+        .notif-icon.warning { background: rgba(255,193,7,.15);   color: #ffc107; }
+        .notif-icon.info    { background: rgba(13,202,240,.15);  color: #0dcaf0; }
 
-        /* Modo claro — íconos más oscuros y saturados */
-        body:not(.dark-mode) .notif-icon.primary { background: #cfe2ff; color: #0a58ca; }
-        body:not(.dark-mode) .notif-icon.success { background: #d1e7dd; color: #146c43; }
-        body:not(.dark-mode) .notif-icon.danger  { background: #f8d7da; color: #b02a37; }
-        body:not(.dark-mode) .notif-icon.warning { background: #fff3cd; color: #664d03; }
-        body:not(.dark-mode) .notif-icon.info    { background: #cff4fc; color: #087990; }
+        /* Modo claro — íconos más oscuros */
+        body:not(.dark-mode) .notif-icon.primary { background: #cfe2ff; color: #0d6efd; }
+        body:not(.dark-mode) .notif-icon.success { background: #d1e7dd; color: #198754; }
+        body:not(.dark-mode) .notif-icon.danger  { background: #f8d7da; color: #dc3545; }
+        body:not(.dark-mode) .notif-icon.warning { background: #fff3cd; color: #856404; }
+        body:not(.dark-mode) .notif-icon.info    { background: #cff4fc; color: #0dcaf0; }
 
         .notif-body { flex: 1; min-width: 0; }
         .notif-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -167,7 +128,7 @@
         .notif-time  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
         .notif-empty { padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px; }
-        .notif-empty i { font-size: 36px; display: block; margin-bottom: 8px; opacity: .5; }
+        .notif-empty i { font-size: 36px; display: block; margin-bottom: 8px; }
 
         /* Header del dropdown */
         .notif-header {
@@ -187,12 +148,7 @@
             font-size: 12px;
             color: var(--primary);
             cursor: pointer;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: background .15s;
         }
-        .notif-header button:hover { background: rgba(13,110,253,.1); }
 
         /* Mensajes badge en sidebar */
         .msg-badge {
@@ -210,108 +166,9 @@
             margin-left: auto;
         }
     </style>
-    <style>
-        /* ── Sidebar Groups (acordeón plegable) ── */
-        .side-menu-group { list-style: none; }
-
-        .side-menu-group-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px 16px;
-            border-radius: 10px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
-            text-align: left;
-            transition: background .2s, color .2s;
-            position: relative;
-        }
-        .side-menu-group-btn:hover {
-            background: var(--bg-body);
-            color: var(--primary);
-        }
-        .side-menu-group.open > .side-menu-group-btn {
-            color: var(--primary);
-            background: rgba(13,110,253,.08);
-        }
-
-        .grp-icon { font-size: 20px; display: flex; align-items: center; flex-shrink: 0; }
-        .grp-label { flex: 1; }
-        .grp-arrow {
-            font-size: 18px;
-            transition: transform .25s ease;
-            margin-left: auto;
-            flex-shrink: 0;
-        }
-        .side-menu-group.open > .side-menu-group-btn .grp-arrow {
-            transform: rotate(-180deg);
-        }
-
-        /* Submenú colapsable */
-        .side-submenu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height .3s ease, opacity .25s ease;
-            opacity: 0;
-        }
-        .side-menu-group.open > .side-submenu {
-            max-height: 400px;
-            opacity: 1;
-        }
-        .side-submenu li a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px 8px 42px;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13.5px;
-            transition: background .15s, color .15s;
-        }
-        .side-submenu li a:hover {
-            background: var(--bg-body);
-            color: var(--primary);
-        }
-        .side-submenu li.active > a {
-            background: rgba(13,110,253,.12);
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .side-submenu li a i { font-size: 17px; }
-
-        /* Sidebar colapsado: ocultar labels y arrows */
-        .sidebar-collapsed-init #sidebar .grp-label,
-        .sidebar-collapsed-init #sidebar .grp-arrow { display: none !important; }
-        .sidebar-collapsed-init #sidebar .side-menu-group-btn { justify-content: center; padding: 14px 0; }
-        .sidebar-collapsed-init #sidebar .grp-icon { font-size: 22px; }
-        .sidebar-collapsed-init #sidebar .side-submenu { display: none !important; }
-    </style>
     @stack('styles')
 </head>
 <body>
-    <script>
-        // Aplicar clases INMEDIATAMENTE después de abrir el body para evitar FOUC
-        (function() {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-            if (window.innerWidth > 768 && localStorage.getItem('sidebarCollapsed') === 'true') {
-                document.body.classList.add('sidebar-collapsed');
-            }
-        })();
-    </script>
-
-<!-- OVERLAY PARA MÓVIL -->
-<div id="sidebar-overlay" class="sidebar-overlay"></div>
 
 <!-- SIDEBAR -->
 <section id="sidebar">
@@ -330,173 +187,98 @@
 
     <div class="sidebar-scroll">
         <ul class="side-menu">
-            {{-- Dashboard — siempre visible --}}
+            {{-- Dashboard — siempre visible para todos --}}
             <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}" data-tooltip="Panel de Control">
                     <i class='bx bxs-dashboard'></i><span>Panel de Control</span>
                 </a>
             </li>
 
-            {{-- ── GRUPO: CLÍNICO ── --}}
-            @php
-                $clinicaActiva = request()->routeIs('pacientes.*') || request()->routeIs('consultas.*') || request()->routeIs('citas.*');
-                $showClinica   = $usuarioActual->puedeEn('pacientes','ver') || $usuarioActual->puedeEn('consultas','ver') || $usuarioActual->puedeEn('citas','ver');
-            @endphp
-            @if($showClinica)
-            <li class="side-menu-group {{ $clinicaActiva ? 'open' : '' }}" id="grp-clinica">
-                <button class="side-menu-group-btn" onclick="toggleGroup('grp-clinica')" data-tooltip="Clínico">
-                    <span class="grp-icon"><i class='bx bxs-heart-circle'></i></span>
-                    <span class="grp-label">Clínico</span>
-                    <i class='bx bx-chevron-down grp-arrow'></i>
-                </button>
-                <ul class="side-submenu">
-                    @if($usuarioActual->puedeEn('pacientes','ver'))
-                    <li class="{{ request()->routeIs('pacientes.*') ? 'active' : '' }}">
-                        <a href="{{ route('pacientes.index') }}"><i class='bx bxs-user-detail'></i><span>Pacientes</span></a>
-                    </li>
-                    @endif
-                    @if($usuarioActual->puedeEn('consultas','ver'))
-                    <li class="{{ request()->routeIs('consultas.*') ? 'active' : '' }}">
-                        <a href="{{ route('consultas.index') }}"><i class='bx bx-clipboard'></i><span>Consultas</span></a>
-                    </li>
-                    @endif
-                    @if($usuarioActual->puedeEn('citas','ver'))
-                    <li class="{{ request()->routeIs('citas.*') ? 'active' : '' }}">
-                        <a href="{{ route('citas.index') }}"><i class='bx bx-calendar-event'></i><span>Agenda de Citas</span></a>
-                    </li>
-                    @endif
-                </ul>
+            {{-- Pacientes — visible si tiene permiso 'ver' --}}
+            @if($usuarioActual->puedeEn('pacientes', 'ver'))
+            <li class="{{ request()->routeIs('pacientes.*') ? 'active' : '' }}">
+                <a href="{{ route('pacientes.index') }}" data-tooltip="Pacientes">
+                    <i class='bx bxs-user-detail'></i><span>Pacientes</span>
+                </a>
             </li>
             @endif
 
-            {{-- ── GRUPO: DOCUMENTOS ── --}}
-            @php
-                $docsActiva = request()->routeIs('recetas.*') || request()->routeIs('informes-medicos.*') || request()->routeIs('gastos-medicos.*');
-                $showDocs   = $usuarioActual->puedeEn('recetas','ver') || $usuarioActual->puedeEn('informes','ver') || $usuarioActual->puedeEn('gastos','ver');
-            @endphp
-            @if($showDocs)
-            <li class="side-menu-group {{ $docsActiva ? 'open' : '' }}" id="grp-documentos">
-                <button class="side-menu-group-btn" onclick="toggleGroup('grp-documentos')" data-tooltip="Documentos">
-                    <span class="grp-icon"><i class='bx bx-file'></i></span>
-                    <span class="grp-label">Documentos</span>
-                    <i class='bx bx-chevron-down grp-arrow'></i>
-                </button>
-                <ul class="side-submenu">
-                    @if($usuarioActual->puedeEn('recetas','ver'))
-                    <li class="{{ request()->routeIs('recetas.*') ? 'active' : '' }}">
-                        <a href="{{ route('recetas.index') }}"><i class='bx bx-file-blank'></i><span>Recetas</span></a>
-                    </li>
-                    @endif
-                    @if($usuarioActual->puedeEn('informes','ver'))
-                    <li class="{{ request()->routeIs('informes-medicos.*') ? 'active' : '' }}">
-                        <a href="{{ route('informes-medicos.index') }}"><i class='bx bx-id-card'></i><span>Informes Médicos</span></a>
-                    </li>
-                    @endif
-                    @if($usuarioActual->puedeEn('gastos','ver'))
-                    <li class="{{ request()->routeIs('gastos-medicos.*') ? 'active' : '' }}">
-                        <a href="{{ route('gastos-medicos.index') }}"><i class='bx bx-receipt'></i><span>Gastos Médicos</span></a>
-                    </li>
-                    @endif
-                </ul>
+            {{-- Consultas — visible si tiene permiso 'ver' --}}
+            @if($usuarioActual->puedeEn('consultas', 'ver'))
+            <li class="{{ request()->routeIs('consultas.*') ? 'active' : '' }}">
+                <a href="{{ route('consultas.index') }}" data-tooltip="Consultas">
+                    <i class='bx bx-clipboard'></i><span>Consultas</span>
+                </a>
             </li>
             @endif
 
-            {{-- ── GRUPO: LABORATORIO ── --}}
-            @if($usuarioActual->puedeEn('examenes','ver'))
-            @php $labActiva = request()->routeIs('examenes-laboratorio.*'); @endphp
-            <li class="side-menu-group {{ $labActiva ? 'open' : '' }}" id="grp-laboratorio">
-                <button class="side-menu-group-btn" onclick="toggleGroup('grp-laboratorio')" data-tooltip="Laboratorio">
-                    <span class="grp-icon"><i class='bx bx-test-tube'></i></span>
-                    <span class="grp-label">Laboratorio</span>
-                    <i class='bx bx-chevron-down grp-arrow'></i>
-                </button>
-                <ul class="side-submenu">
-                    <li class="{{ $labActiva ? 'active' : '' }}">
-                        <a href="{{ route('examenes-laboratorio.index') }}"><i class='bx bx-test-tube'></i><span>Exámenes de Lab.</span></a>
-                    </li>
-                </ul>
+            <li class="side-menu-sep"></li>
+
+            {{-- Medicamentos — visible si tiene permiso 'ver' --}}
+            @if($usuarioActual->puedeEn('medicina', 'ver'))
+            <li class="{{ request()->routeIs('medicina.*') ? 'active' : '' }}">
+                <a href="{{ route('medicina.index') }}" data-tooltip="Medicamentos">
+                    <i class='bx bxs-capsule'></i><span>Medicamentos</span>
+                </a>
             </li>
             @endif
 
-            {{-- ── GRUPO: INVENTARIO ── --}}
-            @php
-                $invActiva = request()->routeIs('medicina.*') || request()->routeIs('inventario.*') || (!$usuarioActual->isAdmin() && request()->routeIs('solicitudes.*'));
-                $showInv   = $usuarioActual->puedeEn('medicina','ver') || $usuarioActual->puedeEn('inventario','ver') || (!$usuarioActual->isAdmin() && $usuarioActual->puedeEn('solicitudes','ver'));
-            @endphp
-            @if($showInv)
-            <li class="side-menu-group {{ $invActiva ? 'open' : '' }}" id="grp-inventario">
-                <button class="side-menu-group-btn" onclick="toggleGroup('grp-inventario')" data-tooltip="Inventario">
-                    <span class="grp-icon"><i class='bx bxs-package'></i></span>
-                    <span class="grp-label">Inventario</span>
-                    <i class='bx bx-chevron-down grp-arrow'></i>
-                </button>
-                <ul class="side-submenu">
-                    @if($usuarioActual->puedeEn('medicina','ver'))
-                    <li class="{{ request()->routeIs('medicina.*') ? 'active' : '' }}">
-                        <a href="{{ route('medicina.index') }}"><i class='bx bxs-capsule'></i><span>Medicamentos</span></a>
-                    </li>
-                    @endif
-                    @if($usuarioActual->puedeEn('inventario','ver'))
-                    <li class="{{ request()->routeIs('inventario.*') ? 'active' : '' }}">
-                        <a href="{{ route('inventario.index') }}"><i class='bx bx-transfer'></i><span>Movimientos</span></a>
-                    </li>
-                    @endif
-                    @if(!$usuarioActual->isAdmin() && $usuarioActual->puedeEn('solicitudes','ver'))
-                    <li class="{{ request()->routeIs('solicitudes.*') ? 'active' : '' }}">
-                        <a href="{{ route('solicitudes.index') }}"><i class='bx bx-send'></i><span>Solicitudes</span></a>
-                    </li>
-                    @endif
-                </ul>
+            {{-- Movimientos — visible si tiene permiso 'ver' --}}
+            @if($usuarioActual->puedeEn('inventario', 'ver'))
+            <li class="{{ request()->routeIs('inventario.*') ? 'active' : '' }}">
+                <a href="{{ route('inventario.index') }}" data-tooltip="Movimientos">
+                    <i class='bx bx-transfer'></i><span>Movimientos</span>
+                </a>
             </li>
             @endif
 
-            {{-- ── Mensajes (enlace directo) ── --}}
-            @if($usuarioActual->puedeEn('mensajes','ver'))
-            @php $unreadMsg = auth()->user()->mensajesNoLeidos(); @endphp
+            {{-- Solicitudes — visible si tiene permiso 'ver' (no-admins) --}}
+            @if(!$usuarioActual->isAdmin() && $usuarioActual->puedeEn('solicitudes', 'ver'))
+            <li class="{{ request()->routeIs('solicitudes.*') ? 'active' : '' }}">
+                <a href="{{ route('solicitudes.index') }}" data-tooltip="Solicitudes">
+                    <i class='bx bx-send'></i><span>Solicitudes</span>
+                </a>
+            </li>
+            @endif
+
+            <li class="side-menu-sep"></li>
+
+            {{-- Mensajes — visible si tiene permiso 'ver' --}}
+            @if($usuarioActual->puedeEn('mensajes', 'ver'))
             <li class="{{ request()->routeIs('mensajes.*') ? 'active' : '' }}">
                 <a href="{{ route('mensajes.index') }}" data-tooltip="Mensajes">
                     <i class='bx bxs-envelope'></i>
                     <span>Mensajes</span>
+                    @php $unreadMsg = auth()->user()->mensajesNoLeidos(); @endphp
                     <span class="msg-badge" id="sidebar-msg-badge" {{ $unreadMsg === 0 ? 'style=display:none' : '' }}>{{ $unreadMsg ?: '' }}</span>
                 </a>
             </li>
             @endif
 
-            {{-- ── Reportes (enlace directo) ── --}}
-            @if($usuarioActual->puedeEn('reportes','ver'))
-            <li class="{{ request()->routeIs('reportes.*') ? 'active' : '' }}">
-                <a href="{{ route('reportes.index') }}" data-tooltip="Reportes">
-                    <i class='bx bx-bar-chart-alt-2'></i><span>Reportes</span>
+            {{-- Sección de administración — solo admins --}}
+            @if($usuarioActual->isAdmin())
+            <li class="side-menu-sep"></li>
+            <li class="{{ request()->routeIs('nomina.*') ? 'active' : '' }}">
+                <a href="{{ route('nomina.index') }}" data-tooltip="Nómina">
+                    <i class='bx bxs-group'></i><span>Nómina</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('usuarios.*') ? 'active' : '' }}">
+                <a href="{{ route('usuarios.index') }}" data-tooltip="Usuarios">
+                    <i class='bx bxs-user-account'></i><span>Usuarios</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('solicitudes.*') ? 'active' : '' }}">
+                <a href="{{ route('solicitudes.index') }}" data-tooltip="Solicitudes">
+                    <i class='bx bx-send'></i><span>Solicitudes</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('bitacora.*') ? 'active' : '' }}">
+                <a href="{{ route('bitacora.index') }}" data-tooltip="Bitácora">
+                    <i class='bx bx-history'></i><span>Bitácora</span>
                 </a>
             </li>
             @endif
-
-            {{-- ── GRUPO: ADMINISTRACIÓN — solo admins ── --}}
-            @if($usuarioActual->isAdmin())
-            @php $adminActiva = request()->routeIs('nomina.*') || request()->routeIs('usuarios.*') || request()->routeIs('solicitudes.*') || request()->routeIs('bitacora.*'); @endphp
-            <li class="side-menu-group {{ $adminActiva ? 'open' : '' }}" id="grp-admin">
-                <button class="side-menu-group-btn" onclick="toggleGroup('grp-admin')" data-tooltip="Administración">
-                    <span class="grp-icon"><i class='bx bxs-cog'></i></span>
-                    <span class="grp-label">Administración</span>
-                    <i class='bx bx-chevron-down grp-arrow'></i>
-                </button>
-                <ul class="side-submenu">
-                    <li class="{{ request()->routeIs('nomina.*') ? 'active' : '' }}">
-                        <a href="{{ route('nomina.index') }}"><i class='bx bxs-group'></i><span>Nómina</span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('usuarios.*') ? 'active' : '' }}">
-                        <a href="{{ route('usuarios.index') }}"><i class='bx bxs-user-account'></i><span>Usuarios</span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('solicitudes.*') ? 'active' : '' }}">
-                        <a href="{{ route('solicitudes.index') }}"><i class='bx bx-send'></i><span>Solicitudes</span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('bitacora.*') ? 'active' : '' }}">
-                        <a href="{{ route('bitacora.index') }}"><i class='bx bx-history'></i><span>Bitácora</span></a>
-                    </li>
-                </ul>
-            </li>
-            @endif
-
         </ul>
     </div>
 
@@ -523,7 +305,7 @@
 <section id="content">
     <!-- NAVBAR -->
     <nav>
-        <button type="button" id="menu-toggle" class="bx bx-menu sidebar-toggle-btn" aria-label="Abrir menú"></button>
+        <i class='bx bx-menu' id="menu-toggle"></i>
         <span class="nav-title">@yield('nav-title', 'Dashboard')</span>
 
         <form action="{{ request()->url() }}" method="get" class="search-form" id="search-form" autocomplete="off">
@@ -540,7 +322,7 @@
 
         <div class="nav-actions">
             <!-- Modo oscuro -->
-            <div class="switch-mode" id="dark-toggle" title="Activar modo oscuro">
+            <div class="switch-mode" title="Cambiar tema">
                 <i class='bx bxs-moon'></i>
                 <i class='bx bx-sun'></i>
                 <div class="ball"></div>
@@ -584,7 +366,7 @@
             <!-- Perfil -->
             <div class="profile-wrapper">
                 <a href="{{ route('perfil.index') }}" class="profile" title="Mi perfil">
-                    <img src="" data-avatar="{{ auth()->user()->nombre_completo }}" data-bg="0d6efd" data-size="40" alt="Perfil" style="border-radius:50%;width:36px;height:36px;">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->nombre_completo) }}&background=0d6efd&color=fff" alt="Perfil">
                 </a>
                 <div class="profile-menu">
                     <ul>
@@ -617,7 +399,7 @@
 </section>
 
 <!-- TOAST CONTAINER -->
-<div id="toast-container" class="toast-container" style="pointer-events:none;"></div>
+<div id="toast-container" class="toast-container"></div>
 
 <!-- MODAL CONFIRMAR ELIMINACIÓN -->
 <div class="modal" id="modal-confirm-delete">
@@ -659,7 +441,6 @@
 </div>
 
 <script src="{{ asset('css/script.js') }}"></script>
-<script src="{{ asset('js/avatar.js') }}"></script>
 <script>
 window.CSRF_TOKEN = '{{ csrf_token() }}';
 window.BASE_URL   = '{{ url('/') }}';
@@ -895,48 +676,9 @@ function exportarModulo(modulo, formato, baseUrl) {
     showToast('Descargando ' + formato.toUpperCase() + '...', 'success');
 }
 
-// ── Acordeón del sidebar ─────────────────────────────────────────────────────
-function toggleGroup(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const wasOpen = el.classList.contains('open');
-
-    // Comportamiento de acordeón: cerrar los demás grupos si vamos a abrir este
-    if (!wasOpen) {
-        document.querySelectorAll('.side-menu-group.open').forEach(function(group) {
-            if (group.id !== id) {
-                group.classList.remove('open');
-                try { localStorage.setItem('sg-' + group.id, '0'); } catch(e) {}
-            }
-        });
-    }
-
-    el.classList.toggle('open', !wasOpen);
-    try { localStorage.setItem('sg-' + id, !wasOpen ? '1' : '0'); } catch(e) {}
-}
-
-// Restaurar estado desde localStorage (sin flash)
-(function() {
-    const groups = ['grp-clinica','grp-documentos','grp-laboratorio','grp-inventario','grp-comunicacion','grp-reportes','grp-admin'];
-    groups.forEach(function(id) {
-        const el  = document.getElementById(id);
-        if (!el) return;
-        // Si ya tiene 'open' (php activo), mantenerlo; si no, revisar localStorage
-        if (!el.classList.contains('open')) {
-            if (localStorage.getItem('sg-' + id) === '1') {
-                el.classList.add('open');
-            }
-        } else {
-            // Guardar estado activo en localStorage
-            localStorage.setItem('sg-' + id, '1');
-        }
-    });
-})();
-
 // Iniciar polling
 pollBadges();
 setInterval(pollBadges, 30000);
-
 </script>
 @stack('scripts')
 </body>

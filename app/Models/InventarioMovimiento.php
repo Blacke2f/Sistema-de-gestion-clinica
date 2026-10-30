@@ -21,20 +21,8 @@ class InventarioMovimiento extends Model
     // Nombre de la tabla en la base de datos
     protected $table = 'inventario_movimientos';
 
-    // Solo usa created_at — cada movimiento es inmutable una vez registrado (no tiene updated_at)
+    // No usa updated_at — cada movimiento es inmutable una vez registrado
     public $timestamps = false;
-
-    /**
-     * Al crear, rellenar automáticamente created_at.
-     */
-    protected static function booted(): void
-    {
-        static::creating(function (self $model) {
-            if (empty($model->created_at)) {
-                $model->created_at = now();
-            }
-        });
-    }
 
     // Campos permitidos para asignación masiva
     protected $fillable = [

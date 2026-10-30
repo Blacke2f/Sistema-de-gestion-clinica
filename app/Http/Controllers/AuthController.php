@@ -18,8 +18,6 @@ use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -61,50 +59,43 @@ class AuthController extends Controller
             'password.required' => 'La contraseña es requerida.',
         ]);
 
-        // Rate limiting: máximo 5 intentos por IP en 1 minuto
-        $throttleKey = 'login:' . Str::lower($request->username) . '|' . $request->ip();
-
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
-            return back()->withErrors([
-                'username' => "Demasiados intentos fallidos. Intente de nuevo en {$seconds} segundos.",
-            ])->withInput();
-        }
-
         // Paso 2: Buscar el usuario por su nombre de usuario
         $usuario = Usuario::where('username', $request->username)->first();
 
+        // Si no existe el usuario, retornar error
         if (! $usuario) {
-            RateLimiter::hit($throttleKey, 60);
             return back()->withErrors(['username' => 'Usuario no encontrado.'])->withInput();
         }
 
         // Paso 3: Verificar que la cuenta esté habilitada
+        // Las cuentas nuevas o desactivadas por el admin no pueden iniciar sesión
         if (! $usuario->activo) {
             return back()->withErrors([
                 'username' => 'Su cuenta está desactivada. Contacte al administrador.'
             ])->withInput();
         }
 
-        // Paso 4: Verificar la contraseña
+        // Paso 4: Verificar la contraseña usando bcrypt
+        // Hash::check compara el texto plano con el hash almacenado en BD
         if (! Hash::check($request->password, $usuario->password)) {
-            RateLimiter::hit($throttleKey, 60);
             return back()->withErrors(['password' => 'Contraseña incorrecta.'])->withInput();
         }
 
-        // Login exitoso — limpiar intentos fallidos
-        RateLimiter::clear($throttleKey);
-
-        // Paso 5: Iniciar sesión
+        // Paso 5: Iniciar sesión manualmente
+        // El segundo parámetro activa "recordarme" si el checkbox fue marcado
         Auth::login($usuario, $request->boolean('remember'));
+
+        // Regenerar el ID de sesión para prevenir ataques de session fixation
+        // (alguien que tenga el ID de sesión anterior no podrá usarlo)
         $request->session()->regenerate();
 
-        // Actualizar último acceso
+        // Actualizar la fecha y hora del último acceso del usuario
         $usuario->update(['ultimo_acceso' => now()]);
 
-        // Paso 6: Registrar en bitácora
+        // Paso 6: Registrar el inicio de sesión en la bitácora
         Bitacora::registrar($usuario->id, 'INICIO SESIÓN', 'usuarios', $usuario->id);
 
+        // Redirigir a la URL que intentaba acceder, o al dashboard por defecto
         return redirect()->intended(route('dashboard'));
     }
 
@@ -139,7 +130,13 @@ class AuthController extends Controller
         // Regenerar el token CSRF para proteger la siguiente sesión
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        // Construir la URL de login de forma dinámica
+        // Esto permite que funcione tanto desde localhost como desde IPs de red local
+        $scheme   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $loginUrl = "{$scheme}://{$host}/SISGECLIN/public/login";
+
+        return redirect($loginUrl);
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -176,10 +173,10 @@ class AuthController extends Controller
             'nombre_completo' => 'required|string|max:150',
             'username'        => 'required|string|max:50|unique:usuarios,username',
             'email'           => 'required|email|max:100|unique:usuarios,email',
-            // Solo roles no-admin se pueden registrar públicamente
-            'rol'             => 'required|in:recepcionista,medico,enfermera,farmaceutico,laboratorista',
+            // Solo recepcionista o médico — no se puede registrar como admin
+            'rol'             => 'required|in:recepcionista,medico',
             // La contraseña debe confirmarse (campo password_confirmation)
-            'password'        => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password'        => 'required|string|min:6|confirmed',
         ], [
             'nombre_completo.required' => 'El nombre completo es requerido.',
             'username.required'        => 'El nombre de usuario es requerido.',
@@ -188,8 +185,7 @@ class AuthController extends Controller
             'email.unique'             => 'Ese correo ya está registrado.',
             'rol.required'             => 'Selecciona un rol.',
             'password.required'        => 'La contraseña es requerida.',
-            'password.min'             => 'La contraseña debe tener al menos 8 caracteres.',
-            'password.regex'           => 'La contraseña debe tener al menos una mayúscula, una minúscula y un número.',
+            'password.min'             => 'La contraseña debe tener al menos 6 caracteres.',
             'password.confirmed'       => 'Las contraseñas no coinciden.',
         ]);
 

@@ -6,7 +6,7 @@
     <title>SISGECLIN — Solicitar Acceso</title>
     <link rel="icon" type="image/png" href="{{ asset('img/image-Photoroom.png') }}">
     <link rel="shortcut icon" href="{{ asset('img/image-Photoroom.ico') }}">
-    <link href="{{ asset('vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
         html, body { height:100%; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#1a2234; }

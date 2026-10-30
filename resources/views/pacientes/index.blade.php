@@ -60,7 +60,7 @@
                         <td><span class="cell-num">{{ $pacientes->firstItem() + $i }}</span></td>
                         <td>
                             <div class="cell-user">
-                                <img src="" data-avatar="{{ $p->nombre_completo }}" data-bg="#005a14" data-size="32" alt="">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($p->nombre_completo) }}&background=005a14&color=fff" alt="">
                                 <span>{{ $p->nombre_completo }}</span>
                             </div>
                         </td>
@@ -74,9 +74,6 @@
                         </td>
                         <td><span class="blood-type">{{ $p->tipo_sangre ?? '-' }}</span></td>
                         <td class="actions" onclick="event.stopPropagation()">
-                            <a href="{{ route('expediente.show', $p->id) }}" class="btn-icon btn-primary" title="Expediente Clínico">
-                                <i class='bx bx-folder-open'></i>
-                            </a>
                             <button class="btn-icon btn-edit" onclick="editarPaciente({{ $p->id }})" title="Editar">
                                 <i class='bx bx-edit'></i>
                             </button>

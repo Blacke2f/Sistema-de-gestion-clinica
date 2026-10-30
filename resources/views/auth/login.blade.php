@@ -6,7 +6,7 @@
     <title>SISGECLIN — Iniciar Sesión</title>
     <link rel="icon" type="image/png" href="{{ asset('img/image-Photoroom.png') }}">
     <link rel="shortcut icon" href="{{ asset('img/image-Photoroom.ico') }}">
-    <link href="{{ asset('vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
         /* Reset total — independiente del sistema */
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
